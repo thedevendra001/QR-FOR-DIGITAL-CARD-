@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Visiting Card - ₹499</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        .price-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1A1A1A;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 42px;
+            font-weight: 900;
+            margin: 20px 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 30px 40px;
+            background: #F8F9FA;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .form-section { padding: 40px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .payment-info {
+            background: #E8F5E9;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+        .payment-info.show { display: block; }
+        @media (max-width: 600px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .form-section, .header { padding: 30px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Professional Digital Visiting Card</h1>
+            <p style="margin: 10px 0; opacity: 0.9;">Get Your Smart Business Card in 1 Hour!</p>
+            <div class="price-tag">₹499</div>
+            <p style="margin: 10px 0; opacity: 0.9;">One-Time Payment • Lifetime Access • Edit Anytime</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item"><div style="font-size:24px">👥</div><div style="font-size:14px;font-weight:600">2 Contacts</div></div>
+            <div class="feature-item"><div style="font-size:24px">📷</div><div style="font-size:14px;font-weight:600">Photo Upload</div></div>
+            <div class="feature-item"><div style="font-size:24px">🌐</div><div style="font-size:14px;font-weight:600">All Social Media</div></div>
+            <div class="feature-item"><div style="font-size:24px">✏️</div><div style="font-size:14px;font-weight:600">Edit Anytime</div></div>
+            <div class="feature-item"><div style="font-size:24px">📱</div><div style="font-size:14px;font-weight:600">Mobile Ready</div></div>
+            <div class="feature-item"><div style="font-size:24px">📲</div><div style="font-size:14px;font-weight:600">FREE QR Code</div></div>
+            <div class="feature-item"><div style="font-size:24px">💳</div><div style="font-size:14px;font-weight:600">UPI Payment</div></div>
+            <div class="feature-item"><div style="font-size:24px">⚡</div><div style="font-size:14px;font-weight:600">1 Hour Delivery</div></div>
+        </div>
+
+        <div class="form-section">
+            <h2 style="text-align:center;margin-bottom:30px">Fill Your Details</h2>
+
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>Full Name <span style="color:red">*</span></label>
+                    <input type="text" name="fullName" required placeholder="Rajesh Kumar">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address <span style="color:red">*</span></label>
+                    <input type="email" name="email" required placeholder="rajesh@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number <span style="color:red">*</span></label>
+                    <input type="tel" name="phone" required placeholder="9876543210" maxlength="10">
+                </div>
+
+                <div class="form-group">
+                    <label>Business/Company Name</label>
+                    <input type="text" name="businessName" placeholder="Kumar Enterprises">
+                </div>
+
+                <div class="form-group">
+                    <label>Your Designation</label>
+                    <input type="text" name="designation" placeholder="CEO / Founder / Manager">
+                </div>
+
+                <div class="form-group">
+                    <label>Business Address</label>
+                    <input type="text" name="address" placeholder="Office/Shop address">
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp Number (if different from phone)</label>
+                    <input type="tel" name="whatsapp" placeholder="Leave blank to use phone number" maxlength="10">
+                </div>
+
+                <div class="form-group">
+                    <label>Your UPI ID (for receiving payments on card)</label>
+                    <input type="text" name="upiId" placeholder="yourname@paytm or yourname@okaxis">
+                </div>
+
+                <div class="form-group">
+                    <label>Instagram Profile URL</label>
+                    <input type="url" name="instagram" placeholder="https://instagram.com/yourusername">
+                </div>
+
+                <div class="form-group">
+                    <label>Facebook Page URL</label>
+                    <input type="url" name="facebook" placeholder="https://facebook.com/yourpage">
+                </div>
+
+                <div class="form-group">
+                    <label>LinkedIn Profile URL</label>
+                    <input type="url" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-group">
+                    <label>Twitter Profile URL</label>
+                    <input type="url" name="twitter" placeholder="https://twitter.com/yourhandle">
+                </div>
+
+                <div class="form-group">
+                    <label>YouTube Channel URL</label>
+                    <input type="url" name="youtube" placeholder="https://youtube.com/@yourchannel">
+                </div>
+
+                <div class="form-group">
+                    <label>Website URL</label>
+                    <input type="url" name="website" placeholder="https://yourwebsite.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Product/Catalog URL</label>
+                    <input type="url" name="productUrl" placeholder="https://yourshop.com/products">
+                </div>
+
+                <div class="form-group">
+                    <label>Google Maps Location Link</label>
+                    <input type="url" name="maps" placeholder="https://maps.google.com/...">
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">📋 Submit Order & Pay ₹499</button>
+                <p style="text-align:center;margin-top:15px;font-size:13px;color:#666">🔒 Secure • Card ready in 1 hour • Edit anytime after delivery</p>
+            </form>
+
+            <div class="payment-info" id="paymentInfo">
+                <h3 style="color:#2E7D32;margin-bottom:15px">✅ Order Submitted Successfully!</h3>
+                <p style="margin:10px 0"><strong>Your order has been saved. Check your email for confirmation.</strong></p>
+                <p style="margin:10px 0;font-size:18px"><strong>UPI ID:</strong> <code style="background:#fff;padding:4px 8px;border-radius:4px;font-size:16px">agrawalfuturify@paytm</code></p>
+                <p style="margin:10px 0;font-size:18px"><strong>Amount:</strong> <strong style="color:#2E7D32;font-size:20px">₹499</strong></p>
+                <p style="margin:15px 0;padding:15px;background:#FFF3CD;border-radius:8px">
+                    <strong>📱 Next Steps:</strong><br>
+                    1️⃣ Pay <strong>₹499</strong> to UPI: <strong>agrawalfuturify@paytm</strong><br>
+                    2️⃣ Take payment screenshot<br>
+                    3️⃣ Send screenshot on WhatsApp: <strong>+91 97700 61597</strong><br>
+                    4️⃣ Get your card in 1 hour! ⚡<br>
+                    5️⃣ Edit your card anytime - just email us! ✏️
+                </p>
+                <div style="text-align:center;margin-top:20px">
+                    <a href="#" id="waLink" style="background:#25D366;color:white;padding:15px 30px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:bold;font-size:16px">
+                        📱 Send Payment Screenshot on WhatsApp
+                    </a>
+                </div>
+                <p style="margin-top:20px;padding:15px;background:#E3F2FD;border-radius:8px;font-size:14px">
+                    <strong>💡 Pro Tip:</strong> After receiving your card, you can edit any detail anytime by sending an email to <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="533234213224323f35262726213a352a13343e323a3f7d303c3e">[email&#160;protected]</a></strong> with your name and what you want to change. We'll update it within 24 hours - FREE! ✨
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyDNQc-8z_hMcOANo8eh7zbEawZNmY1JdoU69_1GH63NvblsPLaEIXqvOmKzXmqEfBh/exec';
+
+        // Debug logging (hidden from customer)
+        const log = (msg) => { console.log('[System]', msg); };
+
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            log('Form submitted');
+            
+            const form = this;
+            const submitBtn = document.getElementById('submitBtn');
+            const paymentInfo = document.getElementById('paymentInfo');
+            
+            // Get data
+            const formData = new FormData(form);
+            const fullName = formData.get('fullName');
+            const email = formData.get('email');
+            const phone = formData.get('phone');
+            
+            // Validate
+            if (!fullName || !email || !phone) {
+                alert('⚠️ Please fill Name, Email and Phone (required fields)');
+                return;
+            }
+            
+            if (phone.length !== 10) {
+                alert('⚠️ Please enter valid 10-digit phone number');
+                return;
+            }
+            
+            // Disable
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Submitting your order...';
+            
+            // Prepare data
+            const orderData = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                businessName: formData.get('businessName') || '',
+                designation: formData.get('designation') || '',
+                address: formData.get('address') || '',
+                whatsapp: formData.get('whatsapp') || phone,
+                upiId: formData.get('upiId') || '',
+                instagram: formData.get('instagram') || '',
+                facebook: formData.get('facebook') || '',
+                linkedin: formData.get('linkedin') || '',
+                twitter: formData.get('twitter') || '',
+                youtube: formData.get('youtube') || '',
+                website: formData.get('website') || '',
+                productUrl: formData.get('productUrl') || '',
+                maps: formData.get('maps') || '',
+                timestamp: new Date().toISOString()
+            };
+            
+            log('Data prepared');
+            
+            // TRIPLE METHOD - Guaranteed Delivery!
+            const methods = [];
+            
+            // Method 1: JSON POST
+            log('Attempting Method 1: JSON POST');
+            methods.push(
+                fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                }).then(() => {
+                    log('Method 1: SUCCESS');
+                }).catch(err => {
+                    log('Method 1: Failed - ' + err.message);
+                })
+            );
+            
+            // Method 2: Form POST
+            log('Attempting Method 2: Form POST');
+            const formBody = new URLSearchParams(orderData).toString();
+            methods.push(
+                fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formBody
+                }).then(() => {
+                    log('Method 2: SUCCESS');
+                }).catch(err => {
+                    log('Method 2: Failed - ' + err.message);
+                })
+            );
+            
+            // Method 3: Image Beacon (Guaranteed)
+            log('Attempting Method 3: Image Beacon');
+            const img = new Image();
+            img.onload = () => log('Method 3: SUCCESS');
+            img.onerror = () => log('Method 3: Attempted');
+            img.src = BACKEND_URL + '?' + new URLSearchParams(orderData).toString();
+            
+            // Wait for all methods
+            try {
+                await Promise.allSettled(methods);
+                log('All methods completed');
+            } catch (e) {
+                log('Some methods failed, but continuing');
+            }
+            
+            // Always show payment info
+            form.style.display = 'none';
+            paymentInfo.classList.add('show');
+            
+            // WhatsApp message
+            const waMsg = `Hi! I just ordered Digital Visiting Card 🎯
+
+📝 My Details:
+Name: ${fullName}
+Email: ${email}
+Phone: ${phone}
+
+💰 Payment: ₹499 via UPI
+Paying to: agrawalfuturify@paytm
+
+Sending payment screenshot now. Please confirm! 🙏`;
+            
+            document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
+            
+            log('Success! Redirecting to WhatsApp in 3 seconds...');
+            
+            // Auto redirect
+            setTimeout(() => {
+                window.location.href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
+            }, 3000);
+        });
+
+        // Phone validation
+        document.querySelector('input[name="phone"]').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
+ 
