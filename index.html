@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Visiting Card - ₹499</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -17,141 +18,150 @@
             max-width: 480px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
         @media (min-width: 768px) { .container { max-width: 600px; } }
         
         .header {
-            background: #2d3748;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             padding: 40px 24px;
             text-align: center;
             color: white;
         }
         .header-icon { font-size: 48px; margin-bottom: 12px; }
-        .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
         .price-tag {
             display: inline-block;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #000;
-            padding: 14px 36px;
+            padding: 16px 40px;
             border-radius: 50px;
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 900;
             margin: 16px 0;
+            box-shadow: 0 8px 24px rgba(255,215,0,0.4);
         }
         
         .features {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 14px;
             padding: 24px;
             background: #f8f9fa;
         }
         @media (min-width: 768px) { .features { grid-template-columns: repeat(4, 1fr); } }
         .feature {
             background: white;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 18px;
+            border-radius: 16px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-        .feature-icon { font-size: 28px; margin-bottom: 8px; }
-        .feature-text { font-size: 13px; font-weight: 600; }
+        .feature-icon { font-size: 32px; margin-bottom: 10px; }
+        .feature-text { font-size: 13px; font-weight: 600; color: #333; }
         
-        .form-section { padding: 24px; }
-        .form-title { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 24px; }
-        .section-block { margin-bottom: 25px; }
+        .form-section { padding: 28px 24px; }
+        .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 28px; color: #1a1a1a; letter-spacing: -0.5px; }
+        .section-block { margin-bottom: 28px; }
         .section-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #667eea;
-            font-size: 16px;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #667eea;
+            font-size: 17px;
             font-weight: 700;
+            color: #333;
         }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #333; }
         .required { color: #e53e3e; }
         .form-group input {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
         }
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
         }
-        .helper-text { font-size: 12px; color: #718096; margin-top: 4px; }
+        .helper-text { font-size: 12px; color: #718096; margin-top: 6px; }
         
         .submit-btn {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #48bb78, #38a169);
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 24px;
+            margin-top: 28px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(102,126,234,0.4);
         }
+        .submit-btn:active { transform: translateY(2px); }
         .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         
         .success-msg {
             background: #fff3cd;
             border-left: 4px solid #f59e0b;
-            padding: 24px;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 28px;
+            border-radius: 12px;
+            margin: 24px 0;
             display: none;
         }
         .success-msg.show { display: block; }
-        .success-msg h3 { color: #92400e; margin-bottom: 16px; font-size: 22px; }
-        .success-msg p { color: #78350f; margin: 10px 0; line-height: 1.6; }
+        .success-msg h3 { color: #92400e; margin-bottom: 18px; font-size: 24px; }
         .upi-box {
             background: white;
-            padding: 16px;
-            border-radius: 8px;
-            margin: 16px 0;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 18px 0;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .upi-id {
-            font-family: monospace;
-            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
             font-weight: 700;
             color: #1a1a1a;
             background: #f0fdf4;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 12px 0;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 14px 0;
         }
         .wa-btn {
             display: inline-block;
-            background: #25d366;
+            background: linear-gradient(135deg, #25d366, #128c7e);
             color: white;
-            padding: 16px 32px;
-            border-radius: 10px;
+            padding: 18px 36px;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: 600;
-            margin-top: 16px;
+            font-weight: 700;
+            margin-top: 18px;
+            box-shadow: 0 6px 20px rgba(37,211,102,0.3);
         }
         .steps {
             background: white;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: 16px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 18px;
         }
         .steps li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #78350f;
             font-size: 15px;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -160,9 +170,9 @@
         <div class="header">
             <div class="header-icon">🎯</div>
             <h1>Professional Digital Visiting Card</h1>
-            <p style="font-size:13px;opacity:0.85;margin:20px 0">Get Your Smart Business Card in 1 Hour!</p>
+            <p style="font-size:14px;opacity:0.9;margin:20px 0;font-weight:500">Get Your Smart Business Card in 1 Hour!</p>
             <div class="price-tag">₹499</div>
-            <p style="font-size:12px;opacity:0.75">One-Time Payment • Lifetime Access • Edit Anytime</p>
+            <p style="font-size:13px;opacity:0.85;font-weight:500">One-Time Payment • Lifetime Access • Edit Anytime</p>
         </div>
         
         <div class="features">
@@ -237,8 +247,9 @@
                         <input type="text" name="address" placeholder="Office No. 123, City">
                     </div>
                     <div class="form-group">
-                        <label>Your UPI ID</label>
+                        <label>Your UPI ID (Paytm recommended)</label>
                         <input type="text" name="upiId" placeholder="yourname@ybl">
+                        <div class="helper-text">e.g., agrawalfuturify@ybl</div>
                     </div>
                 </div>
                 
@@ -288,25 +299,24 @@
                 </div>
                 
                 <button type="submit" class="submit-btn" id="submitBtn">📋 Submit Order</button>
-                <p style="text-align:center;font-size:12px;color:#718096;margin-top:12px">🔒 Secure • Card ready after payment</p>
+                <p style="text-align:center;font-size:13px;color:#718096;margin-top:14px;font-weight:500">🔒 Secure • Card ready after payment</p>
             </form>
             
             <div class="success-msg" id="successMsg">
                 <h3>✅ Order Submitted - Payment Pending</h3>
-                <p><strong>Thank you for your order!</strong></p>
-                <p>Your details have been saved. Please complete payment to activate your card.</p>
+                <p style="color:#78350f;margin-bottom:18px;font-weight:500">Thank you! Your details have been saved. Please complete payment to activate your card.</p>
                 
                 <div class="upi-box">
-                    <p style="margin:0 0 8px;font-weight:600;color:#92400e">💳 Payment Details</p>
-                    <p style="margin:0;font-size:14px;color:#78350f">Amount: <strong style="font-size:24px">₹499</strong></p>
-                    <p style="margin:8px 0 4px;font-size:13px;color:#78350f">Pay to UPI ID:</p>
+                    <p style="margin:0 0 10px;font-weight:700;color:#92400e;font-size:16px">💳 Payment Details</p>
+                    <p style="margin:0;font-size:15px;color:#78350f">Amount: <strong style="font-size:28px">₹499</strong></p>
+                    <p style="margin:12px 0 6px;font-size:14px;color:#78350f;font-weight:600">Pay to UPI ID:</p>
                     <div class="upi-id">agrawalfuturify@ybl</div>
                 </div>
                 
                 <div class="steps">
-                    <p style="font-weight:600;margin-bottom:12px;color:#92400e">📝 Next Steps:</p>
-                    <ol style="padding-left:20px">
-                        <li>Pay ₹499 to: <strong>agrawalfuturify@ybl</strong></li>
+                    <p style="font-weight:700;margin-bottom:14px;color:#92400e;font-size:16px">📝 Next Steps:</p>
+                    <ol style="padding-left:24px">
+                        <li>Pay ₹499 to UPI: <strong>agrawalfuturify@ybl</strong></li>
                         <li>Take screenshot of payment</li>
                         <li>Send screenshot on WhatsApp: <strong>+91 97700 61597</strong></li>
                         <li>Wait for admin verification (1-2 hours)</li>
@@ -314,19 +324,15 @@
                     </ol>
                 </div>
                 
-                <div style="text-align:center;margin-top:20px">
+                <div style="text-align:center;margin-top:22px">
                     <a href="#" id="waLink" class="wa-btn">📱 Send Payment Screenshot on WhatsApp</a>
                 </div>
-                
-                <p style="margin-top:20px;font-size:13px;text-align:center;color:#78350f">
-                    ⏰ Your card will be activated within 1 hour after payment verification
-                </p>
             </div>
         </div>
     </div>
     
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxqsKIL5PxxDNwW_-Fk88EURpo53_v0t0jpNOnb8-VfT0xHBArVTUiGm_NcKZPH1Myj/exec';
+        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE';
         
         let isEditMode = false;
         
@@ -391,7 +397,7 @@
                 this.style.display = 'none';
                 document.getElementById('successMsg').classList.add('show');
                 
-                const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@ybl\n\nPlease verify and activate my card.`;
+                const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@paytm\n\nPlease verify and activate my card.`;
                 document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
                 
             } catch (err) {
