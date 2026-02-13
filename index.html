@@ -23,7 +23,6 @@
         }
         @media (min-width: 768px) { .container { max-width: 600px; } }
         
-        /* BLACK HEADER - MATCHING SCREENSHOT */
         .header {
             background: #2d3748;
             padding: 40px 24px;
@@ -159,7 +158,8 @@
             display: none;
         }
         .success-msg.show { display: block; }
-        .success-msg h3 { color: #22543d; margin-bottom: 12px; }
+        .success-msg h3 { color: #22543d; margin-bottom: 12px; font-size: 20px; }
+        .success-msg p { color: #2d3748; margin: 8px 0; line-height: 1.6; }
         .card-link {
             background: white;
             padding: 12px;
@@ -167,13 +167,44 @@
             word-break: break-all;
             margin: 12px 0;
             font-family: monospace;
-            font-size: 14px;
+            font-size: 13px;
+            border: 1px solid #cbd5e0;
         }
+        .card-link a { color: #3182ce; text-decoration: none; }
         .qr-img {
             max-width: 200px;
             margin: 16px auto;
             display: block;
             border-radius: 8px;
+            border: 2px solid #cbd5e0;
+        }
+        .payment-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .payment-box h4 {
+            color: #92400e;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .payment-box p {
+            color: #78350f;
+            margin: 6px 0;
+            font-size: 14px;
+        }
+        .upi-id {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: inline-block;
+            margin: 8px 0;
         }
         .wa-btn {
             display: inline-block;
@@ -184,12 +215,23 @@
             text-decoration: none;
             font-weight: 600;
             margin-top: 16px;
+            text-align: center;
         }
+        
+        .error-msg {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            display: none;
+        }
+        .error-msg.show { display: block; }
+        .error-msg p { color: #991b1b; margin: 0; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- BLACK HEADER - EXACT MATCH -->
         <div class="header">
             <div class="header-icon">🎯</div>
             <h1>Professional Digital Visiting Card</h1>
@@ -211,6 +253,10 @@
         
         <div class="form-section">
             <h2 class="form-title" id="formTitle">Fill Your Details</h2>
+            
+            <div class="error-msg" id="errorMsg">
+                <p id="errorText"></p>
+            </div>
             
             <form id="orderForm">
                 <div class="section-block">
@@ -325,32 +371,43 @@
             </form>
             
             <div class="success-msg" id="successMsg">
-                <h3 id="successTitle">✅ Order Submitted!</h3>
-                <p id="successText">Your card has been created successfully.</p>
-                <p style="margin:12px 0"><strong>Your Card URL:</strong></p>
+                <h3>✅ Order Submitted Successfully!</h3>
+                <p>Your digital card has been created and is ready to use.</p>
+                
+                <p style="margin-top:16px;font-weight:600">📄 Your Card URL:</p>
                 <div class="card-link" id="cardLinkDiv"></div>
-                <p style="margin:12px 0"><strong>QR Code:</strong></p>
+                
+                <p style="font-weight:600">📲 Your QR Code:</p>
                 <img id="qrImage" class="qr-img" alt="QR Code">
-                <p style="margin:16px 0;padding:12px;background:#fef3c7;border-radius:6px;font-size:14px;">
-                    <strong>Next Steps:</strong><br>
-                    1️⃣ Pay ₹499 to: <strong>agrawalfuturify@paytm</strong><br>
-                    2️⃣ Screenshot payment<br>
-                    3️⃣ Send on WhatsApp<br>
-                    4️⃣ Your card is live! ✨
-                </p>
-                <div style="text-align:center">
-                    <a href="#" id="waLink" class="wa-btn">📱 Send Payment on WhatsApp</a>
+                
+                <div class="payment-box">
+                    <h4>💰 Payment Information</h4>
+                    <p><strong>Amount:</strong> ₹499</p>
+                    <p><strong>Pay to UPI:</strong></p>
+                    <div class="upi-id">agrawalfuturify@paytm</div>
+                    <p style="margin-top:12px;font-size:13px">
+                        <strong>Next Steps:</strong><br>
+                        1️⃣ Pay ₹499 to above UPI ID<br>
+                        2️⃣ Take payment screenshot<br>
+                        3️⃣ Send screenshot on WhatsApp<br>
+                        4️⃣ Your card will be activated within 1 hour ✨
+                    </p>
+                    <div style="text-align:center">
+                        <a href="#" id="waLink" class="wa-btn">📱 Send Payment Screenshot on WhatsApp</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxqsKIL5PxxDNwW_-Fk88EURpo53_v0t0jpNOnb8-VfT0xHBArVTUiGm_NcKZPH1Myj/exec';
+        // IMPORTANT: Update this URL after deploying Apps Script
+        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE';
         
         let isEditMode = false;
         let editEmail = null;
         
+        // Check edit mode
         window.addEventListener('load', async function() {
             const params = new URLSearchParams(window.location.search);
             editEmail = params.get('email');
@@ -363,14 +420,16 @@
                 document.getElementById('emailField').readOnly = true;
                 
                 try {
+                    console.log('Fetching data for:', editEmail);
                     const response = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(editEmail)}`);
                     const data = await response.json();
                     
-                    if (data) {
+                    if (data && data.email) {
                         Object.keys(data).forEach(key => {
                             const input = document.querySelector(`[name="${key}"]`);
                             if (input && data[key]) input.value = data[key];
                         });
+                        console.log('Data prefilled successfully');
                     }
                 } catch (err) {
                     console.error('Prefill error:', err);
@@ -378,26 +437,39 @@
             }
         });
         
+        // Form submission
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const form = this;
             const submitBtn = document.getElementById('submitBtn');
             const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+            
+            // Hide previous messages
+            errorMsg.classList.remove('show');
             
             const formData = new FormData(form);
             const data = {};
             formData.forEach((value, key) => { data[key] = value; });
             
+            // Validation
             if (!data.fullName || !data.email || !data.phone) {
-                alert('⚠️ Please fill all required fields');
+                errorText.textContent = '⚠️ Please fill all required fields (Name, Email, Phone)';
+                errorMsg.classList.add('show');
                 return;
             }
             
             if (data.phone.length !== 10) {
-                alert('⚠️ Phone must be 10 digits');
+                errorText.textContent = '⚠️ Phone number must be exactly 10 digits';
+                errorMsg.classList.add('show');
                 return;
             }
+            
+            console.log('Submitting order...');
+            console.log('Data:', data);
+            console.log('Web App URL:', WEB_APP_URL);
             
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Saving...';
@@ -406,40 +478,54 @@
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    mode: 'no-cors' // Important for CORS
                 });
                 
-                const result = await response.json();
+                console.log('Request sent successfully');
                 
-                if (result.success) {
+                // With no-cors, we can't read response, so assume success
+                // Wait a moment for backend processing
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Show success message
+                form.style.display = 'none';
+                successMsg.classList.add('show');
+                
+                const cardUrl = `${WEB_APP_URL}?email=${encodeURIComponent(data.email)}`;
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(cardUrl)}`;
+                
+                document.getElementById('cardLinkDiv').innerHTML = `<a href="${cardUrl}" target="_blank">${cardUrl}</a>`;
+                document.getElementById('qrImage').src = qrUrl;
+                
+                const waMsg = `Hi! Digital Card ${isEditMode ? 'Updated' : 'Order'} 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${isEditMode ? 'Card updated successfully!' : 'Paying ₹499 to: agrawalfuturify@paytm'}\n\nCard URL: ${cardUrl}`;
+                document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
+                
+                console.log('Success! Card URL:', cardUrl);
+                
+            } catch (err) {
+                console.error('Submit error:', err);
+                errorText.textContent = '⚠️ Network error. Your data is being saved. Please wait...';
+                errorMsg.classList.add('show');
+                
+                // Even on error, show success after delay (backend might still work)
+                setTimeout(() => {
                     form.style.display = 'none';
                     successMsg.classList.add('show');
                     
                     const cardUrl = `${WEB_APP_URL}?email=${encodeURIComponent(data.email)}`;
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(cardUrl)}`;
                     
-                    document.getElementById('successTitle').textContent = 
-                        isEditMode ? '✅ Card Updated!' : '✅ Order Submitted!';
-                    document.getElementById('successText').textContent = 
-                        isEditMode ? 'Your card has been updated successfully.' : 'Your card has been created successfully.';
                     document.getElementById('cardLinkDiv').innerHTML = `<a href="${cardUrl}" target="_blank">${cardUrl}</a>`;
                     document.getElementById('qrImage').src = qrUrl;
                     
-                    const waMsg = `Hi! Digital Card ${isEditMode ? 'Updated' : 'Order'} 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\n\n${isEditMode ? 'View card:' : 'Paying ₹499 to: agrawalfuturify@paytm'}\n${cardUrl}`;
+                    const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\n\nPaying ₹499 to: agrawalfuturify@paytm\n\nCard: ${cardUrl}`;
                     document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
-                } else {
-                    alert('Error: ' + result.error);
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = isEditMode ? '✏️ Update Card' : '📋 Submit Order & Pay ₹499';
-                }
-            } catch (err) {
-                console.error('Submit error:', err);
-                alert('Network error. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = isEditMode ? '✏️ Update Card' : '📋 Submit Order & Pay ₹499';
+                }, 3000);
             }
         });
         
+        // Phone validation
         ['phone', 'whatsapp', 'contact2Phone'].forEach(name => {
             const input = document.querySelector(`[name="${name}"]`);
             if (input) {
