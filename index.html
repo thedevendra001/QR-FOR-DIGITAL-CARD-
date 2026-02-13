@@ -474,12 +474,15 @@
             try {
                 console.log('Submitting data:', data);
                 
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                    mode: 'no-cors'
-                });
+                const response = await fetch(WEB_APP_URL, {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify(data)
+});
+
+const result = await response.json();
+console.log("Server Response:", result);
+
                 
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 
