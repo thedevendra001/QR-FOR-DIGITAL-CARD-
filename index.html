@@ -238,7 +238,7 @@
                     </div>
                     <div class="form-group">
                         <label>Your UPI ID</label>
-                        <input type="text" name="upiId" placeholder="yourname@paytm">
+                        <input type="text" name="upiId" placeholder="yourname@ybl">
                     </div>
                 </div>
                 
@@ -300,13 +300,13 @@
                     <p style="margin:0 0 8px;font-weight:600;color:#92400e">💳 Payment Details</p>
                     <p style="margin:0;font-size:14px;color:#78350f">Amount: <strong style="font-size:24px">₹499</strong></p>
                     <p style="margin:8px 0 4px;font-size:13px;color:#78350f">Pay to UPI ID:</p>
-                    <div class="upi-id">agrawalfuturify@paytm</div>
+                    <div class="upi-id">agrawalfuturify@ybl</div>
                 </div>
                 
                 <div class="steps">
                     <p style="font-weight:600;margin-bottom:12px;color:#92400e">📝 Next Steps:</p>
                     <ol style="padding-left:20px">
-                        <li>Pay ₹499 to: <strong>agrawalfuturify@paytm</strong></li>
+                        <li>Pay ₹499 to: <strong>agrawalfuturify@ybl</strong></li>
                         <li>Take screenshot of payment</li>
                         <li>Send screenshot on WhatsApp: <strong>+91 97700 61597</strong></li>
                         <li>Wait for admin verification (1-2 hours)</li>
@@ -391,7 +391,7 @@
                 this.style.display = 'none';
                 document.getElementById('successMsg').classList.add('show');
                 
-                const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@paytm\n\nPlease verify and activate my card.`;
+                const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@ybl\n\nPlease verify and activate my card.`;
                 document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
                 
             } catch (err) {
