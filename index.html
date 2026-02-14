@@ -387,7 +387,7 @@
     </div>
     
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwq7IU2Wgr9ZhWJ0lMsFxSdElCdq5iPrg0jKC4BS_uRd4D4TQQCpuzeQQS6f4lv21iRug/exec';
+        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE';
         
         let isEditMode = false;
         let currentEmail = null;
@@ -447,6 +447,13 @@
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // ⚠️ CRITICAL CHECK: Web App URL must be configured
+            if (!WEB_APP_URL || WEB_APP_URL === 'YOUR_WEB_APP_URL_HERE') {
+                alert('🚨 CONFIGURATION ERROR!\n\nWeb App URL is not set!\n\nPlease:\n1. Deploy your Apps Script\n2. Copy the Web App URL\n3. Update line 390 in index.html\n4. Replace: YOUR_WEB_APP_URL_HERE\n   With your actual URL');
+                console.error('WEB_APP_URL not configured! Current value:', WEB_APP_URL);
+                return;
+            }
+            
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => { 
@@ -484,6 +491,9 @@
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Saving...';
+            
+            console.log('🚀 Sending to:', WEB_APP_URL);
+            console.log('📦 Data:', data);
             
             try {
                 console.log('Submitting data:', data);
