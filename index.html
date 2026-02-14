@@ -192,131 +192,134 @@
             border-radius: 12px;
             margin-top: 18px;
         }
+        .steps ol {
+            padding-left: 24px;
+        }
         .steps li {
-            margin-bottom: 10px;
+            margin: 10px 0;
             color: #78350f;
-            font-size: 15px;
             line-height: 1.6;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Edit Mode Header (shown only in edit mode) -->
-        <div class="edit-mode-header" id="editModeHeader" style="display:none">
-            <h2>✏️ Edit Your Card Details</h2>
-            <p>Update your information and click "Update Card"</p>
+        <div class="header" id="normalHeader">
+            <div class="header-icon">💼</div>
+            <h1>Digital Visiting Card</h1>
+            <div class="price-tag">₹499</div>
+            <p style="font-size:15px;opacity:0.9;margin-top:12px">One-time payment • Lifetime card</p>
         </div>
         
-        <!-- Normal Header (shown in new order mode) -->
-        <div class="header" id="normalHeader">
-            <div class="header-icon">🎯</div>
-            <h1>Professional Digital Visiting Card</h1>
-            <p style="font-size:14px;opacity:0.9;margin:20px 0;font-weight:500">Get Your Smart Business Card in 1 Hour!</p>
-            <div class="price-tag">₹499</div>
-            <p style="font-size:13px;opacity:0.85;font-weight:500">One-Time Payment • Lifetime Access • Edit Anytime</p>
+        <div class="edit-mode-header" id="editModeHeader" style="display:none">
+            <h2>✏️ Edit Your Card Details</h2>
+            <p>Update your information below</p>
         </div>
         
         <div class="features" id="featuresSection">
-            <div class="feature"><span class="feature-icon">👥</span><div class="feature-text">2 Contacts</div></div>
-            <div class="feature"><span class="feature-icon">📷</span><div class="feature-text">Photo Upload</div></div>
-            <div class="feature"><span class="feature-icon">🌐</span><div class="feature-text">All Social Media</div></div>
-            <div class="feature"><span class="feature-icon">✏️</span><div class="feature-text">Edit Anytime</div></div>
-            <div class="feature"><span class="feature-icon">📱</span><div class="feature-text">Mobile Ready</div></div>
-            <div class="feature"><span class="feature-icon">📲</span><div class="feature-text">FREE QR Code</div></div>
-            <div class="feature"><span class="feature-icon">💳</span><div class="feature-text">UPI Payment</div></div>
-            <div class="feature"><span class="feature-icon">⚡</span><div class="feature-text">1 Hour Delivery</div></div>
+            <div class="feature"><div class="feature-icon">📱</div><div class="feature-text">Mobile Optimized</div></div>
+            <div class="feature"><div class="feature-icon">📧</div><div class="feature-text">Email Integration</div></div>
+            <div class="feature"><div class="feature-icon">🔗</div><div class="feature-text">Social Links</div></div>
+            <div class="feature"><div class="feature-icon">📍</div><div class="feature-text">Location Maps</div></div>
+            <div class="feature"><div class="feature-icon">💳</div><div class="feature-text">UPI Payment</div></div>
+            <div class="feature"><div class="feature-icon">📲</div><div class="feature-text">QR Code</div></div>
+            <div class="feature"><div class="feature-icon">🎨</div><div class="feature-text">Custom Design</div></div>
+            <div class="feature"><div class="feature-icon">✏️</div><div class="feature-text">Edit Anytime</div></div>
         </div>
         
         <div class="form-section">
-            <h2 class="form-title" id="formTitle">Fill Your Details</h2>
+            <h2 class="form-title" id="formTitle">Create Your Digital Card</h2>
             
             <form id="orderForm">
                 <div class="section-block">
-                    <div class="section-header"><span>📞</span><span>Contact 1 - Primary Details</span></div>
+                    <div class="section-header">👤 Basic Information</div>
                     <div class="form-group">
                         <label>Full Name <span class="required">*</span></label>
-                        <input type="text" name="fullName" required placeholder="Rajesh Kumar">
+                        <input type="text" name="fullName" id="fullName" placeholder="John Doe" required>
                     </div>
                     <div class="form-group">
-                        <label>Email Address <span class="required">*</span></label>
-                        <input type="email" name="email" id="emailField" required placeholder="rajesh@example.com">
-                        <div class="helper-text" id="emailHelper">This will be your login email</div>
+                        <label>Email <span class="required">*</span></label>
+                        <input type="email" name="email" id="emailField" placeholder="john@example.com" required>
+                        <div class="helper-text" id="emailHelper">Used for card access and notifications</div>
                     </div>
                     <div class="form-group">
                         <label>Phone Number <span class="required">*</span></label>
-                        <input type="tel" name="phone" required placeholder="9876543210" maxlength="10">
+                        <input type="tel" name="phone" id="phone" placeholder="9876543210" maxlength="10" required>
                         <div class="helper-text">10 digits only</div>
                     </div>
                     <div class="form-group">
                         <label>WhatsApp Number</label>
-                        <input type="tel" name="whatsapp" placeholder="9876543210" maxlength="10">
-                        <div class="helper-text">Leave blank to use phone number</div>
+                        <input type="tel" name="whatsapp" id="whatsapp" placeholder="9876543210" maxlength="10">
+                        <div class="helper-text">Leave blank if same as phone</div>
                     </div>
                 </div>
                 
                 <div class="section-block">
-                    <div class="section-header"><span>👥</span><span>Contact 2 - Support/Secondary</span></div>
+                    <div class="section-header">👥 Secondary Contact (Optional)</div>
                     <div class="form-group">
-                        <label>Contact 2 Name</label>
-                        <input type="text" name="contact2Name" placeholder="Support Team">
+                        <label>Contact Person Name</label>
+                        <input type="text" name="contact2Name" placeholder="Jane Doe">
                     </div>
                     <div class="form-group">
-                        <label>Contact 2 Phone</label>
-                        <input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10">
+                        <label>Contact Person Phone</label>
+                        <input type="tel" name="contact2Phone" maxlength="10" placeholder="9876543210">
                     </div>
                     <div class="form-group">
-                        <label>Contact 2 Email</label>
-                        <input type="email" name="contact2Email" placeholder="support@example.com">
+                        <label>Contact Person Email</label>
+                        <input type="email" name="contact2Email" placeholder="jane@example.com">
                     </div>
                     <div class="form-group">
-                        <label>Contact 2 Role</label>
-                        <input type="text" name="contact2Role" placeholder="Support / Sales">
+                        <label>Contact Person Role</label>
+                        <input type="text" name="contact2Role" placeholder="Assistant Manager">
                     </div>
                 </div>
                 
                 <div class="section-block">
-                    <div class="section-header"><span>🏢</span><span>Business Information</span></div>
+                    <div class="section-header">💼 Business Details</div>
                     <div class="form-group">
-                        <label>Business/Company Name</label>
-                        <input type="text" name="businessName" placeholder="Kumar Enterprises">
+                        <label>Business Name</label>
+                        <input type="text" name="businessName" placeholder="ABC Enterprises">
                     </div>
                     <div class="form-group">
-                        <label>Your Designation/Title</label>
+                        <label>Your Designation</label>
                         <input type="text" name="designation" placeholder="CEO / Founder">
                     </div>
                     <div class="form-group">
                         <label>Business Address</label>
-                        <input type="text" name="address" placeholder="Office No. 123, City">
-                    </div>
-                    <div class="form-group">
-                        <label>Your UPI ID</label>
-                        <input type="text" name="upiId" placeholder="yourname@ybl">
-                        <div class="helper-text">e.g., agrawalfuturify@ybl</div>
+                        <input type="text" name="address" placeholder="123 Main Street, City">
                     </div>
                 </div>
                 
                 <div class="section-block">
-                    <div class="section-header"><span>🌐</span><span>Social Media Links</span></div>
+                    <div class="section-header">💳 Payment Information</div>
                     <div class="form-group">
-                        <label>Instagram URL</label>
+                        <label>UPI ID (for receiving payments)</label>
+                        <input type="text" name="upiId" placeholder="yourname@paytm">
+                        <div class="helper-text">Shown on your card for clients to pay you</div>
+                    </div>
+                </div>
+                
+                <div class="section-block">
+                    <div class="section-header">🔗 Social Media Links</div>
+                    <div class="form-group">
+                        <label>Instagram Profile</label>
                         <input type="url" name="instagram" placeholder="https://instagram.com/username">
                     </div>
                     <div class="form-group">
-                        <label>Facebook URL</label>
-                        <input type="url" name="facebook" placeholder="https://facebook.com/page">
+                        <label>Facebook Profile</label>
+                        <input type="url" name="facebook" placeholder="https://facebook.com/username">
                     </div>
                     <div class="form-group">
-                        <label>LinkedIn URL</label>
-                        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/profile">
+                        <label>LinkedIn Profile</label>
+                        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/username">
                     </div>
                     <div class="form-group">
-                        <label>Twitter URL</label>
-                        <input type="url" name="twitter" placeholder="https://twitter.com/handle">
+                        <label>Twitter / X Profile</label>
+                        <input type="url" name="twitter" placeholder="https://twitter.com/username">
                     </div>
                     <div class="form-group">
-                        <label>YouTube URL</label>
-                        <input type="url" name="youtube" placeholder="https://youtube.com/@channel">
+                        <label>YouTube Channel</label>
+                        <input type="url" name="youtube" placeholder="https://youtube.com/@username">
                     </div>
                     <div class="form-group">
                         <label>Telegram</label>
@@ -326,7 +329,7 @@
                 </div>
                 
                 <div class="section-block">
-                    <div class="section-header"><span>🔗</span><span>Website & Location</span></div>
+                    <div class="section-header">🌐 Additional Links</div>
                     <div class="form-group">
                         <label>Website URL</label>
                         <input type="url" name="website" placeholder="https://yourwebsite.com">
@@ -346,7 +349,6 @@
                 <p style="text-align:center;font-size:13px;color:#718096;margin-top:14px;font-weight:500">🔒 Secure • Card ready after payment</p>
             </form>
             
-            <!-- Edit Mode Success -->
             <div class="success-msg" id="editSuccessMsg">
                 <h3>✅ Card Updated Successfully!</h3>
                 <p style="font-weight:600">Your changes have been saved.</p>
@@ -356,7 +358,6 @@
                 </div>
             </div>
             
-            <!-- New Order Success (Payment Info) -->
             <div class="payment-msg" id="paymentMsg">
                 <h3>✅ Order Submitted - Payment Pending</h3>
                 <p style="color:#78350f;margin-bottom:18px;font-weight:500">Thank you! Your details have been saved. Please complete payment to activate your card.</p>
@@ -370,7 +371,7 @@
                 
                 <div class="steps">
                     <p style="font-weight:700;margin-bottom:14px;color:#92400e;font-size:16px">📝 Next Steps:</p>
-                    <ol style="padding-left:24px">
+                    <ol>
                         <li>Pay ₹499 to UPI: <strong>agrawalfuturify@ybl</strong></li>
                         <li>Take screenshot of payment</li>
                         <li>Send screenshot on WhatsApp: <strong>+91 97700 61597</strong></li>
@@ -387,6 +388,7 @@
     </div>
     
     <script>
+        // ✅ CONFIGURED: Your exact Web App URL
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwq7IU2Wgr9ZhWJ0lMsFxSdElCdq5iPrg0jKC4BS_uRd4D4TQQCpuzeQQS6f4lv21iRug/exec';
         
         let isEditMode = false;
@@ -400,7 +402,6 @@
                 isEditMode = true;
                 currentEmail = editEmail;
                 
-                // Update UI for edit mode
                 document.getElementById('normalHeader').style.display = 'none';
                 document.getElementById('featuresSection').style.display = 'none';
                 document.getElementById('editModeHeader').style.display = 'block';
@@ -408,34 +409,26 @@
                 document.getElementById('submitBtn').textContent = '✏️ Update Card';
                 document.getElementById('emailHelper').textContent = 'Email cannot be changed';
                 
-                // Set email field
                 const emailField = document.getElementById('emailField');
                 emailField.value = editEmail;
-                emailField.disabled = true; // Disable email in edit mode
+                emailField.disabled = true;
                 
-                // Fetch and prefill data
                 try {
                     console.log('Fetching data for:', editEmail);
-                    const response = await fetch(`${https://script.google.com/macros/s/AKfycbwq7IU2Wgr9ZhWJ0lMsFxSdElCdq5iPrg0jKC4BS_uRd4D4TQQCpuzeQQS6f4lv21iRug/exec}?mode=fetch&email=${encodeURIComponent(editEmail)}`);
+                    const response = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(editEmail)}`);
                     const data = await response.json();
                     
                     if (data && data.email) {
                         console.log('Data received:', data);
-                        
-                        // Prefill all fields (except email which is already set)
                         Object.keys(data).forEach(key => {
                             if (key !== 'email') {
                                 const input = document.querySelector(`[name="${key}"]`);
                                 if (input && data[key]) {
                                     input.value = data[key];
-                                    console.log('Prefilled:', key, '=', data[key]);
                                 }
                             }
                         });
-                        
                         console.log('Prefill complete');
-                    } else {
-                        console.warn('No data found for email');
                     }
                 } catch (err) {
                     console.error('Prefill error:', err);
@@ -447,10 +440,9 @@
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // ⚠️ CRITICAL CHECK: Web App URL must be configured
+            // Check if Web App URL is configured
             if (!WEB_APP_URL || WEB_APP_URL === 'YOUR_WEB_APP_URL_HERE') {
-                alert('🚨 CONFIGURATION ERROR!\n\nWeb App URL is not set!\n\nPlease:\n1. Deploy your Apps Script\n2. Copy the Web App URL\n3. Update line 390 in index.html\n4. Replace: YOUR_WEB_APP_URL_HERE\n   With your actual URL');
-                console.error('WEB_APP_URL not configured! Current value:', WEB_APP_URL);
+                alert('🚨 CONFIGURATION ERROR!\n\nWeb App URL is not set!\n\nPlease update the WEB_APP_URL variable.');
                 return;
             }
             
@@ -460,24 +452,20 @@
                 if (key !== 'email' || !isEditMode) {
                     data[key] = value;
                 } else {
-                    data[key] = currentEmail; // Use original email in edit mode
+                    data[key] = currentEmail;
                 }
             });
             
-            // Handle Telegram - convert @username to full URL if needed
+            // Handle Telegram auto-conversion
             if (data.telegram && data.telegram.trim()) {
                 const telegram = data.telegram.trim();
                 if (telegram.startsWith('@')) {
-                    // Convert @username to https://t.me/username
                     data.telegram = 'https://t.me/' + telegram.substring(1);
                 } else if (!telegram.startsWith('http')) {
-                    // If no @ and no http, assume it's just username
                     data.telegram = 'https://t.me/' + telegram;
                 }
-                // Otherwise keep as is (already full URL)
             }
             
-            // Validation
             if (!data.fullName || !data.email || !data.phone) {
                 alert('⚠️ Please fill all required fields (Name, Email, Phone)');
                 return;
@@ -496,8 +484,6 @@
             console.log('📦 Data:', data);
             
             try {
-                console.log('Submitting data:', data);
-                
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -505,37 +491,34 @@
                 });
                 
                 const result = await response.json();
-                console.log('Server response:', result);
+                console.log('✅ Server response:', result);
                 
                 if (result.status === 'success') {
                     this.style.display = 'none';
                     
                     if (isEditMode) {
-                        // Show edit success message
                         document.getElementById('editSuccessMsg').classList.add('show');
                         const viewLink = document.getElementById('viewCardLink');
                         viewLink.href = result.cardUrl || '#';
                     } else {
-                        // Show payment message for new orders
                         document.getElementById('paymentMsg').classList.add('show');
                         const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@ybl\n\nPlease verify and activate my card.`;
                         document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
                     }
                     
-                    console.log('Success!');
+                    console.log('✅ Success!');
                 } else {
                     throw new Error(result.message || 'Submission failed');
                 }
                 
             } catch (err) {
-                console.error('Submit error:', err);
+                console.error('❌ Submit error:', err);
                 alert('⚠️ Error: ' + err.message + '\n\nPlease check:\n1. Apps Script is deployed\n2. Web App URL is correct\n3. Try again in a few seconds');
                 submitBtn.disabled = false;
                 submitBtn.textContent = isEditMode ? '✏️ Update Card' : '📋 Submit Order';
             }
         });
         
-        // Phone number validation
         ['phone', 'whatsapp', 'contact2Phone'].forEach(name => {
             const input = document.querySelector(`[name="${name}"]`);
             if (input) {
@@ -547,4 +530,3 @@
     </script>
 </body>
 </html>
-
