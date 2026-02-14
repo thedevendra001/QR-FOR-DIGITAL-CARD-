@@ -387,10 +387,11 @@
     </div>
     
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwq7IU2Wgr9ZhWJ0lMsFxSdElCdq5iPrg0jKC4BS_uRd4D4TQQCpuzeQQS6f4lv21iRug/exec';
+        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE';
         
         let isEditMode = false;
         let currentEmail = null;
+        let currentToken = null;  // ⬅️ ADD THIS!
         
         window.addEventListener('load', async function() {
             const params = new URLSearchParams(window.location.search);
@@ -401,6 +402,7 @@
             if (editEmail && editToken) {
                 isEditMode = true;
                 currentEmail = editEmail;
+                currentToken = editToken;  // ⬅️ STORE TOKEN!
                 
                 // Update UI for edit mode
                 document.getElementById('normalHeader').style.display = 'none';
@@ -457,7 +459,9 @@
             }
             
             const formData = new FormData(this);
-            const data = {};
+            const data = {
+                mode: isEditMode ? 'edit' : 'create'  // ⬅️ CRITICAL FIX!
+            };
             formData.forEach((value, key) => { 
                 if (key !== 'email' || !isEditMode) {
                     data[key] = value;
@@ -465,6 +469,11 @@
                     data[key] = currentEmail; // Use original email in edit mode
                 }
             });
+            
+            // Add token in edit mode
+            if (isEditMode) {
+                data.editToken = currentToken || '';  // ⬅️ ADD TOKEN!
+            }
             
             // Handle Telegram - convert @username to full URL if needed
             if (data.telegram && data.telegram.trim()) {
