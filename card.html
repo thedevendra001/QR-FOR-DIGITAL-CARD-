@@ -1,1 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Visiting Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 6px solid white;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            background: white;
+        }
+        
+        .profile-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 6px solid white;
+            margin: 0 auto 20px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #667eea;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .designation {
+            font-size: 18px;
+            opacity: 0.95;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .business {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .contact-item:hover {
+            background: #e9ecef;
+            transform: translateX(4px);
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+            min-width: 24px;
+        }
+        
+        .contact-text {
+            flex: 1;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .contact-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+        
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+        
+        .error-container {
+            text-align: center;
+            padding: 60px 30px;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 30px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .footer-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 480px) {
+            .name {
+                font-size: 26px;
+            }
+            
+            .designation {
+                font-size: 16px;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p style="font-size:16px;color:#666;">Loading card...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="errorState" class="error-container" style="display:none;">
+            <div class="error-icon">❌</div>
+            <h2 class="error-title">Card Not Found</h2>
+            <p class="error-message" id="errorMessage">This card could not be loaded. Please check the URL or contact support.</p>
+        </div>
+        
+        <!-- Card Content -->
+        <div id="cardContent" style="display:none;">
+            <!-- Header -->
+            <div class="card-header">
+                <div id="profileImageContainer"></div>
+                <h1 class="name" id="cardName"></h1>
+                <div id="cardDesignation"></div>
+                <div id="cardBusiness"></div>
+            </div>
+            
+            <!-- Body -->
+            <div class="card-body">
+                <!-- Contact Section -->
+                <div class="section" id="contactSection">
+                    <div class="section-title">
+                        <span>📞</span>
+                        <span>Contact</span>
+                    </div>
+                    <div id="contactItems"></div>
+                </div>
+                
+                <!-- Social Media Section -->
+                <div class="section" id="socialSection" style="display:none;">
+                    <div class="section-title">
+                        <span>🌐</span>
+                        <span>Connect</span>
+                    </div>
+                    <div class="social-grid" id="socialLinks"></div>
+                </div>
+                
+                <!-- Additional Info -->
+                <div class="section" id="additionalSection" style="display:none;">
+                    <div class="section-title">
+                        <span>ℹ️</span>
+                        <span>More Info</span>
+                    </div>
+                    <div id="additionalItems"></div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="#" id="saveContactBtn" class="action-btn btn-primary">💾 Save Contact</a>
+                    <a href="#" id="shareBtn" class="action-btn btn-secondary">📤 Share</a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <p class="footer-text">
+                    Powered by <a href="https://thedevendra001.github.io/QR-FOR-DIGITAL-CARD-/" class="footer-link">Agrawal Futurify AI Solutions</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ⚠️ UPDATE THIS WITH YOUR WEB APP URL
+        const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_URL_HERE/exec';
+        
+        let cardData = null;
+        
+        // Load card on page load
+        window.addEventListener('load', async function() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug');
+            
+            if (!slug) {
+                showError('No card ID provided in URL');
+                return;
+            }
+            
+            await loadCard(slug);
+        });
+        
+        // Load card data
+        async function loadCard(slug) {
+            try {
+                console.log('🎴 Loading card:', slug);
+                
+                const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch card data');
+                }
+                
+                const result = await response.json();
+                console.log('📦 Response:', result);
+                
+                if (result.status === 'error') {
+                    throw new Error(result.message || 'Card not found');
+                }
+                
+                if (result.status === 'success' && result.data) {
+                    cardData = result.data;
+                    renderCard(cardData);
+                } else {
+                    throw new Error('Invalid card data');
+                }
+                
+            } catch (err) {
+                console.error('❌ Load error:', err);
+                showError(err.message);
+            }
+        }
+        
+        // Render card
+        function renderCard(data) {
+            console.log('🎨 Rendering card for:', data.fullName);
+            
+            // Hide loading, show content
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('cardContent').style.display = 'block';
+            
+            // Profile Image
+            const imageContainer = document.getElementById('profileImageContainer');
+            if (data.imageUrl) {
+                imageContainer.innerHTML = `<img src="${data.imageUrl}" alt="${data.fullName}" class="profile-image" />`;
+            } else {
+                const initial = data.fullName.charAt(0).toUpperCase();
+                imageContainer.innerHTML = `<div class="profile-placeholder">${initial}</div>`;
+            }
+            
+            // Name
+            document.getElementById('cardName').textContent = data.fullName;
+            
+            // Designation
+            if (data.designation) {
+                document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
+            }
+            
+            // Business
+            if (data.businessName) {
+                document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
+            }
+            
+            // Contact Items
+            const contactItems = document.getElementById('contactItems');
+            let contactHTML = '';
+            
+            if (data.phone) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <span class="contact-text">
+                            <a href="tel:${data.phone}" class="contact-link">${data.phone}</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            if (data.whatsapp) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">💬</span>
+                        <span class="contact-text">
+                            <a href="https://wa.me/${data.whatsapp.replace(/[^0-9]/g, '')}" class="contact-link" target="_blank">WhatsApp</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            if (data.address) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">📍</span>
+                        <span class="contact-text">${data.address}</span>
+                    </div>
+                `;
+            }
+            
+            if (data.upiId) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">💳</span>
+                        <span class="contact-text">
+                            <a href="upi://pay?pa=${data.upiId}" class="contact-link">${data.upiId}</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            contactItems.innerHTML = contactHTML;
+            
+            // Social Links
+            const socialLinks = document.getElementById('socialLinks');
+            let socialHTML = '';
+            
+            if (data.instagram) {
+                socialHTML += `<a href="${data.instagram}" target="_blank" class="social-btn">📷 Instagram</a>`;
+            }
+            if (data.facebook) {
+                socialHTML += `<a href="${data.facebook}" target="_blank" class="social-btn">👥 Facebook</a>`;
+            }
+            if (data.linkedin) {
+                socialHTML += `<a href="${data.linkedin}" target="_blank" class="social-btn">💼 LinkedIn</a>`;
+            }
+            if (data.twitter) {
+                socialHTML += `<a href="${data.twitter}" target="_blank" class="social-btn">🐦 Twitter</a>`;
+            }
+            if (data.youtube) {
+                socialHTML += `<a href="${data.youtube}" target="_blank" class="social-btn">📺 YouTube</a>`;
+            }
+            if (data.telegram) {
+                socialHTML += `<a href="${data.telegram}" target="_blank" class="social-btn">✈️ Telegram</a>`;
+            }
+            
+            if (socialHTML) {
+                socialLinks.innerHTML = socialHTML;
+                document.getElementById('socialSection').style.display = 'block';
+            }
+            
+            // Additional Info
+            const additionalItems = document.getElementById('additionalItems');
+            let additionalHTML = '';
+            
+            if (data.website) {
+                additionalHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">🌐</span>
+                        <span class="contact-text">
+                            <a href="${data.website}" target="_blank" class="contact-link">Website</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            if (data.productUrl) {
+                additionalHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">🛒</span>
+                        <span class="contact-text">
+                            <a href="${data.productUrl}" target="_blank" class="contact-link">Products</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            if (data.maps) {
+                additionalHTML += `
+                    <div class="contact-item">
+                        <span class="contact-icon">🗺️</span>
+                        <span class="contact-text">
+                            <a href="${data.maps}" target="_blank" class="contact-link">Location</a>
+                        </span>
+                    </div>
+                `;
+            }
+            
+            if (additionalHTML) {
+                additionalItems.innerHTML = additionalHTML;
+                document.getElementById('additionalSection').style.display = 'block';
+            }
+            
+            // Setup action buttons
+            setupActionButtons(data);
+        }
+        
+        // Setup action buttons
+        function setupActionButtons(data) {
+            // Save Contact (vCard)
+            document.getElementById('saveContactBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                downloadVCard(data);
+            });
+            
+            // Share
+            document.getElementById('shareBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                shareCard(data);
+            });
+        }
+        
+        // Download vCard
+        function downloadVCard(data) {
+            let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
+            vcard += `FN:${data.fullName}\n`;
+            
+            if (data.businessName) {
+                vcard += `ORG:${data.businessName}\n`;
+            }
+            
+            if (data.designation) {
+                vcard += `TITLE:${data.designation}\n`;
+            }
+            
+            if (data.phone) {
+                vcard += `TEL;TYPE=CELL:${data.phone}\n`;
+            }
+            
+            if (data.whatsapp) {
+                vcard += `TEL;TYPE=WORK:${data.whatsapp}\n`;
+            }
+            
+            if (data.email) {
+                vcard += `EMAIL:${data.email}\n`;
+            }
+            
+            if (data.website) {
+                vcard += `URL:${data.website}\n`;
+            }
+            
+            if (data.address) {
+                vcard += `ADR:;;${data.address};;;;\n`;
+            }
+            
+            vcard += 'END:VCARD';
+            
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${data.fullName.replace(/\s+/g, '_')}.vcf`;
+            link.click();
+        }
+        
+        // Share card
+        function shareCard(data) {
+            const shareData = {
+                title: data.fullName,
+                text: `Check out ${data.fullName}'s digital card${data.businessName ? ' from ' + data.businessName : ''}`,
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.log('Share error:', err));
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('✅ Card link copied to clipboard!');
+                });
+            }
+        }
+        
+        // Show error
+        function showError(message) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('errorMessage').textContent = message;
+        }
+    </script>
+</body>
+</html>
 
