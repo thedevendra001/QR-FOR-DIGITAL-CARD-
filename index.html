@@ -55,10 +55,6 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
-        .edit-mode-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
         
         .features {
             display: grid;
@@ -79,7 +75,7 @@
         .feature-text { font-size: 13px; font-weight: 600; color: #333; }
         
         .form-section { padding: 28px 24px; }
-        .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 28px; color: #1a1a1a; letter-spacing: -0.5px; }
+        .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 28px; color: #1a1a1a; }
         .section-block { margin-bottom: 28px; }
         .section-header {
             display: flex;
@@ -95,7 +91,7 @@
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #333; }
         .required { color: #e53e3e; }
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 16px;
             border: 2px solid #e2e8f0;
@@ -105,7 +101,7 @@
             transition: all 0.3s;
             background: white;
         }
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
@@ -145,17 +141,6 @@
         .success-msg.show { display: block; }
         .success-msg h3 { color: #065f46; margin-bottom: 18px; font-size: 24px; }
         .success-msg p { color: #047857; margin: 10px 0; line-height: 1.6; }
-        
-        .payment-msg {
-            background: #fff3cd;
-            border-left: 4px solid #f59e0b;
-            padding: 28px;
-            border-radius: 12px;
-            margin: 24px 0;
-            display: none;
-        }
-        .payment-msg.show { display: block; }
-        .payment-msg h3 { color: #92400e; margin-bottom: 18px; font-size: 24px; }
     </style>
 </head>
 <body>
@@ -311,8 +296,8 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="submit-btn" id="submitBtn">📋 Submit Order</button>
-                <p style="text-align:center;font-size:13px;color:#718096;margin-top:14px;font-weight:500">🔒 Secure Payment • Instant Activation</p>
+                <button type="submit" class="submit-btn" id="submitBtn">💳 Proceed to Payment</button>
+                <p style="text-align:center;font-size:13px;color:#718096;margin-top:14px;font-weight:500">🔒 Secure Razorpay Payment • Instant Activation</p>
             </form>
             
             <!-- Edit Mode Success -->
@@ -330,11 +315,12 @@
                 <h3>🎉 Payment Successful!</h3>
                 <p style="font-weight:600">Your Digital Card is being activated...</p>
                 <p>You'll receive an email with your card URL and QR code within minutes!</p>
+                <p style="margin-top:20px;font-size:14px;color:#047857;">Please check your email (including spam folder) for activation details.</p>
             </div>
         </div>
     </div>
     
-    <!-- Razorpay SDK -->
+    <!-- ✅ RAZORPAY SDK - LOAD FIRST -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <script>
@@ -344,6 +330,11 @@
         let isEditMode = false;
         let currentEmail = null;
         let currentToken = null;
+        
+        // ✅ DEBUG: Log when page loads
+        console.log('🚀 Page loaded');
+        console.log('📦 Razorpay loaded:', typeof Razorpay !== 'undefined');
+        console.log('🔗 WEB_APP_URL:', WEB_APP_URL);
         
         // Initialize on page load
         window.addEventListener('load', async function() {
@@ -385,7 +376,7 @@
             const emailField = document.getElementById('emailField');
             emailField.value = email;
             emailField.disabled = true;
-            emailField.required = false; // ✅ FIX: Remove required
+            emailField.required = false;
             
             // Fetch and prefill data
             try {
@@ -496,149 +487,263 @@
             });
         }
         
-        // Form submission
+        // ✅ FORM SUBMISSION - PROPER FLOW
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+            e.preventDefault(); // ✅ STOP default form submission
+            
+            console.log('📝 Form submitted');
             
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.textContent;
             
             try {
-                // Upload image first if in edit mode
-                if (isEditMode && document.getElementById('imageInput')?.files[0]) {
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = '📤 Uploading image...';
-                    
-                    try {
-                        await uploadImage(currentEmail, currentToken);
-                        console.log('✅ Image uploaded');
-                    } catch (imgErr) {
-                        console.error('Image error:', imgErr);
-                        alert('⚠️ Image upload failed: ' + imgErr.message);
-                    }
-                }
-                
-                // Prepare form data
-                const formData = new FormData(this);
-                const data = {
-                    mode: isEditMode ? 'edit' : 'create'
-                };
-                
-                formData.forEach((value, key) => {
-                    if (key === 'email' && isEditMode) {
-                        data[key] = currentEmail; // ✅ Use stored email
-                    } else {
-                        data[key] = value;
-                    }
-                });
-                
-                // Add edit token
+                // Handle edit mode differently
                 if (isEditMode) {
-                    data.editToken = currentToken;
+                    await handleEditSubmission(submitBtn, originalText);
+                    return;
                 }
                 
-                // Handle Telegram
-                if (data.telegram && data.telegram.trim()) {
-                    const telegram = data.telegram.trim();
-                    if (telegram.startsWith('@')) {
-                        data.telegram = 'https://t.me/' + telegram.substring(1);
-                    } else if (!telegram.startsWith('http')) {
-                        data.telegram = 'https://t.me/' + telegram;
-                    }
-                }
-                
-                // Validate (new orders only)
-                if (!isEditMode) {
-                    if (!data.fullName || !data.email || !data.phone) {
-                        alert('⚠️ Please fill all required fields');
-                        return;
-                    }
-                    
-                    if (data.phone.length !== 10) {
-                        alert('⚠️ Phone must be 10 digits');
-                        return;
-                    }
-                }
-                
-                submitBtn.disabled = true;
-                submitBtn.textContent = '⏳ Processing...';
-                
-                console.log('🚀 Submitting:', data.mode);
-                
-                // Submit
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                console.log('✅ Response:', result);
-                
-                if (result.status === 'success') {
-                    if (isEditMode) {
-                        // Edit success
-                        this.style.display = 'none';
-                        document.getElementById('editSuccessMsg').classList.add('show');
-                        const viewLink = document.getElementById('viewCardLink');
-                        if (result.cardUrl) {
-                            viewLink.href = result.cardUrl;
-                        }
-                    } else {
-                        // New order - open Razorpay
-                        openRazorpay(result.razorpay, data.email);
-                    }
-                } else {
-                    throw new Error(result.message || 'Submission failed');
-                }
+                // ✅ NEW ORDER FLOW: PAYMENT FIRST
+                await handleNewOrderSubmission(submitBtn, originalText);
                 
             } catch (err) {
-                console.error('❌ Error:', err);
+                console.error('❌ Submission error:', err);
                 alert('⚠️ Error: ' + err.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }
         });
         
-        // Open Razorpay Payment
-        function openRazorpay(razorpayData, email) {
+        // ✅ HANDLE NEW ORDER SUBMISSION
+        async function handleNewOrderSubmission(submitBtn, originalText) {
+            // Validate form
+            const formData = new FormData(document.getElementById('orderForm'));
+            const data = {};
+            
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            // Validate required fields
+            if (!data.fullName || !data.email || !data.phone) {
+                alert('⚠️ Please fill all required fields (Name, Email, Phone)');
+                return;
+            }
+            
+            if (data.phone.length !== 10) {
+                alert('⚠️ Phone number must be exactly 10 digits');
+                return;
+            }
+            
+            console.log('✅ Validation passed');
+            
+            // Disable button
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Creating order...';
+            
+            // ✅ STEP 1: Create order in backend (NO payment yet)
+            console.log('📤 Sending order to backend...');
+            
+            const orderData = {
+                mode: 'create',
+                ...data
+            };
+            
+            // Handle Telegram format
+            if (orderData.telegram && orderData.telegram.trim()) {
+                const telegram = orderData.telegram.trim();
+                if (telegram.startsWith('@')) {
+                    orderData.telegram = 'https://t.me/' + telegram.substring(1);
+                } else if (!telegram.startsWith('http')) {
+                    orderData.telegram = 'https://t.me/' + telegram;
+                }
+            }
+            
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(orderData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Server error: ' + response.status);
+            }
+            
+            const result = await response.json();
+            console.log('📦 Backend response:', result);
+            
+            if (result.status !== 'success') {
+                throw new Error(result.message || 'Order creation failed');
+            }
+            
+            // ✅ STEP 2: Verify Razorpay configuration
+            if (!result.razorpay) {
+                console.error('❌ No Razorpay config in response:', result);
+                throw new Error('Payment configuration not received from server');
+            }
+            
+            if (!result.razorpay.keyId) {
+                console.error('❌ Missing keyId in Razorpay config:', result.razorpay);
+                throw new Error('Payment key not configured');
+            }
+            
+            console.log('✅ Razorpay config received:', {
+                keyId: result.razorpay.keyId,
+                orderId: result.razorpay.orderId,
+                amount: result.razorpay.amount
+            });
+            
+            // ✅ STEP 3: Open Razorpay payment
+            submitBtn.textContent = '💳 Opening payment...';
+            
+            // Small delay to show message
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            openRazorpayPayment(result.razorpay, data.email);
+            
+        }
+        
+        // ✅ HANDLE EDIT SUBMISSION
+        async function handleEditSubmission(submitBtn, originalText) {
+            // Upload image first if selected
+            if (document.getElementById('imageInput')?.files[0]) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '📤 Uploading image...';
+                
+                try {
+                    await uploadImage(currentEmail, currentToken);
+                    console.log('✅ Image uploaded');
+                } catch (imgErr) {
+                    console.error('Image error:', imgErr);
+                    alert('⚠️ Image upload failed: ' + imgErr.message);
+                }
+            }
+            
+            // Prepare update data
+            const formData = new FormData(document.getElementById('orderForm'));
+            const data = {
+                mode: 'edit',
+                email: currentEmail,
+                editToken: currentToken
+            };
+            
+            formData.forEach((value, key) => {
+                if (key !== 'email') {
+                    data[key] = value;
+                }
+            });
+            
+            // Handle Telegram
+            if (data.telegram && data.telegram.trim()) {
+                const telegram = data.telegram.trim();
+                if (telegram.startsWith('@')) {
+                    data.telegram = 'https://t.me/' + telegram.substring(1);
+                } else if (!telegram.startsWith('http')) {
+                    data.telegram = 'https://t.me/' + telegram;
+                }
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Saving...';
+            
+            // Submit update
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                document.getElementById('orderForm').style.display = 'none';
+                document.getElementById('editSuccessMsg').classList.add('show');
+                const viewLink = document.getElementById('viewCardLink');
+                if (result.cardUrl) {
+                    viewLink.href = result.cardUrl;
+                }
+            } else {
+                throw new Error(result.message || 'Update failed');
+            }
+        }
+        
+        // ✅ OPEN RAZORPAY PAYMENT
+        function openRazorpayPayment(razorpayConfig, customerEmail) {
+            console.log('💳 Opening Razorpay with config:', razorpayConfig);
+            
+            // ✅ Verify Razorpay SDK is loaded
+            if (typeof Razorpay === 'undefined') {
+                console.error('❌ Razorpay SDK not loaded!');
+                alert('⚠️ Payment system not loaded. Please refresh the page and try again.');
+                location.reload();
+                return;
+            }
+            
+            // ✅ Build Razorpay options
             const options = {
-                key: razorpayData.keyId,
-                amount: razorpayData.amount,
-                currency: razorpayData.currency,
-                name: razorpayData.name,
-                description: razorpayData.description,
-                order_id: razorpayData.orderId,
-                prefill: razorpayData.prefill,
+                key: razorpayConfig.keyId, // ✅ Use 'key' not 'keyId'
+                amount: razorpayConfig.amount,
+                currency: razorpayConfig.currency || 'INR',
+                name: razorpayConfig.name || 'Digital Visiting Card',
+                description: razorpayConfig.description || 'Digital Visiting Card - ₹499',
+                order_id: razorpayConfig.orderId,
+                prefill: razorpayConfig.prefill || {
+                    email: customerEmail
+                },
                 theme: {
                     color: '#667eea'
                 },
                 handler: function(response) {
-                    handlePaymentSuccess(response, email);
+                    console.log('✅ Payment successful:', response);
+                    handlePaymentSuccess(response, customerEmail);
                 },
                 modal: {
                     ondismiss: function() {
+                        console.log('⚠️ Payment cancelled');
                         alert('Payment cancelled. You can complete payment later using the link in your email.');
-                        location.reload();
+                        document.getElementById('submitBtn').disabled = false;
+                        document.getElementById('submitBtn').textContent = '💳 Proceed to Payment';
                     }
                 }
             };
             
-            const rzp = new Razorpay(options);
-            rzp.open();
-        }
-        
-        // Handle payment success
-        async function handlePaymentSuccess(response, email) {
-            console.log('💳 Payment successful');
+            console.log('🔧 Razorpay options:', options);
             
             try {
+                const rzp = new Razorpay(options);
+                
+                rzp.on('payment.failed', function(response) {
+                    console.error('❌ Payment failed:', response.error);
+                    alert('Payment failed: ' + response.error.description);
+                    document.getElementById('submitBtn').disabled = false;
+                    document.getElementById('submitBtn').textContent = '💳 Proceed to Payment';
+                });
+                
+                console.log('🚀 Opening Razorpay checkout...');
+                rzp.open();
+                
+            } catch (err) {
+                console.error('❌ Razorpay error:', err);
+                alert('⚠️ Payment error: ' + err.message);
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').textContent = '💳 Proceed to Payment';
+            }
+        }
+        
+        // ✅ HANDLE PAYMENT SUCCESS
+        async function handlePaymentSuccess(response, customerEmail) {
+            console.log('🎉 Processing payment success...');
+            
+            try {
+                // ✅ STEP 4: Verify payment with backend
+                console.log('📤 Sending payment verification...');
+                
                 const verifyResponse = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
                         mode: 'verifyPayment',
-                        email: email,
+                        email: customerEmail,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_signature: response.razorpay_signature
@@ -646,8 +751,10 @@
                 });
                 
                 const result = await verifyResponse.json();
+                console.log('📦 Verification response:', result);
                 
                 if (result.status === 'success') {
+                    // ✅ SUCCESS - Show success message
                     document.getElementById('orderForm').style.display = 'none';
                     document.getElementById('paymentSuccessMsg').classList.add('show');
                     console.log('🎉 Card activated!');
@@ -656,7 +763,7 @@
                 }
             } catch (err) {
                 console.error('❌ Verification error:', err);
-                alert('⚠️ Payment received but verification failed. Contact support.');
+                alert('⚠️ Payment received but verification failed. Please contact support with payment ID: ' + response.razorpay_payment_id);
             }
         }
         
