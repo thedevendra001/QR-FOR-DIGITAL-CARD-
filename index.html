@@ -386,178 +386,376 @@
         </div>
     </div>
     
-    <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
+   <script>
+    // ✅ WEB APP URL - UPDATE THIS WITH YOUR DEPLOYMENT URL
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
+    
+    let isEditMode = false;
+    let currentEmail = null;
+    let currentToken = null;
+    let hasImage = false;
+    
+    // Check for card display mode
+    window.addEventListener('load', async function() {
+        const params = new URLSearchParams(window.location.search);
+        const cardSlug = params.get('slug');
+        const cardMode = params.get('mode');
         
-        let isEditMode = false;
-        let currentEmail = null;
-        let currentToken = null;  // ⬅️ ADD THIS!
+        // Card display mode
+        if (cardMode === 'card' && cardSlug) {
+            await displayCard(cardSlug);
+            return;
+        }
         
-        window.addEventListener('load', async function() {
-            const params = new URLSearchParams(window.location.search);
-            const editEmail = params.get('email');
-            const editToken = params.get('token');
+        // Edit mode
+        const editEmail = params.get('email');
+        const editToken = params.get('token');
+        
+        if (editEmail && editToken) {
+            isEditMode = true;
+            currentEmail = editEmail;
+            currentToken = editToken;
             
-            // ✅ FIXED: Edit mode requires BOTH email AND token
-            if (editEmail && editToken) {
-                isEditMode = true;
-                currentEmail = editEmail;
-                currentToken = editToken;  // ⬅️ STORE TOKEN!
+            Logger.log('Edit mode activated for:', editEmail);
+            
+            // Update UI for edit mode
+            document.getElementById('normalHeader').style.display = 'none';
+            document.getElementById('featuresSection').style.display = 'none';
+            document.getElementById('editModeHeader').style.display = 'block';
+            document.getElementById('formTitle').textContent = 'Edit Your Details';
+            document.getElementById('submitBtn').textContent = '✏️ Update Card';
+            document.getElementById('emailHelper').textContent = 'Email cannot be changed';
+            
+            // Show image upload section
+            showImageUploadSection();
+            
+            // Set and disable email field
+            const emailField = document.getElementById('emailField');
+            emailField.value = editEmail;
+            emailField.disabled = true;
+            emailField.required = false; // ✅ FIX: Remove required in edit mode
+            
+            // Fetch and prefill data
+            try {
+                console.log('Fetching data for:', editEmail);
+                const response = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(editEmail)}`);
                 
-                // Update UI for edit mode
-                document.getElementById('normalHeader').style.display = 'none';
-                document.getElementById('featuresSection').style.display = 'none';
-                document.getElementById('editModeHeader').style.display = 'block';
-                document.getElementById('formTitle').textContent = 'Edit Your Details';
-                document.getElementById('submitBtn').textContent = '✏️ Update Card';
-                document.getElementById('emailHelper').textContent = 'Email cannot be changed';
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
                 
-                // Set email field
-                const emailField = document.getElementById('emailField');
-                emailField.value = editEmail;
-                emailField.disabled = true; // Disable email in edit mode
+                const data = await response.json();
                 
-                // Fetch and prefill data
-                try {
-                    console.log('Fetching data for:', editEmail);
-                    const response = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(editEmail)}`);
-                    const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                console.log('Data received:', Object.keys(data));
+                
+                // Prefill all fields
+                Object.keys(data).forEach(key => {
+                    if (key !== 'email') {
+                        const input = document.querySelector(`[name="${key}"]`);
+                        if (input && data[key]) {
+                            input.value = data[key];
+                        }
+                    }
+                });
+                
+                // Show existing image if available
+                if (data.imageUrl) {
+                    showExistingImage(data.imageUrl);
+                }
+                
+                console.log('✅ Data prefilled successfully');
+            } catch (err) {
+                console.error('Prefill error:', err);
+                alert('⚠️ Error loading data: ' + err.message);
+            }
+        }
+    });
+    
+    // Display card function
+    async function displayCard(slug) {
+        try {
+            const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                // Hide form and features
+                document.querySelector('.container').innerHTML = renderCardHTML(result.data);
+            } else {
+                throw new Error(result.message || 'Card not found');
+            }
+        } catch (err) {
+            console.error('Display card error:', err);
+            document.querySelector('.container').innerHTML = '<div class="error-msg"><h2>❌ Card Not Found</h2><p>' + err.message + '</p></div>';
+        }
+    }
+    
+    // Render card HTML
+    function renderCardHTML(data) {
+        return `
+            <div class="card-display">
+                <div class="card-header">
+                    ${data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.fullName}" class="profile-img" />` : ''}
+                    <h1>${data.fullName}</h1>
+                    ${data.designation ? `<p class="designation">${data.designation}</p>` : ''}
+                    ${data.businessName ? `<p class="business">${data.businessName}</p>` : ''}
+                </div>
+                <div class="card-body">
+                    ${data.phone ? `<div class="contact-item">📞 <a href="tel:${data.phone}">${data.phone}</a></div>` : ''}
+                    ${data.whatsapp ? `<div class="contact-item">💬 <a href="https://wa.me/${data.whatsapp}">WhatsApp</a></div>` : ''}
+                    ${data.address ? `<div class="contact-item">📍 ${data.address}</div>` : ''}
                     
-                    if (data && data.email) {
-                        console.log('Data received:', data);
-                        
-                        // Prefill all fields (except email which is already set)
-                        Object.keys(data).forEach(key => {
-                            if (key !== 'email') {
-                                const input = document.querySelector(`[name="${key}"]`);
-                                if (input && data[key]) {
-                                    input.value = data[key];
-                                    console.log('Prefilled:', key, '=', data[key]);
-                                }
-                            }
-                        });
-                        
-                        console.log('Prefill complete');
+                    ${data.instagram || data.facebook || data.linkedin || data.twitter || data.youtube ? `
+                    <div class="social-links">
+                        ${data.instagram ? `<a href="${data.instagram}" target="_blank">📷 Instagram</a>` : ''}
+                        ${data.facebook ? `<a href="${data.facebook}" target="_blank">👥 Facebook</a>` : ''}
+                        ${data.linkedin ? `<a href="${data.linkedin}" target="_blank">💼 LinkedIn</a>` : ''}
+                        ${data.twitter ? `<a href="${data.twitter}" target="_blank">🐦 Twitter</a>` : ''}
+                        ${data.youtube ? `<a href="${data.youtube}" target="_blank">📺 YouTube</a>` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    ${data.website ? `<div class="contact-item">🌐 <a href="${data.website}" target="_blank">Website</a></div>` : ''}
+                    ${data.maps ? `<div class="contact-item">🗺️ <a href="${data.maps}" target="_blank">Location</a></div>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Show image upload section
+    function showImageUploadSection() {
+        const imageSection = document.createElement('div');
+        imageSection.className = 'section-block';
+        imageSection.id = 'imageUploadSection';
+        imageSection.innerHTML = `
+            <div class="section-header"><span>📷</span><span>Profile Photo</span></div>
+            <div class="form-group">
+                <label>Upload Photo</label>
+                <input type="file" id="imageInput" accept="image/*" />
+                <div class="helper-text">Max size: 1MB. Formats: JPG, PNG</div>
+                <div id="imagePreview" style="margin-top:10px;"></div>
+            </div>
+        `;
+        
+        document.querySelector('.section-block').insertAdjacentElement('afterend', imageSection);
+        
+        document.getElementById('imageInput').addEventListener('change', handleImageSelect);
+    }
+    
+    // Show existing image
+    function showExistingImage(imageUrl) {
+        const preview = document.getElementById('imagePreview');
+        if (preview) {
+            preview.innerHTML = `
+                <div style="text-align:center;">
+                    <img src="${imageUrl}" alt="Profile" style="max-width:200px; border-radius:10px; margin:10px 0;" />
+                    <p style="font-size:12px; color:#666;">Current profile photo</p>
+                </div>
+            `;
+            hasImage = true;
+        }
+    }
+    
+    // Handle image selection
+    function handleImageSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Check file size
+        if (file.size > 1024 * 1024) {
+            alert('⚠️ Image size must be less than 1MB');
+            e.target.value = '';
+            return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = `
+                <div style="text-align:center;">
+                    <img src="${event.target.result}" alt="Preview" style="max-width:200px; border-radius:10px; margin:10px 0;" />
+                    <p style="font-size:12px; color:#666;">New image ready to upload</p>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // Upload image to server
+    async function uploadImage(email, token) {
+        const fileInput = document.getElementById('imageInput');
+        if (!fileInput || !fileInput.files[0]) {
+            return null;
+        }
+        
+        const file = fileInput.files[0];
+        
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({
+                            mode: 'uploadImage',
+                            email: email,
+                            token: token,
+                            imageData: e.target.result,
+                            fileName: file.name,
+                            mimeType: file.type
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        resolve(result.imageUrl);
                     } else {
-                        console.warn('No data found for email');
+                        reject(new Error(result.message || 'Upload failed'));
                     }
                 } catch (err) {
-                    console.error('Prefill error:', err);
-                    alert('⚠️ Error loading data. Please try again.');
+                    reject(err);
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Form submission
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Check Web App URL configuration
+        if (!WEB_APP_URL || WEB_APP_URL === 'YOUR_WEB_APP_URL_HERE') {
+            alert('🚨 WEB APP URL NOT CONFIGURED\n\nPlease update WEB_APP_URL in the script.');
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.textContent;
+        
+        try {
+            // Upload image first if in edit mode and image selected
+            if (isEditMode && document.getElementById('imageInput')?.files[0]) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '📤 Uploading image...';
+                
+                try {
+                    const imageUrl = await uploadImage(currentEmail, currentToken);
+                    console.log('✅ Image uploaded:', imageUrl);
+                } catch (imgErr) {
+                    console.error('Image upload error:', imgErr);
+                    alert('⚠️ Image upload failed: ' + imgErr.message + '\n\nContinuing with form update...');
                 }
             }
-        });
-        
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
             
-            // ⚠️ CRITICAL CHECK: Web App URL must be configured
-            if (!WEB_APP_URL || WEB_APP_URL === 'YOUR_WEB_APP_URL_HERE') {
-                alert('🚨 CONFIGURATION ERROR!\n\nWeb App URL is not set!\n\nPlease:\n1. Deploy your Apps Script\n2. Copy the Web App URL\n3. Update line 390 in index.html\n4. Replace: YOUR_WEB_APP_URL_HERE\n   With your actual URL');
-                console.error('WEB_APP_URL not configured! Current value:', WEB_APP_URL);
-                return;
-            }
-            
+            // Prepare form data
             const formData = new FormData(this);
             const data = {
-                mode: isEditMode ? 'edit' : 'create'  // ⬅️ CRITICAL FIX!
+                mode: isEditMode ? 'edit' : 'create'
             };
-            formData.forEach((value, key) => { 
-                if (key !== 'email' || !isEditMode) {
-                    data[key] = value;
+            
+            formData.forEach((value, key) => {
+                // ✅ FIX: In edit mode, always use currentEmail
+                if (key === 'email' && isEditMode) {
+                    data[key] = currentEmail;
                 } else {
-                    data[key] = currentEmail; // Use original email in edit mode
+                    data[key] = value;
                 }
             });
             
-            // Add token in edit mode
+            // Add edit token in edit mode
             if (isEditMode) {
-                data.editToken = currentToken || '';  // ⬅️ ADD TOKEN!
+                data.editToken = currentToken;
             }
             
-            // Handle Telegram - convert @username to full URL if needed
+            // Handle Telegram format
             if (data.telegram && data.telegram.trim()) {
                 const telegram = data.telegram.trim();
                 if (telegram.startsWith('@')) {
-                    // Convert @username to https://t.me/username
                     data.telegram = 'https://t.me/' + telegram.substring(1);
                 } else if (!telegram.startsWith('http')) {
-                    // If no @ and no http, assume it's just username
                     data.telegram = 'https://t.me/' + telegram;
                 }
-                // Otherwise keep as is (already full URL)
             }
             
-            // Validation
-            if (!data.fullName || !data.email || !data.phone) {
-                alert('⚠️ Please fill all required fields (Name, Email, Phone)');
-                return;
+            // Validate required fields (only for new orders)
+            if (!isEditMode) {
+                if (!data.fullName || !data.email || !data.phone) {
+                    alert('⚠️ Please fill all required fields (Name, Email, Phone)');
+                    return;
+                }
+                
+                if (data.phone.length !== 10) {
+                    alert('⚠️ Phone number must be exactly 10 digits');
+                    return;
+                }
             }
             
-            if (data.phone.length !== 10) {
-                alert('⚠️ Phone number must be exactly 10 digits');
-                return;
-            }
-            
-            const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Saving...';
             
             console.log('🚀 Sending to:', WEB_APP_URL);
-            console.log('📦 Data:', data);
+            console.log('📦 Mode:', data.mode);
+            console.log('📧 Email:', data.email);
             
-            try {
-                console.log('Submitting data:', data);
+            // Submit form
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Server returned: ' + response.status);
+            }
+            
+            const result = await response.json();
+            console.log('✅ Server response:', result);
+            
+            if (result.status === 'success') {
+                this.style.display = 'none';
                 
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain;charset=utf-8'  // ⬅️ CORS FIX!
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                console.log('Server response:', result);
-                
-                if (result.status === 'success') {
-                    this.style.display = 'none';
-                    
-                    if (isEditMode) {
-                        // Show edit success message
-                        document.getElementById('editSuccessMsg').classList.add('show');
-                        const viewLink = document.getElementById('viewCardLink');
-                        viewLink.href = result.cardUrl || '#';
-                    } else {
-                        // Show payment message for new orders
-                        document.getElementById('paymentMsg').classList.add('show');
-                        const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@ybl\n\nPlease verify and activate my card.`;
-                        document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
+                if (isEditMode) {
+                    // Show edit success
+                    document.getElementById('editSuccessMsg').classList.add('show');
+                    const viewLink = document.getElementById('viewCardLink');
+                    if (result.cardUrl) {
+                        viewLink.href = result.cardUrl;
                     }
-                    
-                    console.log('Success!');
                 } else {
-                    throw new Error(result.message || 'Submission failed');
+                    // Show payment instructions
+                    document.getElementById('paymentMsg').classList.add('show');
+                    const waMsg = `Hi! Digital Card Order 🎯\n\nName: ${data.fullName}\nEmail: ${data.email}\nPhone: ${data.phone}\n\nI have paid ₹499 to agrawalfuturify@ybl\n\nPlease verify and activate my card.`;
+                    document.getElementById('waLink').href = 'https://wa.me/919770061597?text=' + encodeURIComponent(waMsg);
                 }
                 
-            } catch (err) {
-                console.error('Submit error:', err);
-                alert('⚠️ Error: ' + err.message + '\n\nPlease check:\n1. Apps Script is deployed\n2. Web App URL is correct\n3. Try again in a few seconds');
-                submitBtn.disabled = false;
-                submitBtn.textContent = isEditMode ? '✏️ Update Card' : '📋 Submit Order';
+                console.log('🎉 Success!');
+            } else {
+                throw new Error(result.message || 'Submission failed');
             }
-        });
-        
-        // Phone number validation
-        ['phone', 'whatsapp', 'contact2Phone'].forEach(name => {
-            const input = document.querySelector(`[name="${name}"]`);
-            if (input) {
-                input.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
-                });
-            }
-        });
-    </script>
-</body>
-</html>
-
+            
+        } catch (err) {
+            console.error('❌ Submit error:', err);
+            alert('⚠️ Error: ' + err.message + '\n\nPlease check:\n1. Apps Script is deployed\n2. Web App URL is correct\n3. Try again');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+    
+    // Phone number validation
+    ['phone', 'whatsapp', 'contact2Phone'].forEach(name => {
+        const input = document.querySelector(`[name="${name}"]`);
+        if (input) {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
+            });
+        }
+    });
+</script>
