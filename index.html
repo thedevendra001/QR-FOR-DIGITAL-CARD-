@@ -576,6 +576,25 @@
                 throw new Error(result.message || 'Order creation failed');
             }
             
+            // ✅ Check if manual payment mode
+            if (result.manualPayment) {
+                console.log('⚠️ Manual payment mode - Razorpay not available');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                
+                alert('✅ Order submitted successfully!\n\n' +
+                      'Payment Details:\n' +
+                      'UPI: agrawalfuturify@ybl\n' +
+                      'Amount: ₹499\n\n' +
+                      'Please send payment screenshot to WhatsApp: +91 97700 61597\n\n' +
+                      'You will receive confirmation email with edit link.');
+                
+                // Show manual payment instructions
+                document.getElementById('orderForm').style.display = 'none';
+                showManualPaymentInstructions(data.email, data.fullName, result.orderId);
+                return;
+            }
+            
             // ✅ STEP 2: Verify Razorpay configuration
             if (!result.razorpay) {
                 console.error('❌ No Razorpay config in response:', result);
@@ -601,6 +620,49 @@
             
             openRazorpayPayment(result.razorpay, data.email);
             
+        }
+        
+        // Show manual payment instructions
+        function showManualPaymentInstructions(email, fullName, orderId) {
+            const container = document.querySelector('.form-section');
+            container.innerHTML = `
+                <div style="background:#fff3cd;border-left:4px solid #f59e0b;padding:28px;border-radius:12px;margin:24px 0;">
+                    <h3 style="color:#92400e;margin-bottom:18px;font-size:24px;">✅ Order Submitted!</h3>
+                    <p style="color:#78350f;margin-bottom:18px;font-weight:500;">Thank you! Please complete payment to activate your card.</p>
+                    
+                    <div style="background:white;padding:20px;border-radius:12px;margin:18px 0;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                        <p style="margin:0 0 10px;font-weight:700;color:#92400e;font-size:16px;">💳 Payment Details</p>
+                        <p style="margin:0;font-size:15px;color:#78350f;">Amount: <strong style="font-size:28px;">₹499</strong></p>
+                        <p style="margin:12px 0 6px;font-size:14px;color:#78350f;font-weight:600;">Pay to UPI ID:</p>
+                        <div style="font-family:'Courier New',monospace;font-size:22px;font-weight:700;color:#1a1a1a;background:#f0fdf4;padding:14px;border-radius:8px;margin:14px 0;">
+                            agrawalfuturify@ybl
+                        </div>
+                    </div>
+                    
+                    <div style="background:white;padding:20px;border-radius:12px;margin-top:18px;">
+                        <p style="font-weight:700;margin-bottom:14px;color:#92400e;font-size:16px;">📝 Next Steps:</p>
+                        <ol style="padding-left:24px;color:#78350f;">
+                            <li style="margin-bottom:10px;">Pay ₹499 to UPI: <strong>agrawalfuturify@ybl</strong></li>
+                            <li style="margin-bottom:10px;">Take screenshot of payment</li>
+                            <li style="margin-bottom:10px;">Send screenshot on WhatsApp: <strong>+91 97700 61597</strong></li>
+                            <li style="margin-bottom:10px;">Include your Order ID: <strong>${orderId}</strong></li>
+                            <li style="margin-bottom:10px;">Wait for verification (1-2 hours)</li>
+                            <li>You'll receive card URL + QR code via email ✨</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="text-align:center;margin-top:22px;">
+                        <a href="https://wa.me/919770061597?text=Hi!%20Digital%20Card%20Order%20Payment%0A%0AName:%20${encodeURIComponent(fullName)}%0AEmail:%20${encodeURIComponent(email)}%0AOrder%20ID:%20${orderId}%0A%0AI%20have%20paid%20₹499%20to%20agrawalfuturify@ybl%0A%0APlease%20verify%20and%20activate%20my%20card." 
+                           style="display:inline-block;background:linear-gradient(135deg,#25d366,#128c7e);color:white;padding:18px 36px;border-radius:12px;text-decoration:none;font-weight:700;box-shadow:0 6px 20px rgba(37,211,102,0.3);">
+                            📱 Send Payment Screenshot on WhatsApp
+                        </a>
+                    </div>
+                    
+                    <p style="margin-top:20px;font-size:13px;color:#78350f;text-align:center;">
+                        ✉️ Check your email (${email}) for order confirmation and edit link
+                    </p>
+                </div>
+            `;
         }
         
         // ✅ HANDLE EDIT SUBMISSION
