@@ -383,27 +383,74 @@
             }
         }
         
+        // ===== HELPERS =====
+
+        // Convert Google Drive uc?export=view URL → thumbnail URL (fixes CORS/redirect issues)
+        function fixDriveImageUrl(url) {
+            if (!url) return '';
+            // Already a thumbnail or lh3 URL → use as-is
+            if (url.includes('lh3.googleusercontent.com') || url.includes('thumbnail')) return url;
+            // Standard Drive share URL: extract file ID
+            const match = url.match(/[?&]id=([^&]+)/);
+            if (match) {
+                // Use thumbnail endpoint which works reliably for display
+                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+            }
+            return url;
+        }
+
+        // Normalize phone number → add country code if only 10 digits (backward compat)
+        function normalizePhone(raw, defaultCountry = '91') {
+            const digits = String(raw || '').replace(/[^0-9]/g, '');
+            if (!digits) return '';
+            if (digits.length === 10) return defaultCountry + digits; // old data
+            return digits; // already has country code
+        }
+
+        // Format phone for display: e.g. 919876543210 → +91 98765 43210
+        function formatPhoneDisplay(digits) {
+            if (!digits) return '';
+            if (digits.length === 12 && digits.startsWith('91')) {
+                const cc = digits.slice(0, 2);
+                const num = digits.slice(2);
+                return `+${cc} ${num.slice(0,5)} ${num.slice(5)}`;
+            }
+            if (digits.length === 11 && digits.startsWith('1')) {
+                return `+1 ${digits.slice(1,4)}-${digits.slice(4,7)}-${digits.slice(7)}`;
+            }
+            return '+' + digits;
+        }
+
         function renderCard(data) {
+            // ===== DEBUG =====
+            console.log('Card Data:', data);
+
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('cardContent').style.display = 'block';
             
-            // ===== PROFILE IMAGE (with cache buster + fallback) =====
-            const imageUrl = data.photoUrl || data.imageUrl || data.photo || data.profileImage || '';
+            // ===== PROFILE IMAGE =====
+            // Support all possible field names from backend
+            const rawImageUrl = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
+            const imageUrl = fixDriveImageUrl(rawImageUrl);
+            console.log('Image URL (raw):', rawImageUrl);
+            console.log('Image URL (fixed):', imageUrl);
+
             const imageContainer = document.getElementById('profileImageContainer');
-            
+            const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
+
             if (imageUrl) {
                 const img = document.createElement('img');
-                img.src = imageUrl + '?t=' + Date.now();
+                // Cache buster forces fresh load after edit
+                img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
                 img.alt = data.fullName || '';
                 img.className = 'profile-image';
                 img.onerror = function() {
-                    // If image fails, show initial placeholder
-                    imageContainer.innerHTML = `<div class="profile-placeholder">${(data.fullName || '?').charAt(0).toUpperCase()}</div>`;
+                    console.warn('Image failed to load:', imageUrl);
+                    imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
                 };
                 imageContainer.appendChild(img);
             } else {
-                const initial = (data.fullName || '?').charAt(0).toUpperCase();
-                imageContainer.innerHTML = `<div class="profile-placeholder">${initial}</div>`;
+                imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
             }
             
             // Name / Designation / Business
@@ -414,27 +461,31 @@
             // ===== PRIMARY CONTACT =====
             const contactItems = document.getElementById('contactItems');
             let contactHTML = '';
-            
-            if (data.phone) {
+
+            // ✅ Phone — with backward compat (old 10-digit data → add 91)
+            const phoneDigits = normalizePhone(data.phone);
+            if (phoneDigits) {
+                const phoneDisplay = formatPhoneDisplay(phoneDigits);
                 contactHTML += `
                     <div class="contact-item">
                         <div class="contact-icon icon-phone"><i class="fa-solid fa-phone"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">Phone</div>
-                            <a href="tel:${data.phone}" class="contact-link">${data.phone}</a>
+                            <a href="tel:+${phoneDigits}" class="contact-link">${phoneDisplay}</a>
                         </div>
                     </div>`;
             }
             
-            // ✅ WhatsApp safety fix
-            const whatsappClean = String(data.whatsapp || data.phone || '').replace(/[^0-9]/g, '');
-            if (whatsappClean) {
+            // ✅ WhatsApp — safety fix + backward compat
+            const waRaw = data.whatsapp || data.phone || '';
+            const waDigits = normalizePhone(waRaw);
+            if (waDigits) {
                 contactHTML += `
                     <div class="contact-item">
                         <div class="contact-icon icon-whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
                         <div class="contact-text">
                             <div class="contact-label">WhatsApp</div>
-                            <a href="https://wa.me/${whatsappClean}" class="contact-link" target="_blank">Chat on WhatsApp</a>
+                            <a href="https://wa.me/${waDigits}" class="contact-link" target="_blank">Chat on WhatsApp</a>
                         </div>
                     </div>`;
             }
@@ -486,22 +537,23 @@
             
             contactItems.innerHTML = contactHTML;
             
-            // ===== CONTACT 2 (Bug Fix) =====
+            // ===== CONTACT 2 =====
             if (data.contact2Name || data.contact2Phone || data.contact2Email) {
                 const c2 = document.getElementById('contact2Block');
+                const c2PhoneDigits = normalizePhone(data.contact2Phone);
+                const c2PhoneDisplay = formatPhoneDisplay(c2PhoneDigits);
                 let c2HTML = `<div class="contact2-block">`;
                 if (data.contact2Name) c2HTML += `<div class="contact2-name">${data.contact2Name}</div>`;
                 if (data.contact2Role) c2HTML += `<div class="contact2-role">${data.contact2Role}</div>`;
                 c2HTML += `<div class="contact2-links">`;
-                if (data.contact2Phone) {
-                    c2HTML += `<a href="tel:${data.contact2Phone}" class="contact2-link"><i class="fa-solid fa-phone"></i> ${data.contact2Phone}</a>`;
+                if (c2PhoneDigits) {
+                    c2HTML += `<a href="tel:+${c2PhoneDigits}" class="contact2-link"><i class="fa-solid fa-phone"></i> ${c2PhoneDisplay}</a>`;
                 }
                 if (data.contact2Email) {
                     c2HTML += `<a href="mailto:${data.contact2Email}" class="contact2-link"><i class="fa-solid fa-envelope"></i> Email</a>`;
                 }
-                const c2Whatsapp = String(data.contact2Phone || '').replace(/[^0-9]/g, '');
-                if (c2Whatsapp) {
-                    c2HTML += `<a href="https://wa.me/${c2Whatsapp}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+                if (c2PhoneDigits) {
+                    c2HTML += `<a href="https://wa.me/${c2PhoneDigits}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
                 }
                 c2HTML += `</div></div>`;
                 c2.innerHTML = c2HTML;
@@ -603,15 +655,17 @@
         }
         
         function downloadVCard(data) {
+            const vcPhone = normalizePhone(data.phone);
+            const vcWa    = normalizePhone(data.whatsapp || data.phone);
             let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
             vcard += `FN:${data.fullName}\n`;
             if (data.businessName) vcard += `ORG:${data.businessName}\n`;
             if (data.designation)  vcard += `TITLE:${data.designation}\n`;
-            if (data.phone)    vcard += `TEL;TYPE=CELL:${data.phone}\n`;
-            if (data.whatsapp) vcard += `TEL;TYPE=WORK:${data.whatsapp}\n`;
-            if (data.email)    vcard += `EMAIL:${data.email}\n`;
-            if (data.website)  vcard += `URL:${data.website}\n`;
-            if (data.address)  vcard += `ADR:;;${data.address};;;;\n`;
+            if (vcPhone)  vcard += `TEL;TYPE=CELL:+${vcPhone}\n`;
+            if (vcWa && vcWa !== vcPhone) vcard += `TEL;TYPE=WORK:+${vcWa}\n`;
+            if (data.email)   vcard += `EMAIL:${data.email}\n`;
+            if (data.website) vcard += `URL:${data.website}\n`;
+            if (data.address) vcard += `ADR:;;${data.address};;;;\n`;
             vcard += 'END:VCARD';
             
             const blob = new Blob([vcard], { type: 'text/vcard' });
