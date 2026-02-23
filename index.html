@@ -44,6 +44,31 @@
         .form-group input:disabled { background: #f7fafc; color: #718096; cursor: not-allowed; }
         .helper-text { font-size: 12px; color: #718096; margin-top: 6px; }
 
+        /* ===== COUNTRY CODE SELECTOR ===== */
+        .phone-group { display: flex; gap: 8px; align-items: stretch; }
+        .country-select {
+            flex-shrink: 0;
+            padding: 0 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            background: #f8fafc;
+            cursor: pointer;
+            height: 54px;
+            min-width: 90px;
+            transition: all 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667eea' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 26px;
+        }
+        .country-select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
+        .phone-group input { flex: 1; min-width: 0; }
+
         /* ===== BUTTON AREA ===== */
         .btn-trust-top { text-align: center; font-size: 13.5px; font-weight: 600; color: #667eea; margin-top: 28px; margin-bottom: 10px; }
         .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(102,126,234,0.4); }
@@ -110,12 +135,41 @@
             </div>
             <div class="form-group">
                 <label>Phone <span class="required">*</span><span class="label-badge">Editable Later</span></label>
-                <input type="tel" name="phone" required placeholder="9876543210" maxlength="10">
-                <div class="helper-text">10 digits only</div>
+                <div class="phone-group">
+                    <select class="country-select" id="phoneCC" name="phoneCC">
+                        <option value="91" selected>🇮🇳 +91</option>
+                        <option value="1">🇺🇸 +1</option>
+                        <option value="44">🇬🇧 +44</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="61">🇦🇺 +61</option>
+                        <option value="65">🇸🇬 +65</option>
+                        <option value="60">🇲🇾 +60</option>
+                        <option value="66">🇹🇭 +66</option>
+                        <option value="49">🇩🇪 +49</option>
+                        <option value="81">🇯🇵 +81</option>
+                    </select>
+                    <input type="tel" name="phoneNumber" id="phoneNumber" required placeholder="9876543210" maxlength="15">
+                </div>
+                <div class="helper-text">Enter number without country code</div>
             </div>
             <div class="form-group">
                 <label>WhatsApp<span class="label-badge">Editable Later</span></label>
-                <input type="tel" name="whatsapp" placeholder="9876543210" maxlength="10">
+                <div class="phone-group">
+                    <select class="country-select" id="whatsappCC" name="whatsappCC">
+                        <option value="91" selected>🇮🇳 +91</option>
+                        <option value="1">🇺🇸 +1</option>
+                        <option value="44">🇬🇧 +44</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="61">🇦🇺 +61</option>
+                        <option value="65">🇸🇬 +65</option>
+                        <option value="60">🇲🇾 +60</option>
+                        <option value="66">🇹🇭 +66</option>
+                        <option value="49">🇩🇪 +49</option>
+                        <option value="81">🇯🇵 +81</option>
+                    </select>
+                    <input type="tel" name="whatsappNumber" id="whatsappNumber" placeholder="9876543210" maxlength="15">
+                </div>
+                <div class="helper-text">Leave blank if same as phone</div>
             </div>
 
             <div class="section-header"><span>👥</span><span>Contact 2 (Optional)</span></div>
@@ -125,7 +179,21 @@
             </div>
             <div class="form-group">
                 <label>Phone<span class="label-badge">Editable Later</span></label>
-                <input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10">
+                <div class="phone-group">
+                    <select class="country-select" id="contact2PhoneCC" name="contact2PhoneCC">
+                        <option value="91" selected>🇮🇳 +91</option>
+                        <option value="1">🇺🇸 +1</option>
+                        <option value="44">🇬🇧 +44</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="61">🇦🇺 +61</option>
+                        <option value="65">🇸🇬 +65</option>
+                        <option value="60">🇲🇾 +60</option>
+                        <option value="66">🇹🇭 +66</option>
+                        <option value="49">🇩🇪 +49</option>
+                        <option value="81">🇯🇵 +81</option>
+                    </select>
+                    <input type="tel" name="contact2PhoneNumber" id="contact2PhoneNumber" placeholder="9876543210" maxlength="15">
+                </div>
             </div>
             <div class="form-group">
                 <label>Email<span class="label-badge">Editable Later</span></label>
@@ -238,10 +306,10 @@
 // ============================================================
 // ⚠️ UPDATE THIS URL AFTER BACKEND DEPLOYMENT
 // ============================================================
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
 // ✅ Razorpay key (safe to hardcode)
-const RAZORPAY_KEY_ID = 'rzp_live_SJYhIXCogVGip3';
+const RAZORPAY_KEY_ID = 'rzp_live_SGoMjcZYfpwxeX';
 
 let isEditMode = false, currentEmail = null, currentToken = null;
 
@@ -281,6 +349,10 @@ async function initEditMode(email, token) {
                 if (i && d[k]) i.value = d[k];
             }
         });
+        // ✅ Prefill phone with country selector split
+        if (d.phone)         prefillPhone(d.phone,         'phoneCC',         'phoneNumber');
+        if (d.whatsapp)      prefillPhone(d.whatsapp,      'whatsappCC',      'whatsappNumber');
+        if (d.contact2Phone) prefillPhone(d.contact2Phone, 'contact2PhoneCC', 'contact2PhoneNumber');
         console.log('✅ Data prefilled');
     } catch(e) {
         console.error('Prefill error:', e);
@@ -316,14 +388,20 @@ async function handleNewOrder(btn, orig) {
     // Collect data
     const fd = new FormData(document.getElementById('orderForm')), data = {};
     fd.forEach((v,k) => { data[k] = v; });
-    
+
+    // ✅ Combine country code + number (stored as digits only, no +)
+    const phoneDigits = getFullPhone('phoneCC', 'phoneNumber');
+    const waDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
+    data.phone    = phoneDigits;
+    data.whatsapp = waDigits || phoneDigits; // fallback to phone if WA blank
+
     // Validate
     if (!data.fullName || !data.email || !data.phone) {
         alert('Name, Email, Phone required');
         return;
     }
-    if (data.phone.replace(/\D/g,'').length !== 10) {
-        alert('Phone must be 10 digits');
+    if (data.phone.length < 7) {
+        alert('Enter a valid phone number');
         return;
     }
     
@@ -334,6 +412,15 @@ async function handleNewOrder(btn, orig) {
         const t = data.telegram.trim();
         data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
     }
+
+    // Remove helper fields not needed by backend
+    delete data.phoneCC; delete data.phoneNumber;
+    delete data.whatsappCC; delete data.whatsappNumber;
+
+    // ✅ Contact 2 phone with country code
+    const c2PhoneDigits = getFullPhone('contact2PhoneCC', 'contact2PhoneNumber');
+    if (c2PhoneDigits) data.contact2Phone = c2PhoneDigits;
+    delete data.contact2PhoneCC; delete data.contact2PhoneNumber;
     
     // Create order
     btn.disabled = true;
@@ -365,7 +452,7 @@ async function handleNewOrder(btn, orig) {
     
     const rzp = new Razorpay({
         key: RAZORPAY_KEY_ID,
-        amount: 100,
+        amount: 49900,
         currency: 'INR',
         name: 'Agrawal Futurify AI Solutions',
         description: 'Digital Visiting Card - ₹499',
@@ -471,6 +558,19 @@ async function handleEdit(btn) {
         editToken: currentToken
     };
     fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
+
+    // ✅ Combine country code + number for edit mode too
+    const editPhoneDigits = getFullPhone('phoneCC', 'phoneNumber');
+    const editWaDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
+    if (editPhoneDigits) data.phone    = editPhoneDigits;
+    if (editWaDigits)    data.whatsapp = editWaDigits;
+    delete data.phoneCC; delete data.phoneNumber;
+    delete data.whatsappCC; delete data.whatsappNumber;
+
+    // ✅ Contact 2 phone
+    const editC2PhoneDigits = getFullPhone('contact2PhoneCC', 'contact2PhoneNumber');
+    if (editC2PhoneDigits) data.contact2Phone = editC2PhoneDigits;
+    delete data.contact2PhoneCC; delete data.contact2PhoneNumber;
     
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
@@ -498,14 +598,48 @@ async function handleEdit(btn) {
 }
 
 // ============================================================
-// PHONE VALIDATION
+// PHONE FIELD HELPERS — Country Code + Number combine
 // ============================================================
-['phone','whatsapp','contact2Phone'].forEach(n => {
-    const el = document.querySelector(`[name="${n}"]`);
+
+// Get combined phone with country code (digits only, no +)
+function getFullPhone(ccSelectId, numberInputId) {
+    const cc = String(document.getElementById(ccSelectId)?.value || '91').replace(/\D/g,'');
+    const num = String(document.getElementById(numberInputId)?.value || '').replace(/\D/g,'');
+    if (!num) return '';
+    return cc + num;
+}
+
+// For edit mode prefill: split stored number (e.g. 919876543210 → cc=91, num=9876543210)
+function prefillPhone(stored, ccSelectId, numberInputId) {
+    const digits = String(stored || '').replace(/\D/g,'');
+    if (!digits) return;
+    const ccEl  = document.getElementById(ccSelectId);
+    const numEl = document.getElementById(numberInputId);
+    if (!ccEl || !numEl) return;
+
+    // Try to match one of the CC options
+    const options = Array.from(ccEl.options).map(o => o.value).sort((a,b) => b.length - a.length);
+    let matched = false;
+    for (const cc of options) {
+        if (digits.startsWith(cc) && digits.length > cc.length) {
+            ccEl.value = cc;
+            numEl.value = digits.slice(cc.length);
+            matched = true;
+            break;
+        }
+    }
+    // Fallback: treat as local number
+    if (!matched) { ccEl.value = '91'; numEl.value = digits; }
+}
+
+// Restrict phone inputs to digits only
+['phoneNumber','whatsappNumber','contact2PhoneNumber'].forEach(id => {
+    const el = document.getElementById(id);
     if (el) el.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g,'').substring(0,10);
+        this.value = this.value.replace(/\D/g,'');
     });
 });
+
 </script>
 </body>
 </html>
