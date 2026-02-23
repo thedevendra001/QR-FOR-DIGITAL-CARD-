@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Visiting Card</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ✅ Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -32,7 +34,6 @@
             padding: 40px 30px;
             text-align: center;
             color: white;
-            position: relative;
         }
         
         .profile-image {
@@ -43,7 +44,7 @@
             object-fit: cover;
             margin: 0 auto 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            background: white;
+            display: block;
         }
         
         .profile-placeholder {
@@ -61,41 +62,21 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
         
-        .name {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
+        .name { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .designation { font-size: 18px; opacity: 0.95; font-weight: 500; margin-bottom: 4px; }
+        .business { font-size: 16px; opacity: 0.9; font-weight: 500; }
         
-        .designation {
-            font-size: 18px;
-            opacity: 0.95;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
+        .card-body { padding: 30px; }
         
-        .business {
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-        
-        .card-body {
-            padding: 30px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-        }
+        .section { margin-bottom: 28px; }
         
         .section-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: #667eea;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -104,7 +85,7 @@
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             padding: 14px;
             background: #f8f9fa;
             border-radius: 12px;
@@ -112,74 +93,144 @@
             transition: all 0.3s;
         }
         
-        .contact-item:hover {
-            background: #e9ecef;
-            transform: translateX(4px);
-        }
+        .contact-item:hover { background: #e9ecef; transform: translateX(4px); }
         
+        /* ===== ICON STYLES ===== */
         .contact-icon {
-            font-size: 24px;
-            min-width: 24px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            color: white;
+            flex-shrink: 0;
         }
+        .icon-phone    { background: #667eea; }
+        .icon-whatsapp { background: #25D366; }
+        .icon-email    { background: #ea4335; }
+        .icon-address  { background: #f59e0b; }
+        .icon-upi      { background: #7c3aed; }
+        .icon-website  { background: #0ea5e9; }
+        .icon-product  { background: #f97316; }
+        .icon-map      { background: #10b981; }
         
-        .contact-text {
-            flex: 1;
-            font-size: 15px;
-            color: #333;
+        .contact-text { flex: 1; font-size: 15px; color: #333; }
+        .contact-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        
+        .contact-link { color: #667eea; text-decoration: none; font-weight: 600; }
+        .contact-link:hover { text-decoration: underline; }
+
+        /* ===== CONTACT 2 BLOCK ===== */
+        .contact2-block {
+            background: linear-gradient(135deg, #f0f4ff, #f5f0ff);
+            border: 1.5px solid #c7d2fe;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 10px;
         }
-        
-        .contact-link {
+        .contact2-name { font-size: 15px; font-weight: 700; color: #3730a3; margin-bottom: 2px; }
+        .contact2-role { font-size: 12px; color: #764ba2; font-weight: 600; margin-bottom: 10px; }
+        .contact2-links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .contact2-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 1.5px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 600;
             color: #667eea;
             text-decoration: none;
+            transition: all 0.2s;
+        }
+        .contact2-link:hover { background: #667eea; color: white; border-color: #667eea; }
+        .contact2-link i { font-size: 13px; }
+
+        /* ===== UPI SECTION ===== */
+        .upi-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .upi-pay-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, #7c3aed, #667eea);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+        .upi-pay-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124,58,237,0.4); color: white; }
+        .upi-copy-btn {
+            background: none;
+            border: 1.5px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 12px;
             font-weight: 600;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.2s;
         }
+        .upi-copy-btn:hover { background: #667eea; color: white; border-color: #667eea; }
+        .upi-id-text { font-size: 12px; color: #888; margin-top: 4px; }
         
-        .contact-link:hover {
-            text-decoration: underline;
-        }
-        
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-        }
+        /* ===== SOCIAL GRID ===== */
+        .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
         
         .social-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 12px 10px;
             color: white;
             text-decoration: none;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        
-        .social-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
+        .social-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .social-btn i { font-size: 16px; }
+
+        .btn-instagram { background: linear-gradient(135deg, #f09433, #e6683c, #E4405F, #bc1888); }
+        .btn-facebook  { background: #1877F2; }
+        .btn-linkedin  { background: #0A66C2; }
+        .btn-twitter   { background: #000; }
+        .btn-youtube   { background: #FF0000; }
+        .btn-telegram  { background: #229ED9; }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons { display: flex; gap: 12px; margin-top: 28px; }
         
         .action-btn {
             flex: 1;
-            padding: 16px;
+            padding: 15px;
             text-align: center;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
         }
         
         .btn-primary {
@@ -187,111 +238,55 @@
             color: white;
             box-shadow: 0 4px 12px rgba(102,126,234,0.3);
         }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(102,126,234,0.4); color: white; }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
-        }
+        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea !important; }
+        .btn-secondary:hover { background: #f8f9fa; }
         
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
+        /* ===== ERROR / LOADING ===== */
+        .error-container { text-align: center; padding: 60px 30px; }
+        .error-icon { font-size: 80px; margin-bottom: 20px; }
+        .error-title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 12px; }
+        .error-message { font-size: 16px; color: #666; line-height: 1.6; }
         
-        .btn-secondary:hover {
-            background: #f8f9fa;
-        }
-        
-        .error-container {
-            text-align: center;
-            padding: 60px 30px;
-        }
-        
-        .error-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-        
-        .error-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 12px;
-        }
-        
-        .error-message {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 60px 30px;
-        }
-        
+        .loading { text-align: center; padding: 60px 30px; }
         .spinner {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
         
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 18px;
             background: #f8f9fa;
             border-top: 1px solid #e9ecef;
         }
-        
-        .footer-text {
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .footer-link {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
+        .footer-text { font-size: 13px; color: #666; }
+        .footer-link { color: #667eea; text-decoration: none; font-weight: 600; }
         
         @media (max-width: 480px) {
-            .name {
-                font-size: 26px;
-            }
-            
-            .designation {
-                font-size: 16px;
-            }
-            
-            .card-body {
-                padding: 20px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
+            .name { font-size: 26px; }
+            .designation { font-size: 16px; }
+            .card-body { padding: 20px; }
+            .action-buttons { flex-direction: column; }
+            .social-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="card-container">
-        <!-- Loading State -->
+        <!-- Loading -->
         <div id="loadingState" class="loading">
             <div class="spinner"></div>
             <p style="font-size:16px;color:#666;">Loading card...</p>
         </div>
         
-        <!-- Error State -->
+        <!-- Error -->
         <div id="errorState" class="error-container" style="display:none;">
             <div class="error-icon">❌</div>
             <h2 class="error-title">Card Not Found</h2>
@@ -300,7 +295,6 @@
         
         <!-- Card Content -->
         <div id="cardContent" style="display:none;">
-            <!-- Header -->
             <div class="card-header">
                 <div id="profileImageContainer"></div>
                 <h1 class="name" id="cardName"></h1>
@@ -308,43 +302,50 @@
                 <div id="cardBusiness"></div>
             </div>
             
-            <!-- Body -->
             <div class="card-body">
-                <!-- Contact Section -->
+                <!-- Primary Contact -->
                 <div class="section" id="contactSection">
                     <div class="section-title">
-                        <span>📞</span>
-                        <span>Contact</span>
+                        <i class="fa-solid fa-address-card"></i> Contact
                     </div>
                     <div id="contactItems"></div>
                 </div>
+
+                <!-- Second Contact -->
+                <div class="section" id="contact2Section" style="display:none;">
+                    <div class="section-title">
+                        <i class="fa-solid fa-user-group"></i> Additional Contact
+                    </div>
+                    <div id="contact2Block"></div>
+                </div>
                 
-                <!-- Social Media Section -->
+                <!-- Social -->
                 <div class="section" id="socialSection" style="display:none;">
                     <div class="section-title">
-                        <span>🌐</span>
-                        <span>Connect</span>
+                        <i class="fa-solid fa-share-nodes"></i> Connect
                     </div>
                     <div class="social-grid" id="socialLinks"></div>
                 </div>
                 
-                <!-- Additional Info -->
+                <!-- Additional -->
                 <div class="section" id="additionalSection" style="display:none;">
                     <div class="section-title">
-                        <span>ℹ️</span>
-                        <span>More Info</span>
+                        <i class="fa-solid fa-circle-info"></i> More Info
                     </div>
                     <div id="additionalItems"></div>
                 </div>
                 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <a href="#" id="saveContactBtn" class="action-btn btn-primary">💾 Save Contact</a>
-                    <a href="#" id="shareBtn" class="action-btn btn-secondary">📤 Share</a>
+                    <a href="#" id="saveContactBtn" class="action-btn btn-primary">
+                        <i class="fa-solid fa-address-book"></i> Save Contact
+                    </a>
+                    <a href="#" id="shareBtn" class="action-btn btn-secondary">
+                        <i class="fa-solid fa-share-nodes"></i> Share
+                    </a>
                 </div>
             </div>
             
-            <!-- Footer -->
             <div class="footer">
                 <p class="footer-text">
                     Powered by <a href="https://thedevendra001.github.io/QR-FOR-DIGITAL-CARD-/" class="footer-link">Agrawal Futurify AI Solutions</a>
@@ -354,198 +355,208 @@
     </div>
     
     <script>
-        // ⚠️ UPDATE THIS WITH YOUR WEB APP URL
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
         
         let cardData = null;
         
-        // Load card on page load
         window.addEventListener('load', async function() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get('slug');
-            
-            if (!slug) {
-                showError('No card ID provided in URL');
-                return;
-            }
-            
+            if (!slug) { showError('No card ID provided in URL'); return; }
             await loadCard(slug);
         });
         
-        // Load card data
         async function loadCard(slug) {
             try {
-                console.log('🎴 Loading card:', slug);
-                
                 const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch card data');
-                }
-                
+                if (!response.ok) throw new Error('Failed to fetch card data');
                 const result = await response.json();
-                console.log('📦 Response:', result);
-                
-                if (result.status === 'error') {
-                    throw new Error(result.message || 'Card not found');
-                }
-                
+                if (result.status === 'error') throw new Error(result.message || 'Card not found');
                 if (result.status === 'success' && result.data) {
                     cardData = result.data;
                     renderCard(cardData);
                 } else {
                     throw new Error('Invalid card data');
                 }
-                
             } catch (err) {
-                console.error('❌ Load error:', err);
                 showError(err.message);
             }
         }
         
-        // Render card
         function renderCard(data) {
-            console.log('🎨 Rendering card for:', data.fullName);
-            
-            // Hide loading, show content
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('cardContent').style.display = 'block';
             
-            // Profile Image
+            // ===== PROFILE IMAGE (with cache buster + fallback) =====
+            const imageUrl = data.photoUrl || data.imageUrl || data.photo || data.profileImage || '';
             const imageContainer = document.getElementById('profileImageContainer');
-            if (data.imageUrl) {
-                imageContainer.innerHTML = `<img src="${data.imageUrl}" alt="${data.fullName}" class="profile-image" />`;
+            
+            if (imageUrl) {
+                const img = document.createElement('img');
+                img.src = imageUrl + '?t=' + Date.now();
+                img.alt = data.fullName || '';
+                img.className = 'profile-image';
+                img.onerror = function() {
+                    // If image fails, show initial placeholder
+                    imageContainer.innerHTML = `<div class="profile-placeholder">${(data.fullName || '?').charAt(0).toUpperCase()}</div>`;
+                };
+                imageContainer.appendChild(img);
             } else {
-                const initial = data.fullName.charAt(0).toUpperCase();
+                const initial = (data.fullName || '?').charAt(0).toUpperCase();
                 imageContainer.innerHTML = `<div class="profile-placeholder">${initial}</div>`;
             }
             
-            // Name
-            document.getElementById('cardName').textContent = data.fullName;
+            // Name / Designation / Business
+            document.getElementById('cardName').textContent = data.fullName || '';
+            if (data.designation) document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
+            if (data.businessName) document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
             
-            // Designation
-            if (data.designation) {
-                document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
-            }
-            
-            // Business
-            if (data.businessName) {
-                document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
-            }
-            
-            // Contact Items
+            // ===== PRIMARY CONTACT =====
             const contactItems = document.getElementById('contactItems');
             let contactHTML = '';
             
             if (data.phone) {
                 contactHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">📞</span>
-                        <span class="contact-text">
+                        <div class="contact-icon icon-phone"><i class="fa-solid fa-phone"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Phone</div>
                             <a href="tel:${data.phone}" class="contact-link">${data.phone}</a>
-                        </span>
-                    </div>
-                `;
+                        </div>
+                    </div>`;
             }
             
-          const whatsappNumber = String(data.whatsapp || data.phone || '').replace(/[^0-9]/g, '');
-
-if (whatsappNumber) {
-    contactHTML += `
-        <div class="contact-item">
-            <span class="contact-icon">💬</span>
-            <span class="contact-text">
-                <a href="https://wa.me/${whatsappNumber}" class="contact-link" target="_blank">WhatsApp</a>
-            </span>
-        </div>
-    `;
-}
+            // ✅ WhatsApp safety fix
+            const whatsappClean = String(data.whatsapp || data.phone || '').replace(/[^0-9]/g, '');
+            if (whatsappClean) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <div class="contact-icon icon-whatsapp"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">WhatsApp</div>
+                            <a href="https://wa.me/${whatsappClean}" class="contact-link" target="_blank">Chat on WhatsApp</a>
+                        </div>
+                    </div>`;
+            }
+            
+            if (data.email) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Email</div>
+                            <a href="mailto:${data.email}" class="contact-link">${data.email}</a>
+                        </div>
+                    </div>`;
+            }
             
             if (data.address) {
+                const mapsUrl = data.maps || `https://maps.google.com/?q=${encodeURIComponent(data.address)}`;
                 contactHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">📍</span>
-                        <span class="contact-text">${data.address}</span>
-                    </div>
-                `;
+                        <div class="contact-icon icon-address"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Address</div>
+                            <a href="${mapsUrl}" target="_blank" class="contact-link">${data.address}</a>
+                        </div>
+                    </div>`;
             }
             
+            // ✅ UPI clickable intent link
             if (data.upiId) {
+                const upiName = encodeURIComponent(data.fullName || data.businessName || 'Pay');
+                const upiLink = `upi://pay?pa=${encodeURIComponent(data.upiId)}&pn=${upiName}`;
                 contactHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">💳</span>
-                        <span class="contact-text">
-                            <a href="upi://pay?pa=${data.upiId}" class="contact-link">${data.upiId}</a>
-                        </span>
-                    </div>
-                `;
+                        <div class="contact-icon icon-upi"><i class="fa-solid fa-credit-card"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">UPI Payment</div>
+                            <div class="upi-block">
+                                <a href="${upiLink}" class="upi-pay-btn" onclick="return handleUpiClick(event, '${upiLink}')">
+                                    <i class="fa-solid fa-bolt"></i> Pay Now
+                                </a>
+                                <button class="upi-copy-btn" onclick="copyUpi('${data.upiId}', this)">
+                                    <i class="fa-regular fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <div class="upi-id-text">${data.upiId}</div>
+                        </div>
+                    </div>`;
             }
             
             contactItems.innerHTML = contactHTML;
             
-            // Social Links
+            // ===== CONTACT 2 (Bug Fix) =====
+            if (data.contact2Name || data.contact2Phone || data.contact2Email) {
+                const c2 = document.getElementById('contact2Block');
+                let c2HTML = `<div class="contact2-block">`;
+                if (data.contact2Name) c2HTML += `<div class="contact2-name">${data.contact2Name}</div>`;
+                if (data.contact2Role) c2HTML += `<div class="contact2-role">${data.contact2Role}</div>`;
+                c2HTML += `<div class="contact2-links">`;
+                if (data.contact2Phone) {
+                    c2HTML += `<a href="tel:${data.contact2Phone}" class="contact2-link"><i class="fa-solid fa-phone"></i> ${data.contact2Phone}</a>`;
+                }
+                if (data.contact2Email) {
+                    c2HTML += `<a href="mailto:${data.contact2Email}" class="contact2-link"><i class="fa-solid fa-envelope"></i> Email</a>`;
+                }
+                const c2Whatsapp = String(data.contact2Phone || '').replace(/[^0-9]/g, '');
+                if (c2Whatsapp) {
+                    c2HTML += `<a href="https://wa.me/${c2Whatsapp}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
+                }
+                c2HTML += `</div></div>`;
+                c2.innerHTML = c2HTML;
+                document.getElementById('contact2Section').style.display = 'block';
+            }
+            
+            // ===== SOCIAL LINKS (Brand Colors) =====
             const socialLinks = document.getElementById('socialLinks');
             let socialHTML = '';
             
-            if (data.instagram) {
-                socialHTML += `<a href="${data.instagram}" target="_blank" class="social-btn">📷 Instagram</a>`;
-            }
-            if (data.facebook) {
-                socialHTML += `<a href="${data.facebook}" target="_blank" class="social-btn">👥 Facebook</a>`;
-            }
-            if (data.linkedin) {
-                socialHTML += `<a href="${data.linkedin}" target="_blank" class="social-btn">💼 LinkedIn</a>`;
-            }
-            if (data.twitter) {
-                socialHTML += `<a href="${data.twitter}" target="_blank" class="social-btn">🐦 Twitter</a>`;
-            }
-            if (data.youtube) {
-                socialHTML += `<a href="${data.youtube}" target="_blank" class="social-btn">📺 YouTube</a>`;
-            }
-            if (data.telegram) {
-                socialHTML += `<a href="${data.telegram}" target="_blank" class="social-btn">✈️ Telegram</a>`;
-            }
+            if (data.instagram) socialHTML += `<a href="${data.instagram}" target="_blank" class="social-btn btn-instagram"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
+            if (data.facebook)  socialHTML += `<a href="${data.facebook}"  target="_blank" class="social-btn btn-facebook"><i class="fa-brands fa-facebook"></i> Facebook</a>`;
+            if (data.linkedin)  socialHTML += `<a href="${data.linkedin}"  target="_blank" class="social-btn btn-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>`;
+            if (data.twitter)   socialHTML += `<a href="${data.twitter}"   target="_blank" class="social-btn btn-twitter"><i class="fa-brands fa-x-twitter"></i> Twitter</a>`;
+            if (data.youtube)   socialHTML += `<a href="${data.youtube}"   target="_blank" class="social-btn btn-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
+            if (data.telegram)  socialHTML += `<a href="${data.telegram}"  target="_blank" class="social-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram</a>`;
             
             if (socialHTML) {
                 socialLinks.innerHTML = socialHTML;
                 document.getElementById('socialSection').style.display = 'block';
             }
             
-            // Additional Info
+            // ===== ADDITIONAL INFO =====
             const additionalItems = document.getElementById('additionalItems');
             let additionalHTML = '';
             
             if (data.website) {
                 additionalHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">🌐</span>
-                        <span class="contact-text">
-                            <a href="${data.website}" target="_blank" class="contact-link">Website</a>
-                        </span>
-                    </div>
-                `;
+                        <div class="contact-icon icon-website"><i class="fa-solid fa-globe"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Website</div>
+                            <a href="${data.website}" target="_blank" class="contact-link">${data.website.replace(/^https?:\/\//, '')}</a>
+                        </div>
+                    </div>`;
             }
-            
             if (data.productUrl) {
                 additionalHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">🛒</span>
-                        <span class="contact-text">
-                            <a href="${data.productUrl}" target="_blank" class="contact-link">Products</a>
-                        </span>
-                    </div>
-                `;
+                        <div class="contact-icon icon-product"><i class="fa-solid fa-bag-shopping"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Products</div>
+                            <a href="${data.productUrl}" target="_blank" class="contact-link">View Products</a>
+                        </div>
+                    </div>`;
             }
-            
             if (data.maps) {
                 additionalHTML += `
                     <div class="contact-item">
-                        <span class="contact-icon">🗺️</span>
-                        <span class="contact-text">
-                            <a href="${data.maps}" target="_blank" class="contact-link">Location</a>
-                        </span>
-                    </div>
-                `;
+                        <div class="contact-icon icon-map"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Location</div>
+                            <a href="${data.maps}" target="_blank" class="contact-link">Open in Maps</a>
+                        </div>
+                    </div>`;
             }
             
             if (additionalHTML) {
@@ -553,87 +564,79 @@ if (whatsappNumber) {
                 document.getElementById('additionalSection').style.display = 'block';
             }
             
-            // Setup action buttons
             setupActionButtons(data);
         }
         
-        // Setup action buttons
+        // ===== UPI Click Handler (mobile opens app, desktop safe) =====
+        function handleUpiClick(event, upiLink) {
+            // On desktop, UPI links may not work — we let it try naturally
+            // No prevention needed; browser handles gracefully
+            return true;
+        }
+        
+        // ===== Copy UPI =====
+        function copyUpi(upiId, btn) {
+            navigator.clipboard.writeText(upiId).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                btn.style.background = '#10b981';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            }).catch(() => {
+                alert('UPI ID: ' + upiId);
+            });
+        }
+        
         function setupActionButtons(data) {
-            // Save Contact (vCard)
             document.getElementById('saveContactBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 downloadVCard(data);
             });
-            
-            // Share
             document.getElementById('shareBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 shareCard(data);
             });
         }
         
-        // Download vCard
         function downloadVCard(data) {
             let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
             vcard += `FN:${data.fullName}\n`;
-            
-            if (data.businessName) {
-                vcard += `ORG:${data.businessName}\n`;
-            }
-            
-            if (data.designation) {
-                vcard += `TITLE:${data.designation}\n`;
-            }
-            
-            if (data.phone) {
-                vcard += `TEL;TYPE=CELL:${data.phone}\n`;
-            }
-            
-            if (data.whatsapp) {
-                vcard += `TEL;TYPE=WORK:${data.whatsapp}\n`;
-            }
-            
-            if (data.email) {
-                vcard += `EMAIL:${data.email}\n`;
-            }
-            
-            if (data.website) {
-                vcard += `URL:${data.website}\n`;
-            }
-            
-            if (data.address) {
-                vcard += `ADR:;;${data.address};;;;\n`;
-            }
-            
+            if (data.businessName) vcard += `ORG:${data.businessName}\n`;
+            if (data.designation)  vcard += `TITLE:${data.designation}\n`;
+            if (data.phone)    vcard += `TEL;TYPE=CELL:${data.phone}\n`;
+            if (data.whatsapp) vcard += `TEL;TYPE=WORK:${data.whatsapp}\n`;
+            if (data.email)    vcard += `EMAIL:${data.email}\n`;
+            if (data.website)  vcard += `URL:${data.website}\n`;
+            if (data.address)  vcard += `ADR:;;${data.address};;;;\n`;
             vcard += 'END:VCARD';
             
             const blob = new Blob([vcard], { type: 'text/vcard' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${data.fullName.replace(/\s+/g, '_')}.vcf`;
+            link.download = `${(data.fullName || 'contact').replace(/\s+/g, '_')}.vcf`;
             link.click();
         }
         
-        // Share card
         function shareCard(data) {
             const shareData = {
                 title: data.fullName,
                 text: `Check out ${data.fullName}'s digital card${data.businessName ? ' from ' + data.businessName : ''}`,
                 url: window.location.href
             };
-            
             if (navigator.share) {
                 navigator.share(shareData).catch(err => console.log('Share error:', err));
             } else {
-                // Fallback: Copy to clipboard
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     alert('✅ Card link copied to clipboard!');
                 });
             }
         }
         
-        // Show error
         function showError(message) {
             document.getElementById('loadingState').style.display = 'none';
             document.getElementById('errorState').style.display = 'block';
