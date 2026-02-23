@@ -448,16 +448,18 @@
                 `;
             }
             
-            if (data.whatsapp) {
-                contactHTML += `
-                    <div class="contact-item">
-                        <span class="contact-icon">💬</span>
-                        <span class="contact-text">
-                            <a href="https://wa.me/${data.whatsapp.replace(/[^0-9]/g, '')}" class="contact-link" target="_blank">WhatsApp</a>
-                        </span>
-                    </div>
-                `;
-            }
+          const whatsappNumber = String(data.whatsapp || data.phone || '').replace(/[^0-9]/g, '');
+
+if (whatsappNumber) {
+    contactHTML += `
+        <div class="contact-item">
+            <span class="contact-icon">💬</span>
+            <span class="contact-text">
+                <a href="https://wa.me/${whatsappNumber}" class="contact-link" target="_blank">WhatsApp</a>
+            </span>
+        </div>
+    `;
+}
             
             if (data.address) {
                 contactHTML += `
