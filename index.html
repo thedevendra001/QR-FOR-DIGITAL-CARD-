@@ -5,345 +5,246 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Visiting Card - ₹499</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- ✅ CRITICAL: Load Razorpay SDK first -->
+    <!-- ✅ Load Razorpay SDK -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { width: 100%; max-width: 600px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
         .header { background: linear-gradient(135deg, #667eea, #764ba2); padding: 40px 24px; text-align: center; color: white; }
-        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         .price-tag { display: inline-block; background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 16px 40px; border-radius: 50px; font-size: 48px; font-weight: 900; margin: 16px 0; box-shadow: 0 8px 24px rgba(255,215,0,0.4); }
         .form-section { padding: 28px 24px; }
-        .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 28px; }
-        .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 18px; padding-bottom: 12px; border-bottom: 3px solid #667eea; font-size: 17px; font-weight: 700; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
-        .required { color: #e53e3e; }
-        .form-group input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; transition: all 0.3s; }
+        .form-group input { width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; }
         .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
-        .form-group input:disabled { background: #f7fafc; color: #718096; cursor: not-allowed; }
-        .helper-text { font-size: 12px; color: #718096; margin-top: 6px; }
-        .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 28px; box-shadow: 0 8px 24px rgba(102,126,234,0.4); }
+        .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 28px; }
         .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .success-box { background: #d1fae5; border-left: 4px solid #10b981; padding: 28px; border-radius: 12px; margin: 24px 0; display: none; }
-        .success-box.show { display: block; }
-        .success-box h3 { color: #065f46; margin-bottom: 18px; font-size: 24px; }
-        .edit-mode-header { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); padding: 20px 24px; text-align: center; color: white; display: none; }
+        .status-box { padding: 20px; border-radius: 12px; margin: 20px 0; text-align: center; display: none; }
+        .status-box.show { display: block; }
+        .status-box.processing { background: #fff3cd; border: 2px solid #ffc107; }
+        .status-box.success { background: #d1fae5; border: 2px solid #10b981; }
+        .status-box.error { background: #fee; border: 2px solid #ef4444; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="edit-mode-header" id="editModeHeader">
-        <h2>✏️ Edit Your Card</h2>
-    </div>
-    <div class="header" id="normalHeader">
+    <div class="header">
         <h1>Professional Digital Visiting Card</h1>
         <div class="price-tag">₹499</div>
-        <p style="font-size:14px;opacity:0.9;margin-top:16px">One-Time Payment • Lifetime Access</p>
+        <p style="font-size:14px;opacity:0.9;margin-top:16px">One-Time • Lifetime Access</p>
     </div>
     
     <div class="form-section">
-        <h2 class="form-title" id="formTitle">Fill Your Details</h2>
         <form id="orderForm">
-            <div class="section-header"><span>📞</span><span>Primary Contact</span></div>
             <div class="form-group">
-                <label>Full Name <span class="required">*</span></label>
-                <input type="text" name="fullName" required placeholder="Rajesh Kumar">
-            </div>
-            <div class="form-group">
-                <label>Email <span class="required">*</span></label>
-                <input type="email" name="email" id="emailField" required placeholder="rajesh@example.com">
-                <div class="helper-text" id="emailHelper">This will be your login email</div>
+                <label>Full Name *</label>
+                <input type="text" name="fullName" required>
             </div>
             <div class="form-group">
-                <label>Phone <span class="required">*</span></label>
-                <input type="tel" name="phone" required placeholder="9876543210" maxlength="10">
-                <div class="helper-text">10 digits only</div>
+                <label>Email *</label>
+                <input type="email" name="email" id="emailField" required>
             </div>
             <div class="form-group">
-                <label>WhatsApp</label>
-                <input type="tel" name="whatsapp" placeholder="9876543210" maxlength="10">
+                <label>Phone *</label>
+                <input type="tel" name="phone" required maxlength="10">
             </div>
-
-            <div class="section-header"><span>👥</span><span>Contact 2 (Optional)</span></div>
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" name="contact2Name" placeholder="Support Team">
-            </div>
-            <div class="form-group">
-                <label>Phone</label>
-                <input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="contact2Email" placeholder="support@example.com">
-            </div>
-            <div class="form-group">
-                <label>Role</label>
-                <input type="text" name="contact2Role" placeholder="Support">
-            </div>
-
-            <div class="section-header"><span>🏢</span><span>Business Info</span></div>
-            <div class="form-group">
-                <label>Business Name</label>
-                <input type="text" name="businessName" placeholder="Kumar Enterprises">
-            </div>
-            <div class="form-group">
-                <label>Designation</label>
-                <input type="text" name="designation" placeholder="CEO">
-            </div>
-            <div class="form-group">
-                <label>Address</label>
-                <input type="text" name="address" placeholder="Office No. 123">
-            </div>
-            <div class="form-group">
-                <label>UPI ID</label>
-                <input type="text" name="upiId" placeholder="yourname@ybl">
-            </div>
-
-            <div class="section-header"><span>🌐</span><span>Social Media</span></div>
-            <div class="form-group">
-                <label>Instagram</label>
-                <input type="url" name="instagram" placeholder="https://instagram.com/username">
-            </div>
-            <div class="form-group">
-                <label>Facebook</label>
-                <input type="url" name="facebook" placeholder="https://facebook.com/page">
-            </div>
-            <div class="form-group">
-                <label>LinkedIn</label>
-                <input type="url" name="linkedin" placeholder="https://linkedin.com/in/profile">
-            </div>
-            <div class="form-group">
-                <label>Twitter</label>
-                <input type="url" name="twitter" placeholder="https://twitter.com/handle">
-            </div>
-            <div class="form-group">
-                <label>YouTube</label>
-                <input type="url" name="youtube" placeholder="https://youtube.com/@channel">
-            </div>
-            <div class="form-group">
-                <label>Telegram</label>
-                <input type="text" name="telegram" placeholder="@username">
-            </div>
-
-            <div class="section-header"><span>🔗</span><span>Website & Location</span></div>
-            <div class="form-group">
-                <label>Website</label>
-                <input type="url" name="website" placeholder="https://yourwebsite.com">
-            </div>
-            <div class="form-group">
-                <label>Product URL</label>
-                <input type="url" name="productUrl" placeholder="https://shop.com/products">
-            </div>
-            <div class="form-group">
-                <label>Google Maps</label>
-                <input type="url" name="maps" placeholder="https://maps.google.com/...">
-            </div>
-
-            <div id="imageUploadSection" style="display:none">
-                <div class="section-header"><span>📷</span><span>Photo</span></div>
-                <div class="form-group">
-                    <input type="file" id="imageInput" accept="image/*" />
-                    <div class="helper-text">Max 1MB</div>
-                    <div id="imagePreview"></div>
-                </div>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">💳 Proceed to Payment - ₹499</button>
+            <button type="submit" class="submit-btn" id="submitBtn">💳 Pay ₹499</button>
         </form>
 
-        <div class="success-box" id="successMsg">
-            <h3>🎉 Payment Successful!</h3>
-            <p>Check your email for card URL and QR code!</p>
+        <!-- Processing Status -->
+        <div class="status-box processing" id="processingBox">
+            <div class="spinner"></div>
+            <h3 id="processingMsg">Processing payment...</h3>
+            <p style="margin-top:10px;font-size:14px;color:#856404" id="processingDetail"></p>
         </div>
-        
-        <div class="success-box" id="editSuccessMsg">
-            <h3>✅ Updated!</h3>
-            <p>Changes saved successfully.</p>
+
+        <!-- Success -->
+        <div class="status-box success" id="successBox">
+            <h2 style="color:#065f46;margin-bottom:10px">🎉 Card Activated!</h2>
+            <p style="color:#047857;margin-bottom:20px">Check your email for card URL and QR code</p>
+            <a href="#" id="cardLink" style="display:inline-block;background:#667eea;color:white;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:600">📱 View Card</a>
+        </div>
+
+        <!-- Error -->
+        <div class="status-box error" id="errorBox">
+            <h3 style="color:#991b1b;margin-bottom:10px">❌ Error</h3>
+            <p style="color:#7f1d1d" id="errorMsg"></p>
         </div>
     </div>
 </div>
 
 <script>
 // ============================================================
-// ⚠️ UPDATE THIS URL AFTER BACKEND DEPLOYMENT
+// ⚠️ UPDATE THIS URL AFTER DEPLOYMENT
 // ============================================================
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
-
-// ✅ Razorpay key (safe to hardcode)
+const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 const RAZORPAY_KEY_ID = 'rzp_live_SGoMjcZYfpwxeX';
 
-let isEditMode = false, currentEmail = null, currentToken = null;
+let currentEmail = null;
+let pollInterval = null;
+
+console.log('🚀 Loaded | Razorpay:', typeof Razorpay !== 'undefined' ? '✅' : '❌');
 
 // ============================================================
-// INITIALIZATION
-// ============================================================
-console.log('🚀 App loaded | Razorpay:', typeof Razorpay !== 'undefined' ? '✅' : '❌');
-
-window.addEventListener('load', async () => {
-    const p = new URLSearchParams(window.location.search);
-    const email = p.get('email'), token = p.get('token');
-    if (email && token) await initEditMode(email, token);
-});
-
-async function initEditMode(email, token) {
-    isEditMode = true; currentEmail = email; currentToken = token;
-    document.getElementById('normalHeader').style.display = 'none';
-    document.getElementById('editModeHeader').style.display = 'block';
-    document.getElementById('formTitle').textContent = 'Edit Details';
-    document.getElementById('submitBtn').textContent = '✏️ Update Card';
-    document.getElementById('imageUploadSection').style.display = 'block';
-    
-    const ef = document.getElementById('emailField');
-    ef.value = email; ef.disabled = true; ef.required = false;
-    
-    try {
-        const r = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(email)}`);
-        const d = await r.json();
-        if (d.error) throw new Error(d.error);
-        Object.keys(d).forEach(k => {
-            if (k !== 'email') {
-                const i = document.querySelector(`[name="${k}"]`);
-                if (i && d[k]) i.value = d[k];
-            }
-        });
-        console.log('✅ Data prefilled');
-    } catch(e) {
-        console.error('Prefill error:', e);
-        alert('Error loading data');
-    }
-}
-
-// ============================================================
-// FORM SUBMISSION
+// FORM SUBMIT
 // ============================================================
 document.getElementById('orderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn'), orig = btn.textContent;
     
-    try {
-        if (isEditMode) {
-            await handleEdit(btn);
-        } else {
-            await handleNewOrder(btn, orig);
-        }
-    } catch(e) {
-        console.error('❌ Error:', e);
-        alert('Error: ' + e.message);
-        btn.disabled = false;
-        btn.textContent = orig;
-    }
-});
-
-// ============================================================
-// NEW ORDER FLOW
-// ============================================================
-async function handleNewOrder(btn, orig) {
+    const btn = document.getElementById('submitBtn');
+    const form = e.target;
+    
     // Collect data
-    const fd = new FormData(document.getElementById('orderForm')), data = {};
-    fd.forEach((v,k) => { data[k] = v; });
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((v, k) => { data[k] = v; });
     
     // Validate
     if (!data.fullName || !data.email || !data.phone) {
-        alert('Name, Email, Phone required');
+        alert('All fields required');
         return;
     }
-    if (data.phone.replace(/\D/g,'').length !== 10) {
+    if (data.phone.replace(/\D/g, '').length !== 10) {
         alert('Phone must be 10 digits');
         return;
     }
     
-    // Format Telegram
-    if (data.telegram && data.telegram.trim()) {
-        const t = data.telegram.trim();
-        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
+    currentEmail = data.email.trim().toLowerCase();
+    
+    try {
+        btn.disabled = true;
+        btn.textContent = '⏳ Creating order...';
+        
+        console.log('📤 Creating order...');
+        
+        // Create order
+        const res = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ mode: 'create', ...data })
+        });
+        
+        const result = await res.json();
+        console.log('📦 Order result:', result);
+        
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Order creation failed');
+        }
+        
+        console.log('✅ Order created:', result.orderId);
+        
+        // Open Razorpay
+        btn.textContent = '💳 Opening payment...';
+        await new Promise(r => setTimeout(r, 500));
+        
+        if (typeof Razorpay === 'undefined') {
+            throw new Error('Razorpay not loaded');
+        }
+        
+        openRazorpay(data, result.orderId, result.email);
+        
+    } catch (err) {
+        console.error('❌ Error:', err);
+        showError(err.message);
+        btn.disabled = false;
+        btn.textContent = '💳 Pay ₹499';
     }
-    
-    // Create order
-    btn.disabled = true;
-    btn.textContent = '⏳ Creating order...';
-    console.log('📤 Creating order...');
-    
-    const r = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ mode: 'create', ...data })
-    });
-    
-    const res = await r.json();
-    console.log('📦 Response:', res);
-    
-    if (res.status !== 'success') {
-        throw new Error(res.message || 'Order creation failed');
-    }
-    
-    console.log('✅ Order created:', res.orderId);
-    
-    // Open Razorpay
-    btn.textContent = '💳 Opening payment...';
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    if (typeof Razorpay === 'undefined') {
-        throw new Error('Razorpay not loaded. Refresh and try again.');
-    }
-    
+});
+
+// ============================================================
+// OPEN RAZORPAY PAYMENT
+// ============================================================
+function openRazorpay(data, orderId, email) {
     const rzp = new Razorpay({
         key: RAZORPAY_KEY_ID,
-        amount: 100,
+        amount: 49900,
         currency: 'INR',
         name: 'Agrawal Futurify AI Solutions',
-        description: 'Digital Visiting Card - ₹499',
-        prefill: { name: data.fullName, email: data.email, contact: data.phone },
-        notes: { orderId: res.orderId },
+        description: 'Digital Visiting Card',
+        prefill: {
+            name: data.fullName,
+            email: email,
+            contact: data.phone
+        },
+        notes: {
+            orderId: orderId,
+            email: email  // ✅ CRITICAL for webhook
+        },
         theme: { color: '#667eea' },
+        
+        // ============================================================
+        // PAYMENT SUCCESS HANDLER
+        // ============================================================
         handler: async function(response) {
-            console.log('✅ Payment done:', response.razorpay_payment_id);
-            btn.textContent = '⏳ Verifying...';
+            console.log('✅ Payment success:', response.razorpay_payment_id);
+            
+            hideForm();
+            showProcessing('Verifying payment...', 'Please wait, this may take a few seconds');
             
             try {
-                const vr = await fetch(WEB_APP_URL, {
+                // ✅ PATH B: Frontend verification (secondary)
+                console.log('📤 Sending verification...');
+                
+                const verifyRes = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
-                        mode: 'verifyPayment',
-                        email: data.email,
+                        mode: 'verify',
+                        email: currentEmail,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_order_id: response.razorpay_order_id || '',
                         razorpay_signature: response.razorpay_signature || ''
                     })
                 });
                 
-                const vres = await vr.json();
-                console.log('📦 Verify response:', vres);
+                const verifyResult = await verifyRes.json();
+                console.log('📦 Verify result:', verifyResult);
                 
-                if (vres.status === 'success') {
-                    document.getElementById('orderForm').style.display = 'none';
-                    document.getElementById('successMsg').classList.add('show');
-                    console.log('🎉 Success!');
+                if (verifyResult.status === 'success') {
+                    console.log('🎉 Verification successful!');
+                    showSuccess(verifyResult.cardUrl);
                 } else {
-                    throw new Error(vres.message || 'Verification failed');
+                    throw new Error(verifyResult.message || 'Verification failed');
                 }
-            } catch(e) {
-                console.error('❌ Verification error:', e);
-                alert('Payment received but verification failed. Contact support.');
+                
+            } catch (err) {
+                console.error('❌ Verification error:', err);
+                
+                // ✅ PATH C: Start polling (tertiary fallback)
+                console.log('🔄 Starting status polling...');
+                showProcessing('Activating your card...', 'Payment received. Activating card automatically...');
+                startPolling();
             }
         },
+        
+        // ============================================================
+        // PAYMENT CANCELLED
+        // ============================================================
         modal: {
-            ondismiss: () => {
+            ondismiss: function() {
                 console.log('Payment cancelled');
-                btn.disabled = false;
-                btn.textContent = orig;
+                
+                // Start polling in case payment actually went through
+                showProcessing('Checking payment status...', 'Verifying if payment was completed...');
+                startPolling();
+                
+                // Stop after 15 seconds if no payment found
+                setTimeout(() => {
+                    if (pollInterval) {
+                        stopPolling();
+                        showError('Payment cancelled. You can retry anytime.');
+                    }
+                }, 15000);
             }
         }
     });
     
-    rzp.on('payment.failed', resp => {
-        console.error('Payment failed:', resp.error);
-        alert('Payment failed: ' + resp.error.description);
-        btn.disabled = false;
-        btn.textContent = orig;
+    rzp.on('payment.failed', function(response) {
+        console.error('Payment failed:', response.error);
+        showError('Payment failed: ' + response.error.description);
     });
     
     console.log('🚀 Opening Razorpay...');
@@ -351,86 +252,101 @@ async function handleNewOrder(btn, orig) {
 }
 
 // ============================================================
-// EDIT MODE
+// STATUS POLLING SYSTEM (PATH C - TERTIARY FALLBACK)
+// Checks backend every 3 seconds for up to 2 minutes
 // ============================================================
-async function handleEdit(btn) {
-    // Upload image if selected
-    if (document.getElementById('imageInput')?.files[0]) {
-        btn.disabled = true;
-        btn.textContent = '📤 Uploading...';
-        const fi = document.getElementById('imageInput'), file = fi.files[0];
+function startPolling() {
+    if (!currentEmail) {
+        console.error('No email to poll');
+        return;
+    }
+    
+    let attempts = 0;
+    const maxAttempts = 40; // 2 minutes (40 × 3 seconds)
+    
+    console.log('🔄 Starting polling for:', currentEmail);
+    
+    pollInterval = setInterval(async () => {
+        attempts++;
+        console.log(`🔍 Poll attempt ${attempts}/${maxAttempts}`);
         
-        if (file.size > 1024*1024) {
-            alert('Image must be < 1MB');
-            return;
-        }
-        
-        const r = new FileReader();
-        r.onload = async ev => {
-            try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        mode: 'uploadImage',
-                        email: currentEmail,
-                        token: currentToken,
-                        imageData: ev.target.result,
-                        fileName: file.name,
-                        mimeType: file.type
-                    })
-                });
-                const rs = await res.json();
-                if (rs.status !== 'success') alert('Image upload failed');
-            } catch(e) {
-                alert('Image error: ' + e.message);
+        try {
+            const res = await fetch(`${WEB_APP_URL}?mode=checkStatus&email=${encodeURIComponent(currentEmail)}`);
+            const result = await res.json();
+            
+            console.log('📦 Status:', result);
+            
+            if (result.status === 'success' && result.activated) {
+                console.log('🎉 Card activated!');
+                stopPolling();
+                showSuccess(result.cardUrl);
+                return;
             }
-        };
-        r.readAsDataURL(file);
-        await new Promise(res => setTimeout(res, 1000));
-    }
-    
-    // Update data
-    const fd = new FormData(document.getElementById('orderForm')), data = {
-        mode: 'edit',
-        email: currentEmail,
-        editToken: currentToken
-    };
-    fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
-    
-    if (data.telegram && data.telegram.trim()) {
-        const t = data.telegram.trim();
-        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
-    }
-    
-    btn.disabled = true;
-    btn.textContent = '⏳ Saving...';
-    
-    const r = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-    });
-    
-    const res = await r.json();
-    
-    if (res.status === 'success') {
-        document.getElementById('orderForm').style.display = 'none';
-        document.getElementById('editSuccessMsg').classList.add('show');
-        console.log('✅ Updated');
-    } else {
-        throw new Error(res.message);
+            
+            if (attempts >= maxAttempts) {
+                console.log('⏱️ Polling timeout');
+                stopPolling();
+                showProcessing(
+                    'Payment processing...',
+                    'Your payment is being processed. You will receive an email when your card is ready. This usually takes 2-5 minutes.'
+                );
+            }
+            
+        } catch (err) {
+            console.error('Poll error:', err);
+            
+            if (attempts >= maxAttempts) {
+                stopPolling();
+                showError('Could not verify payment status. Check your email for updates.');
+            }
+        }
+    }, 3000); // Poll every 3 seconds
+}
+
+function stopPolling() {
+    if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+        console.log('🛑 Stopped polling');
     }
 }
 
 // ============================================================
-// PHONE VALIDATION
+// UI STATE FUNCTIONS
 // ============================================================
-['phone','whatsapp','contact2Phone'].forEach(n => {
-    const el = document.querySelector(`[name="${n}"]`);
-    if (el) el.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g,'').substring(0,10);
-    });
+function hideForm() {
+    document.getElementById('orderForm').style.display = 'none';
+}
+
+function showProcessing(title, detail) {
+    document.getElementById('processingMsg').textContent = title;
+    document.getElementById('processingDetail').textContent = detail || '';
+    document.getElementById('processingBox').classList.add('show');
+    document.getElementById('successBox').classList.remove('show');
+    document.getElementById('errorBox').classList.remove('show');
+}
+
+function showSuccess(cardUrl) {
+    stopPolling();
+    document.getElementById('cardLink').href = cardUrl || '#';
+    document.getElementById('successBox').classList.add('show');
+    document.getElementById('processingBox').classList.remove('show');
+    document.getElementById('errorBox').classList.remove('show');
+}
+
+function showError(message) {
+    stopPolling();
+    document.getElementById('errorMsg').textContent = message;
+    document.getElementById('errorBox').classList.add('show');
+    document.getElementById('processingBox').classList.remove('show');
+    document.getElementById('successBox').classList.remove('show');
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').textContent = '💳 Pay ₹499';
+}
+
+// Phone validation
+document.querySelector('[name="phone"]').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').substring(0, 10);
 });
 </script>
 </body>
