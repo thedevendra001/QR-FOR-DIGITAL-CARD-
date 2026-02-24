@@ -306,7 +306,7 @@
 // ============================================================
 // ⚠️ UPDATE THIS URL AFTER BACKEND DEPLOYMENT
 // ============================================================
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
 // ✅ Razorpay key (safe to hardcode)
 const RAZORPAY_KEY_ID = 'rzp_live_SGoMjcZYfpwxeX';
@@ -450,14 +450,20 @@ async function handleNewOrder(btn, orig) {
         throw new Error('Razorpay not loaded. Refresh and try again.');
     }
     
+    // ✅ DEBUG — confirm backend response fields
+    console.log('Order response:', res);
+    console.log('Razorpay order_id:', res.razorpayOrderId);
+    console.log('Internal order ID:', res.orderId);
+
     const rzp = new Razorpay({
         key: RAZORPAY_KEY_ID,
-        amount: 100,
+        order_id: res.razorpayOrderId,   // ✅ CRITICAL FIX — required by Razorpay
+        amount: res.amount || 49900,
         currency: 'INR',
         name: 'Agrawal Futurify AI Solutions',
         description: 'Digital Visiting Card - ₹499',
         prefill: { name: data.fullName, email: data.email, contact: data.phone },
-        notes: { orderId: res.orderId },
+        notes: { internalOrderId: res.orderId },
         theme: { color: '#667eea' },
         handler: async function(response) {
             console.log('✅ Payment done:', response.razorpay_payment_id);
