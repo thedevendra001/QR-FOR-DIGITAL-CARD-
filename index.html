@@ -457,7 +457,7 @@ async function handleNewOrder(btn, orig) {
 
     const rzp = new Razorpay({
         key: RAZORPAY_KEY_ID,
-        order_id: res.razorpayOrderId,   // ✅ CRITICAL FIX — required by Razorpay
+        order_id: res.razorpay_order_id || res.razorpayOrderId,   // ✅ CRITICAL FIX — required by Razorpay
         amount: res.amount || 100,
         currency: 'INR',
         name: 'Agrawal Futurify AI Solutions',
