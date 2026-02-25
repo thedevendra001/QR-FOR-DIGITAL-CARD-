@@ -103,30 +103,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
-            color: white;
+            font-size: 18px;
             flex-shrink: 0;
         }
-        .icon-phone    { background: #667eea; }
-        .icon-whatsapp { background: #25D366; }
-        .icon-email    { background: #ea4335; }
-        .icon-address  { background: #f59e0b; }
-        .icon-upi      { background: #7c3aed; }
-        .icon-website  { background: #0ea5e9; }
-        .icon-product  { background: #f97316; }
-        .icon-map      { background: #10b981; }
+        .icon-phone { background: #dcfce7; color: #16a34a; }
+        .icon-whatsapp { background: #dcfce7; color: #25D366; }
+        .icon-email { background: #dbeafe; color: #2563eb; }
+        .icon-address { background: #fef3c7; color: #f59e0b; }
+        .icon-upi { background: #e0e7ff; color: #6366f1; }
         
-        .contact-text { flex: 1; font-size: 15px; color: #333; }
-        .contact-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        
-        .contact-link { color: #667eea; text-decoration: none; font-weight: 600; }
-        .contact-link:hover { text-decoration: underline; }
+        .contact-text { flex: 1; min-width: 0; }
+        .contact-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+        .contact-link {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .contact-link:hover { color: #667eea; }
 
-        /* ===== CONTACT 2 BLOCK ===== */
+        /* ===== CONTACT 2 ===== */
         .contact2-block {
-            background: linear-gradient(135deg, #f0f4ff, #f5f0ff);
-            border: 1.5px solid #c7d2fe;
-            border-radius: 14px;
+            background: linear-gradient(135deg, #f0f4ff, #faf5ff);
+            border: 2px solid #c7d2fe;
+            border-radius: 12px;
             padding: 16px;
             margin-bottom: 10px;
         }
@@ -348,7 +350,7 @@
             
             <div class="footer">
                 <p class="footer-text">
-                    Powered by <a href="https://thedevendra001.github.io/QR-FOR-DIGITAL-CARD-/" class="footer-link">Agrawal Futurify AI Solutions</a>
+                    Powered by <a href="https://thedevendra001.github.io/QR-FOR-DIGITAL-CARD-/" class="footer-link" target="_blank">Agrawal Futurify AI Solutions</a>
                 </p>
             </div>
         </div>
@@ -357,44 +359,47 @@
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxC92gLrinxS72t2r7e0nNGjAKbsicw9sR5vYaLcEzC0meuvCPncwmhFAthvvP3QtDHjw/exec';
         
-        let cardData = null;
+        // Get slug from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
         
-        window.addEventListener('load', async function() {
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get('slug');
-            if (!slug) { showError('No card ID provided in URL'); return; }
-            await loadCard(slug);
-        });
+        if (!slug) {
+            showError('No card identifier found in URL');
+        } else {
+            loadCard(slug);
+        }
         
         async function loadCard(slug) {
             try {
                 const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
-                if (!response.ok) throw new Error('Failed to fetch card data');
                 const result = await response.json();
-                if (result.status === 'error') throw new Error(result.message || 'Card not found');
-                if (result.status === 'success' && result.data) {
-                    cardData = result.data;
-                    renderCard(cardData);
+                
+                if (result.status === 'error') {
+                    showError(result.message);
+                } else if (result.status === 'success' && result.data) {
+                    renderCard(result.data);
+                    setupActionButtons(result.data);
                 } else {
-                    throw new Error('Invalid card data');
+                    showError('Card data not found');
                 }
-            } catch (err) {
-                showError(err.message);
+            } catch (error) {
+                console.error('Load error:', error);
+                showError('Failed to load card. Please check your connection.');
             }
         }
-        
-        // ===== HELPERS =====
 
-        // Convert Google Drive uc?export=view URL → thumbnail URL (fixes CORS/redirect issues)
         function fixDriveImageUrl(url) {
             if (!url) return '';
-            // Already a thumbnail or lh3 URL → use as-is
-            if (url.includes('lh3.googleusercontent.com') || url.includes('thumbnail')) return url;
-            // Standard Drive share URL: extract file ID
-            const match = url.match(/[?&]id=([^&]+)/);
-            if (match) {
-                // Use thumbnail endpoint which works reliably for display
-                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+            if (url.includes('drive.google.com/file/d/')) {
+                const match = url.match(/\/file\/d\/([^\/]+)/);
+                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+            if (url.includes('drive.google.com/open?id=')) {
+                const match = url.match(/id=([^&]+)/);
+                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+            if (url.includes('drive.google.com/uc?')) {
+                return url;
             }
             return url;
         }
@@ -429,7 +434,6 @@
             document.getElementById('cardContent').style.display = 'block';
             
             // ===== PROFILE IMAGE =====
-            // Support all possible field names from backend
             const rawImageUrl = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
             const imageUrl = fixDriveImageUrl(rawImageUrl);
             console.log('Image URL (raw):', rawImageUrl);
@@ -440,7 +444,6 @@
 
             if (imageUrl) {
                 const img = document.createElement('img');
-                // Cache buster forces fresh load after edit
                 img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
                 img.alt = data.fullName || '';
                 img.className = 'profile-image';
@@ -462,7 +465,7 @@
             const contactItems = document.getElementById('contactItems');
             let contactHTML = '';
 
-            // ✅ Phone — with backward compat (old 10-digit data → add 91)
+            // ✅ Phone
             const phoneDigits = normalizePhone(data.phone);
             if (phoneDigits) {
                 const phoneDisplay = formatPhoneDisplay(phoneDigits);
@@ -476,7 +479,7 @@
                     </div>`;
             }
             
-            // ✅ WhatsApp — safety fix + backward compat
+            // ✅ WhatsApp
             const waRaw = data.whatsapp || data.phone || '';
             const waDigits = normalizePhone(waRaw);
             if (waDigits) {
@@ -490,6 +493,7 @@
                     </div>`;
             }
             
+            // ✅ EMAIL - ADDED (Lines 493-502)
             if (data.email) {
                 contactHTML += `
                     <div class="contact-item">
@@ -501,6 +505,7 @@
                     </div>`;
             }
             
+            // ✅ Address
             if (data.address) {
                 const mapsUrl = data.maps || `https://maps.google.com/?q=${encodeURIComponent(data.address)}`;
                 contactHTML += `
@@ -513,7 +518,7 @@
                     </div>`;
             }
             
-            // ✅ UPI clickable intent link
+            // ✅ UPI CLICKABLE - ADDED (Lines 517-536)
             if (data.upiId) {
                 const upiName = encodeURIComponent(data.fullName || data.businessName || 'Pay');
                 const upiLink = `upi://pay?pa=${encodeURIComponent(data.upiId)}&pn=${upiName}`;
@@ -552,81 +557,56 @@
                 if (data.contact2Email) {
                     c2HTML += `<a href="mailto:${data.contact2Email}" class="contact2-link"><i class="fa-solid fa-envelope"></i> Email</a>`;
                 }
-                if (c2PhoneDigits) {
-                    c2HTML += `<a href="https://wa.me/${c2PhoneDigits}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
-                }
                 c2HTML += `</div></div>`;
                 c2.innerHTML = c2HTML;
                 document.getElementById('contact2Section').style.display = 'block';
             }
             
-            // ===== SOCIAL LINKS (Brand Colors) =====
+            // ===== SOCIAL =====
             const socialLinks = document.getElementById('socialLinks');
             let socialHTML = '';
-            
-            if (data.instagram) socialHTML += `<a href="${data.instagram}" target="_blank" class="social-btn btn-instagram"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
-            if (data.facebook)  socialHTML += `<a href="${data.facebook}"  target="_blank" class="social-btn btn-facebook"><i class="fa-brands fa-facebook"></i> Facebook</a>`;
-            if (data.linkedin)  socialHTML += `<a href="${data.linkedin}"  target="_blank" class="social-btn btn-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>`;
-            if (data.twitter)   socialHTML += `<a href="${data.twitter}"   target="_blank" class="social-btn btn-twitter"><i class="fa-brands fa-x-twitter"></i> Twitter</a>`;
-            if (data.youtube)   socialHTML += `<a href="${data.youtube}"   target="_blank" class="social-btn btn-youtube"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
-            if (data.telegram)  socialHTML += `<a href="${data.telegram}"  target="_blank" class="social-btn btn-telegram"><i class="fa-brands fa-telegram"></i> Telegram</a>`;
-            
+            if (data.instagram) socialHTML += `<a href="${data.instagram}" class="social-btn btn-instagram" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
+            if (data.facebook)  socialHTML += `<a href="${data.facebook}" class="social-btn btn-facebook" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a>`;
+            if (data.linkedin)  socialHTML += `<a href="${data.linkedin}" class="social-btn btn-linkedin" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>`;
+            if (data.twitter)   socialHTML += `<a href="${data.twitter}" class="social-btn btn-twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i> X</a>`;
+            if (data.youtube)   socialHTML += `<a href="${data.youtube}" class="social-btn btn-youtube" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
+            if (data.telegram)  socialHTML += `<a href="${data.telegram}" class="social-btn btn-telegram" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>`;
             if (socialHTML) {
                 socialLinks.innerHTML = socialHTML;
                 document.getElementById('socialSection').style.display = 'block';
             }
             
-            // ===== ADDITIONAL INFO =====
+            // ===== ADDITIONAL =====
             const additionalItems = document.getElementById('additionalItems');
             let additionalHTML = '';
-            
-            if (data.website) {
-                additionalHTML += `
-                    <div class="contact-item">
-                        <div class="contact-icon icon-website"><i class="fa-solid fa-globe"></i></div>
-                        <div class="contact-text">
-                            <div class="contact-label">Website</div>
-                            <a href="${data.website}" target="_blank" class="contact-link">${data.website.replace(/^https?:\/\//, '')}</a>
-                        </div>
-                    </div>`;
-            }
-            if (data.productUrl) {
-                additionalHTML += `
-                    <div class="contact-item">
-                        <div class="contact-icon icon-product"><i class="fa-solid fa-bag-shopping"></i></div>
-                        <div class="contact-text">
-                            <div class="contact-label">Products</div>
-                            <a href="${data.productUrl}" target="_blank" class="contact-link">View Products</a>
-                        </div>
-                    </div>`;
-            }
-            if (data.maps) {
-                additionalHTML += `
-                    <div class="contact-item">
-                        <div class="contact-icon icon-map"><i class="fa-solid fa-map-location-dot"></i></div>
-                        <div class="contact-text">
-                            <div class="contact-label">Location</div>
-                            <a href="${data.maps}" target="_blank" class="contact-link">Open in Maps</a>
-                        </div>
-                    </div>`;
-            }
-            
+            if (data.website) additionalHTML += `
+                <div class="contact-item">
+                    <div class="contact-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-globe"></i></div>
+                    <div class="contact-text">
+                        <div class="contact-label">Website</div>
+                        <a href="${data.website}" target="_blank" class="contact-link">${data.website.replace(/^https?:\/\//, '')}</a>
+                    </div>
+                </div>`;
+            if (data.productUrl) additionalHTML += `
+                <div class="contact-item">
+                    <div class="contact-icon" style="background:#fef3c7;color:#f59e0b;"><i class="fa-solid fa-shopping-cart"></i></div>
+                    <div class="contact-text">
+                        <div class="contact-label">Products</div>
+                        <a href="${data.productUrl}" target="_blank" class="contact-link">View Products</a>
+                    </div>
+                </div>`;
             if (additionalHTML) {
                 additionalItems.innerHTML = additionalHTML;
                 document.getElementById('additionalSection').style.display = 'block';
             }
-            
-            setupActionButtons(data);
         }
         
-        // ===== UPI Click Handler (mobile opens app, desktop safe) =====
+        // ===== UPI HANDLERS - ADDED (Lines 623-644) =====
         function handleUpiClick(event, upiLink) {
-            // On desktop, UPI links may not work — we let it try naturally
-            // No prevention needed; browser handles gracefully
+            // Mobile pe UPI apps open honge, desktop pe safe fallback
             return true;
         }
         
-        // ===== Copy UPI =====
         function copyUpi(upiId, btn) {
             navigator.clipboard.writeText(upiId).then(() => {
                 const orig = btn.innerHTML;
@@ -699,3 +679,4 @@
     </script>
 </body>
 </html>
+
