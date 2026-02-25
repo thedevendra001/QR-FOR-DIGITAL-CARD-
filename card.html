@@ -467,16 +467,17 @@
                     </div>`;
             }
             
-            // ✅ DEBUG: Check if email exists
-            console.log("🔍 PRIMARY EMAIL DEBUG:");
-            console.log("  data.email =", data.email);
-            console.log("  Type:", typeof data.email);
-            console.log("  Exists?", !!data.email);
-            console.log("  Not empty?", data.email && data.email.trim() !== '');
+            // ✅ CRITICAL DEBUG - Check if email exists
+            console.log("===== PRIMARY EMAIL DEBUG =====");
+            console.log("Full data object:", data);
+            console.log("Primary Email value:", data.email);
+            console.log("Email type:", typeof data.email);
+            console.log("Email truthy?", !!data.email);
+            console.log("===============================");
             
             // ✅ TASK 1: EMAIL - PRIMARY CONTACT (NEW FEATURE)
             if (data.email && String(data.email).trim() !== '') {
-                console.log("✅ Email block ADDED to contactHTML");
+                console.log("✅ EMAIL BLOCK IS BEING ADDED");
                 contactHTML += `
                     <div class="contact-item">
                         <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
@@ -486,7 +487,7 @@
                         </div>
                     </div>`;
             } else {
-                console.log("❌ Email block NOT added - email is missing or empty");
+                console.log("❌ EMAIL BLOCK NOT ADDED - Reason:", !data.email ? "email is null/undefined" : "email is empty string");
             }
             
             if (data.address) {
