@@ -391,14 +391,28 @@
 
         function fixDriveImageUrl(url) {
             if (!url) return '';
-            if (url.includes('drive.google.com/file/d/')) {
-                const match = url.match(/\/file\/d\/([^\/]+)/);
+            url = String(url).trim();
+
+            // /file/d/FILE_ID/view  →  uc?export=view&id=FILE_ID
+            if (url.includes('/file/d/')) {
+                const match = url.match(/\/file\/d\/([^\/\?]+)/);
                 if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
             }
-            if (url.includes('drive.google.com/open?id=')) {
-                const match = url.match(/id=([^&]+)/);
+            // open?id=  →  uc?export=view&id=
+            if (url.includes('drive.google.com/open?id=') || url.includes('drive.google.com/open?id=')) {
+                const match = url.match(/[?&]id=([^&]+)/);
                 if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
             }
+            // thumbnail?id=  →  uc?export=view&id=
+            if (url.includes('thumbnail?id=') || url.includes('thumbnail?sz=')) {
+                const match = url.match(/[?&]id=([^&]+)/);
+                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+            // lh3.googleusercontent.com links (Drive's CDN)
+            if (url.includes('lh3.googleusercontent.com')) {
+                return url; // these work directly
+            }
+            // already a uc?export link
             if (url.includes('drive.google.com/uc?')) {
                 return url;
             }
@@ -434,38 +448,27 @@
             const rawImageUrl = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
 const imageUrl = fixDriveImageUrl(rawImageUrl);
 
-// ✅ DEBUG LOGGING (remove after verification)
-console.log('🖼️ Image Debug:');
-console.log('  Raw URL:', rawImageUrl);
-console.log('  Fixed URL:', imageUrl);
-console.log('  URL exists?', !!imageUrl);
+// ✅ DEBUG (remove after verification)
+console.log('🖼️ Raw URL:', rawImageUrl, '→ Fixed:', imageUrl);
 
 const imageContainer = document.getElementById('profileImageContainer');
 const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
 
 if (imageUrl) {
     console.log('✅ Image URL exists, attempting to load...');
+    imageContainer.innerHTML = ''; // clear before append
     const img = document.createElement('img');
+    img.crossOrigin = "anonymous";
     img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
     img.alt = data.fullName || '';
     img.className = 'profile-image';
     
-    // ✅ Enhanced success handler
     img.onload = function() {
         console.log('✅ Image loaded successfully');
-        console.log('   Loaded URL:', img.src);
     };
     
-    // ✅ Enhanced error handler
-    img.onerror = function(err) {
-        console.error('❌ Image failed to load');
-        console.error('   Attempted URL:', img.src);
-        console.error('   Error:', err);
-        console.error('   Possible causes:');
-        console.error('   - Drive file permission is private');
-        console.error('   - File was deleted from Drive');
-        console.error('   - Invalid URL format');
-        console.error('   - CORS issue');
+    img.onerror = function() {
+        console.error('❌ Image failed to load:', img.src);
         imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
     };
     
@@ -480,40 +483,6 @@ if (imageUrl) {
 }
 
 
-/* ============================================================
-   🔧 OPTIONAL: Add full data debug at renderCard start
-   Add this after line 428 (after console.log('Card Data:', data);)
-   ============================================================ */
-
-console.log('🔍 DETAILED CARD DATA DEBUG:');
-console.log('📧 Email:', data.email, '| Exists?', !!data.email);
-console.log('🖼️ ImageURL:', data.imageUrl, '| Exists?', !!data.imageUrl);
-console.log('👤 Name:', data.fullName);
-console.log('📞 Phone:', data.phone);
-console.log('💼 Business:', data.businessName);
-
-
-/* ============================================================
-   🔧 VERIFICATION: Email rendering code
-   This should ALREADY be present at lines 487-497
-   If missing, add it after WhatsApp block
-   ============================================================ */
-
-// ✅ EMAIL - Primary Contact
-if (data.email && String(data.email).trim() !== '') {
-    console.log('✅ Rendering email in Primary Contact');
-    contactHTML += `
-        <div class="contact-item">
-            <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
-            <div class="contact-text">
-                <div class="contact-label">Email</div>
-                <a href="mailto:${data.email}" class="contact-link">${data.email}</a>
-            </div>
-        </div>`;
-} else {
-    console.log('⚠️ Email not rendered - not present or empty');
-}
-           
             document.getElementById('cardName').textContent = data.fullName || '';
             if (data.designation) document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
             if (data.businessName) document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
