@@ -393,29 +393,32 @@
             if (!url) return '';
             url = String(url).trim();
 
-            // /file/d/FILE_ID/view  →  uc?export=view&id=FILE_ID
+            // Extract Drive file ID from any known Drive URL format
+            let fileId = null;
+
             if (url.includes('/file/d/')) {
                 const match = url.match(/\/file\/d\/([^\/\?]+)/);
-                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-            }
-            // open?id=  →  uc?export=view&id=
-            if (url.includes('drive.google.com/open?id=') || url.includes('drive.google.com/open?id=')) {
+                if (match) fileId = match[1];
+            } else if (url.includes('[?&]id=')) {
                 const match = url.match(/[?&]id=([^&]+)/);
-                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-            }
-            // thumbnail?id=  →  uc?export=view&id=
-            if (url.includes('thumbnail?id=') || url.includes('thumbnail?sz=')) {
+                if (match) fileId = match[1];
+            } else if (url.includes('drive.google.com/uc?')) {
                 const match = url.match(/[?&]id=([^&]+)/);
-                if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                if (match) fileId = match[1];
+            } else if (url.includes('thumbnail?')) {
+                const match = url.match(/[?&]id=([^&]+)/);
+                if (match) fileId = match[1];
             }
-            // lh3.googleusercontent.com links (Drive's CDN)
-            if (url.includes('lh3.googleusercontent.com')) {
-                return url; // these work directly
+
+            if (fileId) {
+                // ✅ Use thumbnail endpoint — bypasses virus-scan interstitial, no CORS issue
+                // sz=s400 = 400px size, works for profile photos
+                return `https://lh3.googleusercontent.com/d/${fileId}=s400`;
             }
-            // already a uc?export link
-            if (url.includes('drive.google.com/uc?')) {
-                return url;
-            }
+
+            // lh3 links already work directly
+            if (url.includes('lh3.googleusercontent.com')) return url;
+
             return url;
         }
 
@@ -458,8 +461,7 @@ if (imageUrl) {
     console.log('✅ Image URL exists, attempting to load...');
     imageContainer.innerHTML = ''; // clear before append
     const img = document.createElement('img');
-    img.crossOrigin = "anonymous";
-    img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    img.src = imageUrl;
     img.alt = data.fullName || '';
     img.className = 'profile-image';
     
