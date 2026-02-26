@@ -374,6 +374,7 @@
             try {
                 const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
                 const result = await response.json();
+                console.log("API RESULT:", result);
                 
                 if (result.status === 'error') {
                     showError(result.message);
