@@ -432,24 +432,88 @@
             document.getElementById('cardContent').style.display = 'block';
             
             const rawImageUrl = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
-            const imageUrl = fixDriveImageUrl(rawImageUrl);
+const imageUrl = fixDriveImageUrl(rawImageUrl);
 
-            const imageContainer = document.getElementById('profileImageContainer');
-            const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
+// ✅ DEBUG LOGGING (remove after verification)
+console.log('🖼️ Image Debug:');
+console.log('  Raw URL:', rawImageUrl);
+console.log('  Fixed URL:', imageUrl);
+console.log('  URL exists?', !!imageUrl);
 
-            if (imageUrl) {
-                const img = document.createElement('img');
-                img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-                img.alt = data.fullName || '';
-                img.className = 'profile-image';
-                img.onerror = function() {
-                    imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
-                };
-                imageContainer.appendChild(img);
-            } else {
-                imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
-            }
-            
+const imageContainer = document.getElementById('profileImageContainer');
+const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
+
+if (imageUrl) {
+    console.log('✅ Image URL exists, attempting to load...');
+    const img = document.createElement('img');
+    img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    img.alt = data.fullName || '';
+    img.className = 'profile-image';
+    
+    // ✅ Enhanced success handler
+    img.onload = function() {
+        console.log('✅ Image loaded successfully');
+        console.log('   Loaded URL:', img.src);
+    };
+    
+    // ✅ Enhanced error handler
+    img.onerror = function(err) {
+        console.error('❌ Image failed to load');
+        console.error('   Attempted URL:', img.src);
+        console.error('   Error:', err);
+        console.error('   Possible causes:');
+        console.error('   - Drive file permission is private');
+        console.error('   - File was deleted from Drive');
+        console.error('   - Invalid URL format');
+        console.error('   - CORS issue');
+        imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
+    };
+    
+    imageContainer.appendChild(img);
+} else {
+    console.log('⚠️ No image URL provided, showing placeholder');
+    console.log('   data.imageUrl:', data.imageUrl);
+    console.log('   data.photoUrl:', data.photoUrl);
+    console.log('   data.photo:', data.photo);
+    console.log('   data.profileImage:', data.profileImage);
+    imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
+}
+
+
+/* ============================================================
+   🔧 OPTIONAL: Add full data debug at renderCard start
+   Add this after line 428 (after console.log('Card Data:', data);)
+   ============================================================ */
+
+console.log('🔍 DETAILED CARD DATA DEBUG:');
+console.log('📧 Email:', data.email, '| Exists?', !!data.email);
+console.log('🖼️ ImageURL:', data.imageUrl, '| Exists?', !!data.imageUrl);
+console.log('👤 Name:', data.fullName);
+console.log('📞 Phone:', data.phone);
+console.log('💼 Business:', data.businessName);
+
+
+/* ============================================================
+   🔧 VERIFICATION: Email rendering code
+   This should ALREADY be present at lines 487-497
+   If missing, add it after WhatsApp block
+   ============================================================ */
+
+// ✅ EMAIL - Primary Contact
+if (data.email && String(data.email).trim() !== '') {
+    console.log('✅ Rendering email in Primary Contact');
+    contactHTML += `
+        <div class="contact-item">
+            <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
+            <div class="contact-text">
+                <div class="contact-label">Email</div>
+                <a href="mailto:${data.email}" class="contact-link">${data.email}</a>
+            </div>
+        </div>`;
+} else {
+    console.log('⚠️ Email not rendered - not present or empty');
+}
+           
             document.getElementById('cardName').textContent = data.fullName || '';
             if (data.designation) document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
             if (data.businessName) document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
