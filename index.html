@@ -349,6 +349,24 @@ async function initEditMode(email, token) {
     const ef = document.getElementById('emailField');
     ef.value = email; ef.disabled = true; ef.required = false;
     
+    // ✅ Add "Change Email" option in edit mode
+    const emailGroup = ef.closest('.form-group');
+    if (emailGroup && !document.getElementById('changeEmailGroup')) {
+        const changeDiv = document.createElement('div');
+        changeDiv.id = 'changeEmailGroup';
+        changeDiv.style.marginTop = '10px';
+        changeDiv.innerHTML = `
+            <div style="font-size:12px;color:#667eea;font-weight:600;cursor:pointer" onclick="toggleEmailChange()" id="changeEmailToggle">
+                ✏️ Email address badalna chahte hain?
+            </div>
+            <div id="changeEmailInput" style="display:none;margin-top:8px">
+                <input type="email" id="newEmailField" name="newEmail" placeholder="Naya email darj karein" 
+                    style="width:100%;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:15px">
+                <div style="font-size:11px;color:#e53e3e;margin-top:4px">⚠️ Email badalne ke baad purana edit link kaam nahi karega. Naya link naye email pe aayega.</div>
+            </div>`;
+        emailGroup.appendChild(changeDiv);
+    }
+    
     try {
         const r = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(email)}`);
         const d = await r.json();
@@ -411,19 +429,20 @@ function showEmailBanner(status, email) {
     const submitBtn = document.getElementById('submitBtn');
 
     if (status === 'PAID') {
+        // Inform but DO NOT block — user can order again (new card/slug will be created)
         banner.className = 'email-status-banner paid';
-        banner.innerHTML = `⚠️ This email already has an active card.<br>
-            Please check your inbox for the edit link, or 
+        banner.innerHTML = `ℹ️ Is email se pehle ek card bana hua hai.<br>
+            Agar <strong>edit karna hai</strong> to apne email inbox mein edit link dhundein ya 
             <a href="https://wa.me/919770061597?text=Resend%20edit%20link%20for%20${encodeURIComponent(email)}" target="_blank">
-                WhatsApp us to resend it
-            </a>.`;
+                WhatsApp karen
+            </a>.<br>
+            <span style="color:#6b7280;font-weight:400;font-size:12px">Naya order karna chahte hain to niche proceed karen.</span>`;
         banner.style.display = 'block';
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '0.5';
-        submitBtn.title = 'This email already has an active card';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
     } else if (status === 'CREATED') {
         banner.className = 'email-status-banner created';
-        banner.innerHTML = `ℹ️ A previous order exists for this email (payment not completed). You can continue to pay below.`;
+        banner.innerHTML = `ℹ️ Pichla order incomplete tha (payment nahi hui). Niche proceed karein — same order resume hoga.`;
         banner.style.display = 'block';
         submitBtn.disabled = false;
         submitBtn.style.opacity = '';
@@ -462,18 +481,9 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
         }
     } catch(e) {
         console.error('❌ Error:', e);
-        // If it's a PAID email error, show inline banner instead of raw alert
-        if (e.message && e.message.toLowerCase().includes('already registered')) {
-            const email = document.getElementById('emailField').value.trim().toLowerCase();
-            emailStatusCache[email] = 'PAID';
-            showEmailBanner('PAID', email);
-            btn.disabled = false;
-            btn.textContent = orig;
-        } else {
-            alert('Error: ' + e.message);
-            btn.disabled = false;
-            btn.textContent = orig;
-        }
+        alert('Error: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = orig;
     } finally {
         isSubmitting = false;
     }
@@ -656,6 +666,12 @@ async function handleEdit(btn) {
         editToken: currentToken
     };
     fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
+    
+    // ✅ Handle email change — send as newEmail so backend can update it
+    const newEmailField = document.getElementById('newEmailField');
+    if (newEmailField && newEmailField.value.trim()) {
+        data.newEmail = newEmailField.value.trim().toLowerCase();
+    }
 
     // ✅ Combine country code + number for edit mode too
     const editPhoneDigits = getFullPhone('phoneCC', 'phoneNumber');
@@ -687,6 +703,21 @@ async function handleEdit(btn) {
         console.log('✅ Updated');
     } else {
         throw new Error(res.message);
+    }
+}
+
+function toggleEmailChange() {
+    const input = document.getElementById('changeEmailInput');
+    const toggle = document.getElementById('changeEmailToggle');
+    if (input.style.display === 'none') {
+        input.style.display = 'block';
+        toggle.textContent = '✕ Cancel';
+        toggle.style.color = '#e53e3e';
+    } else {
+        input.style.display = 'none';
+        toggle.innerHTML = '✏️ Email address badalna chahte hain?';
+        toggle.style.color = '#667eea';
+        document.getElementById('newEmailField').value = '';
     }
 }
 
