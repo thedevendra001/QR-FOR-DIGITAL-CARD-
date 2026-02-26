@@ -348,8 +348,14 @@ async function initEditMode(email, token) {
 // ============================================================
 // FORM SUBMISSION
 // ============================================================
+// SUBMIT HANDLER — with double-submit guard
+// ============================================================
+let isSubmitting = false;
+
 document.getElementById('orderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    if (isSubmitting) return; // prevent double-submit race
+    isSubmitting = true;
     const btn = document.getElementById('submitBtn'), orig = btn.textContent;
     
     try {
@@ -363,6 +369,8 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
         alert('Error: ' + e.message);
         btn.disabled = false;
         btn.textContent = orig;
+    } finally {
+        isSubmitting = false;
     }
 });
 
@@ -420,7 +428,11 @@ async function handleNewOrder(btn, orig) {
         throw new Error(res.message || 'Order creation failed');
     }
     
-    console.log('✅ Order created:', res.orderId);
+    if (res.retry) {
+        console.log('🔄 Retry detected — reusing existing order:', res.orderId);
+    } else {
+        console.log('✅ New order created:', res.orderId);
+    }
     
     // Open Razorpay
     btn.textContent = '💳 Opening payment...';
@@ -476,6 +488,7 @@ async function handleNewOrder(btn, orig) {
                 console.log('Payment cancelled');
                 btn.disabled = false;
                 btn.textContent = orig;
+                isSubmitting = false;
             }
         }
     });
