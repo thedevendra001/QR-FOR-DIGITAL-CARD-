@@ -82,6 +82,28 @@
         .success-box.show { display: block; }
         .success-box h3 { color: #065f46; margin-bottom: 18px; font-size: 24px; }
         .edit-mode-header { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); padding: 20px 24px; text-align: center; color: white; display: none; }
+
+        /* ===== EMAIL STATUS BANNER ===== */
+        .email-status-banner {
+            display: none;
+            margin-top: 10px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .email-status-banner.paid {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+        .email-status-banner.created {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+        .email-checking { color: #888; font-size: 12px; margin-top: 6px; display: none; }
     </style>
 </head>
 <body>
@@ -132,6 +154,8 @@
                 <label>Email <span class="required">*</span></label>
                 <input type="email" name="email" id="emailField" required placeholder="rajesh@example.com">
                 <div class="helper-text" id="emailHelper">This will be your login email — enter carefully</div>
+                <div class="email-checking" id="emailChecking">⏳ Checking email...</div>
+                <div class="email-status-banner" id="emailStatusBanner"></div>
             </div>
             <div class="form-group">
                 <label>Phone <span class="required">*</span><span class="label-badge">Editable Later</span></label>
@@ -348,6 +372,78 @@ async function initEditMode(email, token) {
 // ============================================================
 // FORM SUBMISSION
 // ============================================================
+// EMAIL STATUS PRE-CHECK — fires on blur (when user leaves email field)
+// ============================================================
+let emailStatusCache = {}; // cache to avoid repeat API calls
+
+document.getElementById('emailField').addEventListener('blur', async function() {
+    if (isEditMode) return; // skip in edit mode
+    const email = this.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) return;
+
+    const banner = document.getElementById('emailStatusBanner');
+    const checking = document.getElementById('emailChecking');
+
+    // Use cache if available
+    if (emailStatusCache[email] !== undefined) {
+        showEmailBanner(emailStatusCache[email], email);
+        return;
+    }
+
+    checking.style.display = 'block';
+    banner.style.display = 'none';
+
+    try {
+        const r = await fetch(`${WEB_APP_URL}?mode=checkStatus&email=${encodeURIComponent(email)}`);
+        const d = await r.json();
+        checking.style.display = 'none';
+        const status = String(d.status || d.paymentStatus || '').toUpperCase();
+        emailStatusCache[email] = status;
+        showEmailBanner(status, email);
+    } catch(e) {
+        checking.style.display = 'none';
+        // silently ignore — don't block user if check fails
+    }
+});
+
+function showEmailBanner(status, email) {
+    const banner = document.getElementById('emailStatusBanner');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (status === 'PAID') {
+        banner.className = 'email-status-banner paid';
+        banner.innerHTML = `⚠️ This email already has an active card.<br>
+            Please check your inbox for the edit link, or 
+            <a href="https://wa.me/919770061597?text=Resend%20edit%20link%20for%20${encodeURIComponent(email)}" target="_blank">
+                WhatsApp us to resend it
+            </a>.`;
+        banner.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.title = 'This email already has an active card';
+    } else if (status === 'CREATED') {
+        banner.className = 'email-status-banner created';
+        banner.innerHTML = `ℹ️ A previous order exists for this email (payment not completed). You can continue to pay below.`;
+        banner.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+    } else {
+        banner.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+    }
+}
+
+// Clear banner when user changes the email
+document.getElementById('emailField').addEventListener('input', function() {
+    const banner = document.getElementById('emailStatusBanner');
+    const submitBtn = document.getElementById('submitBtn');
+    banner.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '';
+});
+
+// ============================================================
 // SUBMIT HANDLER — with double-submit guard
 // ============================================================
 let isSubmitting = false;
@@ -366,9 +462,18 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
         }
     } catch(e) {
         console.error('❌ Error:', e);
-        alert('Error: ' + e.message);
-        btn.disabled = false;
-        btn.textContent = orig;
+        // If it's a PAID email error, show inline banner instead of raw alert
+        if (e.message && e.message.toLowerCase().includes('already registered')) {
+            const email = document.getElementById('emailField').value.trim().toLowerCase();
+            emailStatusCache[email] = 'PAID';
+            showEmailBanner('PAID', email);
+            btn.disabled = false;
+            btn.textContent = orig;
+        } else {
+            alert('Error: ' + e.message);
+            btn.disabled = false;
+            btn.textContent = orig;
+        }
     } finally {
         isSubmitting = false;
     }
