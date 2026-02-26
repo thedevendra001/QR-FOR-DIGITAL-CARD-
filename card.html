@@ -520,17 +520,24 @@ if (imageUrl) {
                     </div>`;
             }
             
-            // ✅ EMAIL - Primary Contact
-            if (data.email && String(data.email).trim() !== '') {
-                contactHTML += `
-                    <div class="contact-item">
-                        <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
-                        <div class="contact-text">
-                            <div class="contact-label">Email</div>
-                            <a href="mailto:${data.email}" class="contact-link">${data.email}</a>
-                        </div>
-                    </div>`;
-            }
+            // EMAIL - Primary Contact
+     const primaryEmail =
+         (data.email || data.primaryEmail || data.contactEmail || '').trim();
+
+if (primaryEmail) {
+    contactHTML += `
+        <div class="contact-item">
+            <div class="contact-icon icon-email">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="contact-text">
+                <div class="contact-label">Email</div>
+                <a href="mailto:${primaryEmail}" class="contact-link">${primaryEmail}</a>
+            </div>
+        </div>
+    `;
+}
+            
             
             // ✅ ADDRESS with Copy Button
             if (data.address) {
