@@ -393,30 +393,29 @@
             if (!url) return '';
             url = String(url).trim();
 
-            // Extract Drive file ID from any known Drive URL format
             let fileId = null;
 
-            if (url.includes('/file/d/')) {
+            // drive.google.com/uc?export=view&id=FILE_ID  (most common - stored by backend)
+            if (url.includes('drive.google.com/uc?') || url.includes('drive.google.com/uc?export')) {
+                const match = url.match(/[?&]id=([^&]+)/);
+                if (match) fileId = match[1];
+            }
+            // drive.google.com/file/d/FILE_ID/view
+            else if (url.includes('/file/d/')) {
                 const match = url.match(/\/file\/d\/([^\/\?]+)/);
                 if (match) fileId = match[1];
-            } else if (url.includes('[?&]id=')) {
-                const match = url.match(/[?&]id=([^&]+)/);
-                if (match) fileId = match[1];
-            } else if (url.includes('drive.google.com/uc?')) {
-                const match = url.match(/[?&]id=([^&]+)/);
-                if (match) fileId = match[1];
-            } else if (url.includes('thumbnail?')) {
+            }
+            // open?id= or thumbnail?id=
+            else if (url.includes('?id=') || url.includes('&id=')) {
                 const match = url.match(/[?&]id=([^&]+)/);
                 if (match) fileId = match[1];
             }
 
             if (fileId) {
-                // ✅ Use thumbnail endpoint — bypasses virus-scan interstitial, no CORS issue
-                // sz=s400 = 400px size, works for profile photos
-                return `https://lh3.googleusercontent.com/d/${fileId}=s400`;
+                return 'https://lh3.googleusercontent.com/d/' + fileId + '=s400';
             }
 
-            // lh3 links already work directly
+            // Already lh3
             if (url.includes('lh3.googleusercontent.com')) return url;
 
             return url;
