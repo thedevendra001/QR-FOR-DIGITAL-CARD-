@@ -460,7 +460,9 @@ if (imageUrl) {
     console.log('✅ Image URL exists, attempting to load...');
     imageContainer.innerHTML = ''; // clear before append
     const img = document.createElement('img');
-    img.src = imageUrl;
+    img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    img.crossOrigin = 'anonymous';
+
     img.alt = data.fullName || '';
     img.className = 'profile-image';
     
