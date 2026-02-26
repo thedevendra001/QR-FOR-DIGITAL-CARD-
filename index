@@ -415,7 +415,8 @@ document.getElementById('emailField').addEventListener('blur', async function() 
         const r = await fetch(`${WEB_APP_URL}?mode=checkStatus&email=${encodeURIComponent(email)}`);
         const d = await r.json();
         checking.style.display = 'none';
-        const status = String(d.status || d.paymentStatus || '').toUpperCase();
+        // ✅ FIX: d.status = 'success'/'error' — payment status is in d.paymentStatus
+        const status = String(d.paymentStatus || '').trim().toUpperCase();
         emailStatusCache[email] = status;
         showEmailBanner(status, email);
     } catch(e) {
