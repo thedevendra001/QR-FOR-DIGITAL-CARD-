@@ -104,11 +104,11 @@
             font-size: 18px;
             flex-shrink: 0;
         }
-        .icon-phone { background: #dcfce7; color: #16a34a; }
+        .icon-phone    { background: #dcfce7; color: #16a34a; }
         .icon-whatsapp { background: #dcfce7; color: #25D366; }
-        .icon-email { background: #dbeafe; color: #2563eb; }
-        .icon-address { background: #fef3c7; color: #f59e0b; }
-        .icon-upi { background: #e0e7ff; color: #6366f1; }
+        .icon-email    { background: #dbeafe; color: #2563eb; }
+        .icon-address  { background: #fef3c7; color: #f59e0b; }
+        .icon-upi      { background: #e0e7ff; color: #6366f1; }
         
         .contact-text { flex: 1; min-width: 0; }
         .contact-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
@@ -149,12 +149,7 @@
         .contact2-link:hover { background: #667eea; color: white; border-color: #667eea; }
         .contact2-link i { font-size: 13px; }
 
-        .upi-block {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .upi-block { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .upi-pay-btn {
             display: inline-flex;
             align-items: center;
@@ -184,7 +179,6 @@
         .upi-copy-btn:hover { background: #667eea; color: white; border-color: #667eea; }
         .upi-id-text { font-size: 12px; color: #888; margin-top: 4px; }
         
-        /* ===== ADDRESS COPY BUTTON ===== */
         .address-copy-btn {
             background: none;
             border: 1.5px solid #c7d2fe;
@@ -246,11 +240,7 @@
             border: none;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
-        }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(102,126,234,0.4); color: white; }
         
         .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea !important; }
@@ -359,6 +349,9 @@
     </div>
     
     <script>
+        // ============================================================
+        // ⚠️ UPDATE THIS URL AFTER BACKEND DEPLOYMENT
+        // ============================================================
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfq42nZFZZrTyAqnS7jPJPCPg49S7-cNi-DZwfHNe8IeY4F3v-LU1yzb1LJgfz2Slg/exec';
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -373,8 +366,8 @@
         async function loadCard(slug) {
             try {
                 const response = await fetch(`${WEB_APP_URL}?mode=card&slug=${encodeURIComponent(slug)}`);
-                const result = await response.json();
-                console.log("API RESULT:", result);
+                const result   = await response.json();
+                console.log('API RESULT:', result);
                 
                 if (result.status === 'error') {
                     showError(result.message);
@@ -390,35 +383,31 @@
             }
         }
 
+        // ============================================================
+        // ✅ FIX PROBLEM 4: Email display — use email OR primaryEmail OR contactEmail
+        // ============================================================
+        function getPrimaryEmail(data) {
+            return String(data.email || data.primaryEmail || data.contactEmail || '').trim();
+        }
+
         function fixDriveImageUrl(url) {
             if (!url) return '';
             url = String(url).trim();
-
             let fileId = null;
 
-            // drive.google.com/uc?export=view&id=FILE_ID  (most common - stored by backend)
             if (url.includes('drive.google.com/uc?') || url.includes('drive.google.com/uc?export')) {
                 const match = url.match(/[?&]id=([^&]+)/);
                 if (match) fileId = match[1];
-            }
-            // drive.google.com/file/d/FILE_ID/view
-            else if (url.includes('/file/d/')) {
+            } else if (url.includes('/file/d/')) {
                 const match = url.match(/\/file\/d\/([^\/\?]+)/);
                 if (match) fileId = match[1];
-            }
-            // open?id= or thumbnail?id=
-            else if (url.includes('?id=') || url.includes('&id=')) {
+            } else if (url.includes('?id=') || url.includes('&id=')) {
                 const match = url.match(/[?&]id=([^&]+)/);
                 if (match) fileId = match[1];
             }
 
-            if (fileId) {
-                return 'https://lh3.googleusercontent.com/d/' + fileId + '=s400';
-            }
-
-            // Already lh3
+            if (fileId) return 'https://lh3.googleusercontent.com/d/' + fileId + '=s400';
             if (url.includes('lh3.googleusercontent.com')) return url;
-
             return url;
         }
 
@@ -432,9 +421,8 @@
         function formatPhoneDisplay(digits) {
             if (!digits) return '';
             if (digits.length === 12 && digits.startsWith('91')) {
-                const cc = digits.slice(0, 2);
                 const num = digits.slice(2);
-                return `+${cc} ${num.slice(0,5)} ${num.slice(5)}`;
+                return `+91 ${num.slice(0,5)} ${num.slice(5)}`;
             }
             if (digits.length === 11 && digits.startsWith('1')) {
                 return `+1 ${digits.slice(1,4)}-${digits.slice(4,7)}-${digits.slice(7)}`;
@@ -445,57 +433,44 @@
         function renderCard(data) {
             console.log('Card Data:', data);
 
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('cardContent').style.display = 'block';
+            document.getElementById('loadingState').style.display  = 'none';
+            document.getElementById('cardContent').style.display   = 'block';
             
-            const rawImageUrl = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
-const imageUrl = fixDriveImageUrl(rawImageUrl);
+            // ── Profile Image ──────────────────────────────────────
+            const rawImageUrl   = data.imageUrl || data.photoUrl || data.photo || data.profileImage || '';
+            const imageUrl      = fixDriveImageUrl(rawImageUrl);
+            const imageContainer = document.getElementById('profileImageContainer');
+            const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
 
-// ✅ DEBUG (remove after verification)
-console.log('🖼️ Raw URL:', rawImageUrl, '→ Fixed:', imageUrl);
+            console.log('🖼️ Raw URL:', rawImageUrl, '→ Fixed:', imageUrl);
 
-const imageContainer = document.getElementById('profileImageContainer');
-const fallbackInitial = (data.fullName || '?').charAt(0).toUpperCase();
+            if (imageUrl) {
+                imageContainer.innerHTML = '';
+                const img = document.createElement('img');
+                img.src         = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                img.crossOrigin = 'anonymous';
+                img.alt         = data.fullName || '';
+                img.className   = 'profile-image';
+                img.onload  = () => console.log('✅ Image loaded');
+                img.onerror = () => {
+                    console.error('❌ Image failed:', img.src);
+                    imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
+                };
+                imageContainer.appendChild(img);
+            } else {
+                imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
+            }
 
-if (imageUrl) {
-    console.log('✅ Image URL exists, attempting to load...');
-    imageContainer.innerHTML = ''; // clear before append
-    const img = document.createElement('img');
-    img.src = imageUrl + (imageUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-    img.crossOrigin = 'anonymous';
-
-    img.alt = data.fullName || '';
-    img.className = 'profile-image';
-    
-    img.onload = function() {
-        console.log('✅ Image loaded successfully');
-    };
-    
-    img.onerror = function() {
-        console.error('❌ Image failed to load:', img.src);
-        imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
-    };
-    
-    imageContainer.appendChild(img);
-} else {
-    console.log('⚠️ No image URL provided, showing placeholder');
-    console.log('   data.imageUrl:', data.imageUrl);
-    console.log('   data.photoUrl:', data.photoUrl);
-    console.log('   data.photo:', data.photo);
-    console.log('   data.profileImage:', data.profileImage);
-    imageContainer.innerHTML = `<div class="profile-placeholder">${fallbackInitial}</div>`;
-}
-
-
+            // ── Header ─────────────────────────────────────────────
             document.getElementById('cardName').textContent = data.fullName || '';
             if (data.designation) document.getElementById('cardDesignation').innerHTML = `<p class="designation">${data.designation}</p>`;
-            if (data.businessName) document.getElementById('cardBusiness').innerHTML = `<p class="business">${data.businessName}</p>`;
+            if (data.businessName) document.getElementById('cardBusiness').innerHTML   = `<p class="business">${data.businessName}</p>`;
             
-            // ===== PRIMARY CONTACT =====
+            // ── PRIMARY CONTACT ────────────────────────────────────
             const contactItems = document.getElementById('contactItems');
-            let contactHTML = '';
+            let contactHTML    = '';
 
-            const phoneDigits = normalizePhone(data.phone);
+            const phoneDigits  = normalizePhone(data.phone);
             if (phoneDigits) {
                 const phoneDisplay = formatPhoneDisplay(phoneDigits);
                 contactHTML += `
@@ -508,8 +483,7 @@ if (imageUrl) {
                     </div>`;
             }
             
-            const waRaw = data.whatsapp || data.phone || '';
-            const waDigits = normalizePhone(waRaw);
+            const waDigits = normalizePhone(data.whatsapp || data.phone || '');
             if (waDigits) {
                 contactHTML += `
                     <div class="contact-item">
@@ -521,26 +495,19 @@ if (imageUrl) {
                     </div>`;
             }
             
-            // EMAIL - Primary Contact
-     const primaryEmail =
-         (data.email || data.primaryEmail || data.contactEmail || '').trim();
-
-if (primaryEmail) {
-    contactHTML += `
-        <div class="contact-item">
-            <div class="contact-icon icon-email">
-                <i class="fa-solid fa-envelope"></i>
-            </div>
-            <div class="contact-text">
-                <div class="contact-label">Email</div>
-                <a href="mailto:${primaryEmail}" class="contact-link">${primaryEmail}</a>
-            </div>
-        </div>
-    `;
-}
+            // ✅ FIX PROBLEM 4: Primary email — tries all possible fields
+            const primaryEmail = getPrimaryEmail(data);
+            if (primaryEmail) {
+                contactHTML += `
+                    <div class="contact-item">
+                        <div class="contact-icon icon-email"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="contact-text">
+                            <div class="contact-label">Email</div>
+                            <a href="mailto:${primaryEmail}" class="contact-link">${primaryEmail}</a>
+                        </div>
+                    </div>`;
+            }
             
-            
-            // ✅ ADDRESS with Copy Button
             if (data.address) {
                 const mapsUrl = data.maps || `https://maps.google.com/?q=${encodeURIComponent(data.address)}`;
                 contactHTML += `
@@ -565,7 +532,7 @@ if (primaryEmail) {
                         <div class="contact-text">
                             <div class="contact-label">UPI Payment</div>
                             <div class="upi-block">
-                                <a href="${upiLink}" class="upi-pay-btn" onclick="return handleUpiClick(event, '${upiLink}')">
+                                <a href="${upiLink}" class="upi-pay-btn">
                                     <i class="fa-solid fa-bolt"></i> Pay Now
                                 </a>
                                 <button class="upi-copy-btn" onclick="copyUpi('${data.upiId}', this)">
@@ -579,51 +546,38 @@ if (primaryEmail) {
             
             contactItems.innerHTML = contactHTML;
             
-            // ===== CONTACT 2 / ADDITIONAL CONTACT =====
+            // ── CONTACT 2 ──────────────────────────────────────────
             if (data.contact2Name || data.contact2Phone || data.contact2Email) {
-                const c2 = document.getElementById('contact2Block');
-                const c2PhoneDigits = normalizePhone(data.contact2Phone);
+                const c2             = document.getElementById('contact2Block');
+                const c2PhoneDigits  = normalizePhone(data.contact2Phone);
                 const c2PhoneDisplay = formatPhoneDisplay(c2PhoneDigits);
                 let c2HTML = `<div class="contact2-block">`;
                 if (data.contact2Name) c2HTML += `<div class="contact2-name">${data.contact2Name}</div>`;
                 if (data.contact2Role) c2HTML += `<div class="contact2-role">${data.contact2Role}</div>`;
                 c2HTML += `<div class="contact2-links">`;
-                
-                // Call button
-                if (c2PhoneDigits) {
-                    c2HTML += `<a href="tel:+${c2PhoneDigits}" class="contact2-link"><i class="fa-solid fa-phone"></i> ${c2PhoneDisplay}</a>`;
-                }
-                
-                // Email button
-                if (data.contact2Email) {
-                    c2HTML += `<a href="mailto:${data.contact2Email}" class="contact2-link"><i class="fa-solid fa-envelope"></i> Email</a>`;
-                }
-                
-                // ✅ TASK 2: WHATSAPP - ADDITIONAL CONTACT (NEW FEATURE)
-                if (c2PhoneDigits) {
-                    c2HTML += `<a href="https://wa.me/${c2PhoneDigits}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
-                }
-                
+                if (c2PhoneDigits)       c2HTML += `<a href="tel:+${c2PhoneDigits}" class="contact2-link"><i class="fa-solid fa-phone"></i> ${c2PhoneDisplay}</a>`;
+                if (data.contact2Email)  c2HTML += `<a href="mailto:${data.contact2Email}" class="contact2-link"><i class="fa-solid fa-envelope"></i> Email</a>`;
+                if (c2PhoneDigits)       c2HTML += `<a href="https://wa.me/${c2PhoneDigits}" target="_blank" class="contact2-link"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`;
                 c2HTML += `</div></div>`;
                 c2.innerHTML = c2HTML;
                 document.getElementById('contact2Section').style.display = 'block';
             }
             
-            // ===== SOCIAL =====
+            // ── SOCIAL ─────────────────────────────────────────────
             const socialLinks = document.getElementById('socialLinks');
             let socialHTML = '';
             if (data.instagram) socialHTML += `<a href="${data.instagram}" class="social-btn btn-instagram" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
-            if (data.facebook)  socialHTML += `<a href="${data.facebook}" class="social-btn btn-facebook" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a>`;
-            if (data.linkedin)  socialHTML += `<a href="${data.linkedin}" class="social-btn btn-linkedin" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>`;
-            if (data.twitter)   socialHTML += `<a href="${data.twitter}" class="social-btn btn-twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i> X</a>`;
-            if (data.youtube)   socialHTML += `<a href="${data.youtube}" class="social-btn btn-youtube" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
-            if (data.telegram)  socialHTML += `<a href="${data.telegram}" class="social-btn btn-telegram" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>`;
+            if (data.facebook)  socialHTML += `<a href="${data.facebook}"  class="social-btn btn-facebook"  target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a>`;
+            if (data.linkedin)  socialHTML += `<a href="${data.linkedin}"  class="social-btn btn-linkedin"  target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>`;
+            if (data.twitter)   socialHTML += `<a href="${data.twitter}"   class="social-btn btn-twitter"   target="_blank"><i class="fa-brands fa-x-twitter"></i> X</a>`;
+            if (data.youtube)   socialHTML += `<a href="${data.youtube}"   class="social-btn btn-youtube"   target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>`;
+            if (data.telegram)  socialHTML += `<a href="${data.telegram}"  class="social-btn btn-telegram"  target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>`;
             if (socialHTML) {
                 socialLinks.innerHTML = socialHTML;
                 document.getElementById('socialSection').style.display = 'block';
             }
             
-            // ===== ADDITIONAL =====
+            // ── ADDITIONAL ─────────────────────────────────────────
             const additionalItems = document.getElementById('additionalItems');
             let additionalHTML = '';
             if (data.website) additionalHTML += `
@@ -648,43 +602,23 @@ if (primaryEmail) {
             }
         }
         
-        function handleUpiClick(event, upiLink) {
-            return true;
-        }
-        
         function copyUpi(upiId, btn) {
             navigator.clipboard.writeText(upiId).then(() => {
                 const orig = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
                 btn.style.background = '#10b981';
                 btn.style.color = 'white';
-                setTimeout(() => {
-                    btn.innerHTML = orig;
-                    btn.style.background = '';
-                    btn.style.color = '';
-                }, 2000);
-            }).catch(() => {
-                alert('UPI ID: ' + upiId);
-            });
+                setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
+            }).catch(() => { alert('UPI ID: ' + upiId); });
         }
         
-        // ✅ FIX #6: Copy Address Function
         function copyAddress(address, btn) {
             navigator.clipboard.writeText(address).then(() => {
                 const orig = btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-                btn.style.background = '#10b981';
-                btn.style.color = 'white';
-                btn.style.borderColor = '#10b981';
-                setTimeout(() => {
-                    btn.innerHTML = orig;
-                    btn.style.background = '';
-                    btn.style.color = '';
-                    btn.style.borderColor = '';
-                }, 2000);
-            }).catch(() => {
-                alert('Address: ' + address);
-            });
+                btn.style.background = '#10b981'; btn.style.color = 'white'; btn.style.borderColor = '#10b981';
+                setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+            }).catch(() => { alert('Address: ' + address); });
         }
         
         function setupActionButtons(data) {
@@ -701,23 +635,25 @@ if (primaryEmail) {
         function downloadVCard(data) {
             const vcPhone = normalizePhone(data.phone);
             const vcWa    = normalizePhone(data.whatsapp || data.phone);
+            const vcEmail = getPrimaryEmail(data);
             let vcard = 'BEGIN:VCARD\nVERSION:3.0\n';
             vcard += `FN:${data.fullName}\n`;
             if (data.businessName) vcard += `ORG:${data.businessName}\n`;
             if (data.designation)  vcard += `TITLE:${data.designation}\n`;
             if (vcPhone)  vcard += `TEL;TYPE=CELL:+${vcPhone}\n`;
             if (vcWa && vcWa !== vcPhone) vcard += `TEL;TYPE=WORK:+${vcWa}\n`;
-            if (data.email)   vcard += `EMAIL:${data.email}\n`;
+            if (vcEmail)  vcard += `EMAIL:${vcEmail}\n`;
             if (data.website) vcard += `URL:${data.website}\n`;
             if (data.address) vcard += `ADR:;;${data.address};;;;\n`;
             vcard += 'END:VCARD';
             
             const blob = new Blob([vcard], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
+            const url  = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = url;
+            link.href  = url;
             link.download = `${(data.fullName || 'contact').replace(/\s+/g, '_')}.vcf`;
             link.click();
+            URL.revokeObjectURL(url);
         }
         
         function shareCard(data) {
@@ -737,8 +673,8 @@ if (primaryEmail) {
         
         function showError(message) {
             document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('errorState').style.display = 'block';
-            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorState').style.display   = 'block';
+            document.getElementById('errorMessage').textContent   = message;
         }
     </script>
 </body>
