@@ -305,37 +305,46 @@ async function initEditMode(email, token) {
 }
 
 // ============================================================
-// ✅ FIX PROBLEM 1: EMAIL BLUR — check status, show banner
+// EMAIL STATUS CHECK — used on blur AND on submit
+// Uses POST (reliable with Apps Script, no CORS issues)
 // ============================================================
 let emailStatusCache = {};
 
-document.getElementById('emailField').addEventListener('blur', async function() {
-    if (isEditMode) return;
-    const email   = this.value.trim().toLowerCase();
-    if (!email || !email.includes('@')) return;
-
-    const banner   = document.getElementById('emailStatusBanner');
-    const checking = document.getElementById('emailChecking');
-
-    if (emailStatusCache[email] !== undefined) {
-        showEmailBanner(emailStatusCache[email], email);
-        return;
-    }
-
-    checking.style.display = 'block';
-    banner.style.display   = 'none';
+async function checkEmailStatus(email) {
+    const cached = emailStatusCache[email];
+    if (cached !== undefined) return cached;
 
     try {
-        const r = await fetch(`${WEB_APP_URL}?mode=checkStatus&email=${encodeURIComponent(email)}`);
+        console.log('🔍 Checking status for:', email);
+        const r = await fetch(WEB_APP_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body:    JSON.stringify({ mode: 'checkStatus', email: email })
+        });
         const d = await r.json();
-        checking.style.display = 'none';
+        console.log('📊 Status response:', d);
         const status = String(d.paymentStatus || '').trim().toUpperCase();
         emailStatusCache[email] = status;
-        showEmailBanner(status, email);
+        return status;
     } catch(e) {
-        checking.style.display = 'none';
-        // silently ignore — don't block on network error
+        console.error('❌ Status check failed:', e);
+        return 'UNKNOWN';
     }
+}
+
+// Blur — show banner as UX hint
+document.getElementById('emailField').addEventListener('blur', async function() {
+    if (isEditMode) return;
+    const email = this.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) return;
+
+    const checking = document.getElementById('emailChecking');
+    checking.style.display = 'block';
+
+    const status = await checkEmailStatus(email);
+    checking.style.display = 'none';
+    console.log('📧 Blur check result:', status, 'for', email);
+    showEmailBanner(status, email);
 });
 
 // Clear banner when user edits the email
@@ -343,10 +352,10 @@ document.getElementById('emailField').addEventListener('input', function() {
     document.getElementById('emailStatusBanner').style.display = 'none';
     document.getElementById('emailStatusBanner').className     = 'email-status-banner';
     const btn = document.getElementById('submitBtn');
-    btn.disabled    = false;
+    btn.disabled      = false;
     btn.style.opacity = '';
-    btn.textContent = '💳 Pay ₹499';
-    emailStatusCache = {}; // reset cache on edit
+    btn.textContent   = '💳 Pay ₹499';
+    emailStatusCache  = {};
 });
 
 function showEmailBanner(status, email) {
@@ -354,7 +363,6 @@ function showEmailBanner(status, email) {
     const submitBtn = document.getElementById('submitBtn');
 
     if (status === 'PAID') {
-        // ── CASE A: Block ──────────────────────────────────
         banner.className = 'email-status-banner paid';
         banner.innerHTML = `
             <strong>⛔ This email already has an active card.</strong><br>
@@ -363,26 +371,25 @@ function showEmailBanner(status, email) {
             <a href="https://wa.me/919770061597?text=Please%20resend%20my%20card%20for%20${encodeURIComponent(email)}"
                target="_blank">Contact Support on WhatsApp</a><br>
             <strong>Want to edit your card?</strong> Check your email inbox for the edit link.`;
-        banner.style.display  = 'block';
-        submitBtn.disabled    = true;
+        banner.style.display    = 'block';
+        submitBtn.disabled      = true;
         submitBtn.style.opacity = '0.45';
-        submitBtn.textContent = '⛔ Email Already Registered';
+        submitBtn.textContent   = '⛔ Email Already Registered';
 
     } else if (status === 'CREATED') {
-        // ── CASE B: Warning, allow retry ──────────────────
         banner.className = 'email-status-banner created';
         banner.innerHTML = `⚠️ <strong>A previous incomplete order exists for this email.</strong><br>
             Payment was not completed last time. You can proceed — your previous order will be resumed.`;
-        banner.style.display  = 'block';
-        submitBtn.disabled    = false;
+        banner.style.display    = 'block';
+        submitBtn.disabled      = false;
         submitBtn.style.opacity = '';
-        submitBtn.textContent = '💳 Pay ₹499';
+        submitBtn.textContent   = '💳 Pay ₹499';
 
     } else {
-        banner.style.display  = 'none';
-        submitBtn.disabled    = false;
+        banner.style.display    = 'none';
+        submitBtn.disabled      = false;
         submitBtn.style.opacity = '';
-        submitBtn.textContent = '💳 Pay ₹499';
+        submitBtn.textContent   = '💳 Pay ₹499';
     }
 }
 
@@ -414,7 +421,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
 });
 
 // ============================================================
-// ✅ FIX PROBLEM 1 + 3: NEW ORDER FLOW
+// NEW ORDER FLOW — status check happens BOTH on blur AND here at submit
 // ============================================================
 async function handleNewOrder(btn, orig) {
     const fd = new FormData(document.getElementById('orderForm')), data = {};
@@ -438,6 +445,26 @@ async function handleNewOrder(btn, orig) {
 
     currentEmail = data.email.trim().toLowerCase();
 
+    // ── SUBMIT-TIME STATUS CHECK (safety net even if blur failed) ──
+    btn.textContent = '⏳ Checking email...';
+    btn.disabled = true;
+    const statusAtSubmit = await checkEmailStatus(currentEmail);
+    console.log('🔐 Submit-time status check:', statusAtSubmit);
+
+    if (statusAtSubmit === 'PAID') {
+        // Block immediately — don't even hit backend
+        showEmailBanner('PAID', currentEmail);
+        btn.disabled    = false;
+        btn.textContent = '⛔ Email Already Registered';
+        isSubmitting    = false;
+        return;
+    }
+
+    if (statusAtSubmit === 'CREATED') {
+        // Show warning banner but let them proceed
+        showEmailBanner('CREATED', currentEmail);
+    }
+
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
         data.telegram = t.startsWith('@')
@@ -448,7 +475,6 @@ async function handleNewOrder(btn, orig) {
     delete data.phoneCC; delete data.phoneNumber;
     delete data.whatsappCC; delete data.whatsappNumber;
 
-    btn.disabled    = true;
     btn.textContent = '⏳ Creating order...';
     console.log('📤 Creating order for:', currentEmail);
 
