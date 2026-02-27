@@ -430,17 +430,20 @@ function showEmailBanner(status, email) {
     const submitBtn = document.getElementById('submitBtn');
 
     if (status === 'PAID') {
-        // Inform but DO NOT block — user can order again (new card/slug will be created)
+        // PAID = Card already active. Block submission. Show support options.
         banner.className = 'email-status-banner paid';
-        banner.innerHTML = `ℹ️ Is email se pehle ek card bana hua hai.<br>
-            Agar <strong>edit karna hai</strong> to apne email inbox mein edit link dhundein ya 
-            <a href="https://wa.me/919770061597?text=Resend%20edit%20link%20for%20${encodeURIComponent(email)}" target="_blank">
-                WhatsApp karen
-            </a>.<br>
-            <span style="color:#6b7280;font-weight:400;font-size:12px">Naya order karna chahte hain to niche proceed karen.</span>`;
+        banner.innerHTML = `⛔ <strong>Is email se card pehle se bana hua hai.</strong><br>
+            Is email se <strong>naya order nahi ban sakta</strong>.<br><br>
+            <strong>Agar card email nahi mila?</strong> 
+            <a href="https://wa.me/919770061597?text=Please%20resend%20my%20card%20for%20${encodeURIComponent(email)}" 
+               target="_blank" style="color:#1d4ed8;font-weight:700;">
+               📩 WhatsApp pe resend mangwao
+            </a><br>
+            <strong>Agar edit karna hai?</strong> Apne email inbox mein edit link dhundein.`;
         banner.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.4';
+        submitBtn.textContent = '⛔ Email Already Registered';
     } else if (status === 'CREATED') {
         banner.className = 'email-status-banner created';
         banner.innerHTML = `ℹ️ Pichla order incomplete tha (payment nahi hui). Niche proceed karein — same order resume hoga.`;
@@ -461,6 +464,7 @@ document.getElementById('emailField').addEventListener('input', function() {
     banner.style.display = 'none';
     submitBtn.disabled = false;
     submitBtn.style.opacity = '';
+    submitBtn.textContent = '💳 Pay ₹499';
 });
 
 // ============================================================
@@ -565,7 +569,7 @@ async function handleNewOrder(btn, orig) {
         name: 'Agrawal Futurify AI Solutions',
         description: 'Digital Visiting Card - ₹499',
         prefill: { name: data.fullName, email: data.email, contact: data.phone },
-        notes: { orderId: res.orderId, email: currentEmail },
+        notes: { orderId: res.orderId },
         theme: { color: '#667eea' },
         handler: async function(response) {
             console.log('✅ Payment done:', response.razorpay_payment_id);
