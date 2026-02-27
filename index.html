@@ -565,7 +565,7 @@ async function handleNewOrder(btn, orig) {
         name: 'Agrawal Futurify AI Solutions',
         description: 'Digital Visiting Card - ₹499',
         prefill: { name: data.fullName, email: data.email, contact: data.phone },
-        notes: { orderId: res.orderId },
+        notes: { orderId: res.orderId, email: currentEmail },
         theme: { color: '#667eea' },
         handler: async function(response) {
             console.log('✅ Payment done:', response.razorpay_payment_id);
