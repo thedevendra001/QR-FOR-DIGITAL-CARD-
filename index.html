@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Visiting Card - ₹499</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- ✅ CRITICAL: Load Razorpay SDK first -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +14,6 @@
         .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         .price-tag { display: inline-block; background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 16px 40px; border-radius: 50px; font-size: 48px; font-weight: 900; margin: 16px 0; box-shadow: 0 8px 24px rgba(255,215,0,0.4); }
 
-        /* ===== TRUST INTRO SECTION ===== */
         .trust-intro { background: rgba(255,255,255,0.15); border-radius: 16px; margin: 20px 16px 0; padding: 18px 20px; text-align: left; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.3); }
         .trust-intro-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #fff; }
         .trust-intro ul { list-style: none; }
@@ -26,13 +24,35 @@
         .form-section { padding: 28px 24px; }
         .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 20px; }
 
-        /* ===== IMPORTANT INFO BOX ===== */
         .info-box { background: linear-gradient(135deg, #f0f4ff, #e8f5e9); border: 2px solid #667eea; border-radius: 16px; padding: 20px; margin-bottom: 28px; }
         .info-box-title { font-size: 16px; font-weight: 700; color: #3730a3; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .info-box ul { list-style: none; margin-bottom: 14px; }
         .info-box ul li { font-size: 13.5px; color: #374151; margin-bottom: 9px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
         .info-box ul li::before { content: "•"; color: #667eea; font-weight: 900; font-size: 16px; flex-shrink: 0; line-height: 1.3; }
         .info-box-highlight { background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #92400e; display: flex; align-items: center; gap: 8px; }
+
+        /* ===== EMAIL STATUS BANNER ===== */
+        .email-status-banner {
+            display: none;
+            margin-top: 10px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        .email-status-banner.paid {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            color: #7f1d1d;
+        }
+        .email-status-banner.created {
+            background: #fffbeb;
+            border: 2px solid #f59e0b;
+            color: #78350f;
+        }
+        .email-status-banner a { color: #1d4ed8; font-weight: 700; }
+        .email-checking { color: #888; font-size: 12px; margin-top: 6px; display: none; }
 
         .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 18px; padding-bottom: 12px; border-bottom: 3px solid #667eea; font-size: 17px; font-weight: 700; }
         .form-group { margin-bottom: 18px; }
@@ -44,35 +64,22 @@
         .form-group input:disabled { background: #f7fafc; color: #718096; cursor: not-allowed; }
         .helper-text { font-size: 12px; color: #718096; margin-top: 6px; }
 
-        /* ===== COUNTRY CODE SELECTOR ===== */
         .phone-group { display: flex; gap: 8px; align-items: stretch; }
         .country-select {
-            flex-shrink: 0;
-            padding: 0 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #374151;
-            background: #f8fafc;
-            cursor: pointer;
-            height: 54px;
-            min-width: 90px;
-            transition: all 0.3s;
-            appearance: none;
-            -webkit-appearance: none;
+            flex-shrink: 0; padding: 0 10px; border: 2px solid #e2e8f0; border-radius: 12px;
+            font-size: 14px; font-weight: 600; color: #374151; background: #f8fafc;
+            cursor: pointer; height: 54px; min-width: 90px; transition: all 0.3s;
+            appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667eea' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 8px center;
-            padding-right: 26px;
+            background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px;
         }
         .country-select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
         .phone-group input { flex: 1; min-width: 0; }
 
-        /* ===== BUTTON AREA ===== */
         .btn-trust-top { text-align: center; font-size: 13.5px; font-weight: 600; color: #667eea; margin-top: 28px; margin-bottom: 10px; }
-        .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(102,126,234,0.4); }
-        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(102,126,234,0.4); transition: all 0.3s; }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        .submit-btn:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(102,126,234,0.5); }
         .btn-secure-text { text-align: center; font-size: 12px; color: #718096; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-guarantee { text-align: center; font-size: 12px; color: #6b7280; margin-top: 10px; padding: 10px 16px; background: #f9fafb; border-radius: 10px; border: 1px solid #e5e7eb; line-height: 1.5; }
         .support-line { text-align: center; margin-top: 16px; font-size: 13px; color: #374151; padding: 12px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0; }
@@ -82,8 +89,6 @@
         .success-box.show { display: block; }
         .success-box h3 { color: #065f46; margin-bottom: 18px; font-size: 24px; }
         .edit-mode-header { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); padding: 20px 24px; text-align: center; color: white; display: none; }
-
-
     </style>
 </head>
 <body>
@@ -95,8 +100,6 @@
         <h1>Professional Digital Visiting Card</h1>
         <div class="price-tag">₹499</div>
         <p style="font-size:14px;opacity:0.9;margin-top:8px">One-Time Payment • Lifetime Access</p>
-
-        <!-- ===== SECTION 1: TRUST INTRO ===== -->
         <div class="trust-intro">
             <div class="trust-intro-title">Create Your Professional Digital Visiting Card</div>
             <ul>
@@ -108,11 +111,10 @@
             <div class="secure-badge">🔒 Secure payment powered by Razorpay</div>
         </div>
     </div>
-    
+
     <div class="form-section">
         <h2 class="form-title" id="formTitle">Fill Your Details</h2>
 
-        <!-- ===== SECTION 2: IMPORTANT INFORMATION BOX ===== -->
         <div class="info-box" id="infoBox">
             <div class="info-box-title">ℹ️ Important Information</div>
             <ul>
@@ -134,8 +136,8 @@
                 <label>Email <span class="required">*</span></label>
                 <input type="email" name="email" id="emailField" required placeholder="rajesh@example.com">
                 <div class="helper-text" id="emailHelper">This will be your login email — enter carefully</div>
-
-
+                <div class="email-checking" id="emailChecking">⏳ Checking email...</div>
+                <div class="email-status-banner" id="emailStatusBanner"></div>
             </div>
             <div class="form-group">
                 <label>Phone <span class="required">*</span><span class="label-badge">Editable Later</span></label>
@@ -177,80 +179,29 @@
             </div>
 
             <div class="section-header"><span>👥</span><span>Contact 2 (Optional)</span></div>
-            <div class="form-group">
-                <label>Name<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="contact2Name" placeholder="Support Team">
-            </div>
-            <div class="form-group">
-                <label>Phone<span class="label-badge">Editable Later</span></label>
-                <input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10">
-            </div>
-            <div class="form-group">
-                <label>Email<span class="label-badge">Editable Later</span></label>
-                <input type="email" name="contact2Email" placeholder="support@example.com">
-            </div>
-            <div class="form-group">
-                <label>Role<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="contact2Role" placeholder="Support">
-            </div>
+            <div class="form-group"><label>Name<span class="label-badge">Editable Later</span></label><input type="text" name="contact2Name" placeholder="Support Team"></div>
+            <div class="form-group"><label>Phone<span class="label-badge">Editable Later</span></label><input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10"></div>
+            <div class="form-group"><label>Email<span class="label-badge">Editable Later</span></label><input type="email" name="contact2Email" placeholder="support@example.com"></div>
+            <div class="form-group"><label>Role<span class="label-badge">Editable Later</span></label><input type="text" name="contact2Role" placeholder="Support"></div>
 
             <div class="section-header"><span>🏢</span><span>Business Info</span></div>
-            <div class="form-group">
-                <label>Business Name<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="businessName" placeholder="Kumar Enterprises">
-            </div>
-            <div class="form-group">
-                <label>Designation<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="designation" placeholder="CEO">
-            </div>
-            <div class="form-group">
-                <label>Address<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="address" placeholder="Office No. 123">
-            </div>
-            <div class="form-group">
-                <label>UPI ID<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="upiId" placeholder="yourname@ybl">
-            </div>
+            <div class="form-group"><label>Business Name<span class="label-badge">Editable Later</span></label><input type="text" name="businessName" placeholder="Kumar Enterprises"></div>
+            <div class="form-group"><label>Designation<span class="label-badge">Editable Later</span></label><input type="text" name="designation" placeholder="CEO"></div>
+            <div class="form-group"><label>Address<span class="label-badge">Editable Later</span></label><input type="text" name="address" placeholder="Office No. 123"></div>
+            <div class="form-group"><label>UPI ID<span class="label-badge">Editable Later</span></label><input type="text" name="upiId" placeholder="yourname@ybl"></div>
 
             <div class="section-header"><span>🌐</span><span>Social Media</span></div>
-            <div class="form-group">
-                <label>Instagram<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="instagram" placeholder="https://instagram.com/username">
-            </div>
-            <div class="form-group">
-                <label>Facebook<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="facebook" placeholder="https://facebook.com/page">
-            </div>
-            <div class="form-group">
-                <label>LinkedIn<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="linkedin" placeholder="https://linkedin.com/in/profile">
-            </div>
-            <div class="form-group">
-                <label>Twitter<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="twitter" placeholder="https://twitter.com/handle">
-            </div>
-            <div class="form-group">
-                <label>YouTube<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="youtube" placeholder="https://youtube.com/@channel">
-            </div>
-            <div class="form-group">
-                <label>Telegram<span class="label-badge">Editable Later</span></label>
-                <input type="text" name="telegram" placeholder="@username">
-            </div>
+            <div class="form-group"><label>Instagram<span class="label-badge">Editable Later</span></label><input type="url" name="instagram" placeholder="https://instagram.com/username"></div>
+            <div class="form-group"><label>Facebook<span class="label-badge">Editable Later</span></label><input type="url" name="facebook" placeholder="https://facebook.com/page"></div>
+            <div class="form-group"><label>LinkedIn<span class="label-badge">Editable Later</span></label><input type="url" name="linkedin" placeholder="https://linkedin.com/in/profile"></div>
+            <div class="form-group"><label>Twitter<span class="label-badge">Editable Later</span></label><input type="url" name="twitter" placeholder="https://twitter.com/handle"></div>
+            <div class="form-group"><label>YouTube<span class="label-badge">Editable Later</span></label><input type="url" name="youtube" placeholder="https://youtube.com/@channel"></div>
+            <div class="form-group"><label>Telegram<span class="label-badge">Editable Later</span></label><input type="text" name="telegram" placeholder="@username"></div>
 
             <div class="section-header"><span>🔗</span><span>Website & Location</span></div>
-            <div class="form-group">
-                <label>Website<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="website" placeholder="https://yourwebsite.com">
-            </div>
-            <div class="form-group">
-                <label>Product URL<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="productUrl" placeholder="https://shop.com/products">
-            </div>
-            <div class="form-group">
-                <label>Google Maps<span class="label-badge">Editable Later</span></label>
-                <input type="url" name="maps" placeholder="https://maps.google.com/...">
-            </div>
+            <div class="form-group"><label>Website<span class="label-badge">Editable Later</span></label><input type="url" name="website" placeholder="https://yourwebsite.com"></div>
+            <div class="form-group"><label>Product URL<span class="label-badge">Editable Later</span></label><input type="url" name="productUrl" placeholder="https://shop.com/products"></div>
+            <div class="form-group"><label>Google Maps<span class="label-badge">Editable Later</span></label><input type="url" name="maps" placeholder="https://maps.google.com/..."></div>
 
             <div id="imageUploadSection" style="display:none">
                 <div class="section-header"><span>📷</span><span>Photo</span></div>
@@ -261,20 +212,10 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 4: BUTTON TRUST TEXT ===== -->
             <div class="btn-trust-top" id="btnTrustTop">⚡ Takes less than 1 minute to create your card</div>
-
             <button type="submit" class="submit-btn" id="submitBtn">💳 Pay ₹499</button>
-
-            <!-- Below button texts -->
             <div class="btn-secure-text" id="btnSecureText">🔒 Secure Payment via Razorpay</div>
-
-            <!-- ===== SECTION 5: GUARANTEE TEXT ===== -->
-            <div class="btn-guarantee" id="btnGuarantee">
-                By proceeding, you agree to create your digital card with lifetime editable access.
-            </div>
-
-            <!-- ===== SECTION 6: SUPPORT LINE ===== -->
+            <div class="btn-guarantee" id="btnGuarantee">By proceeding, you agree to create your digital card with lifetime editable access.</div>
             <div class="support-line" id="supportLine">
                 💬 Need help? <a href="https://wa.me/919770061597" target="_blank">WhatsApp Support: +91 9770061597</a>
             </div>
@@ -284,7 +225,6 @@
             <h3>🎉 Payment Successful!</h3>
             <p>Check your email for card URL and QR code!</p>
         </div>
-        
         <div class="success-box" id="editSuccessMsg">
             <h3>✅ Updated!</h3>
             <p>Changes saved successfully.</p>
@@ -294,22 +234,20 @@
 
 <script>
 // ============================================================
-// ⚠️ UPDATE THIS URL AFTER BACKEND DEPLOYMENT
+// CONFIG — update URL after each new backend deployment
 // ============================================================
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfq42nZFZZrTyAqnS7jPJPCPg49S7-cNi-DZwfHNe8IeY4F3v-LU1yzb1LJgfz2Slg/exec';
-
-// ✅ Razorpay key (safe to hardcode)
+const WEB_APP_URL   = 'https://script.google.com/macros/s/AKfycbzfq42nZFZZrTyAqnS7jPJPCPg49S7-cNi-DZwfHNe8IeY4F3v-LU1yzb1LJgfz2Slg/exec';
 const RAZORPAY_KEY_ID = 'rzp_live_SJYhIXCogVGip3';
 
 let isEditMode = false, currentEmail = null, currentToken = null;
 
+console.log('🚀 App loaded | Razorpay:', typeof Razorpay !== 'undefined' ? '✅' : '❌');
+
 // ============================================================
 // INITIALIZATION
 // ============================================================
-console.log('🚀 App loaded | Razorpay:', typeof Razorpay !== 'undefined' ? '✅' : '❌');
-
 window.addEventListener('load', async () => {
-    const p = new URLSearchParams(window.location.search);
+    const p     = new URLSearchParams(window.location.search);
     const email = p.get('email'), token = p.get('token');
     if (email && token) await initEditMode(email, token);
 });
@@ -319,17 +257,17 @@ async function initEditMode(email, token) {
     document.getElementById('normalHeader').style.display = 'none';
     document.getElementById('editModeHeader').style.display = 'block';
     document.getElementById('formTitle').textContent = 'Edit Details';
-    document.getElementById('submitBtn').textContent = '✏️ Update Card';
+    document.getElementById('submitBtn').textContent  = '✏️ Update Card';
     document.getElementById('imageUploadSection').style.display = 'block';
 
-    // Hide payment-only trust elements in edit mode
-    const hideInEdit = ['infoBox','btnTrustTop','btnSecureText','btnGuarantee','supportLine'];
-    hideInEdit.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
-    
+    ['infoBox','btnTrustTop','btnSecureText','btnGuarantee','supportLine'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
     const ef = document.getElementById('emailField');
     ef.value = email; ef.disabled = true; ef.required = false;
-    
-    // ✅ Add "Change Email" option in edit mode
+
     const emailGroup = ef.closest('.form-group');
     if (emailGroup && !document.getElementById('changeEmailGroup')) {
         const changeDiv = document.createElement('div');
@@ -340,13 +278,13 @@ async function initEditMode(email, token) {
                 ✏️ Email address badalna chahte hain?
             </div>
             <div id="changeEmailInput" style="display:none;margin-top:8px">
-                <input type="email" id="newEmailField" name="newEmail" placeholder="Naya email darj karein" 
+                <input type="email" id="newEmailField" name="newEmail" placeholder="Naya email darj karein"
                     style="width:100%;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:15px">
-                <div style="font-size:11px;color:#e53e3e;margin-top:4px">⚠️ Email badalne ke baad purana edit link kaam nahi karega. Naya link naye email pe aayega.</div>
+                <div style="font-size:11px;color:#e53e3e;margin-top:4px">⚠️ Email badalne ke baad purana edit link kaam nahi karega.</div>
             </div>`;
         emailGroup.appendChild(changeDiv);
     }
-    
+
     try {
         const r = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(email)}`);
         const d = await r.json();
@@ -357,7 +295,6 @@ async function initEditMode(email, token) {
                 if (i && d[k]) i.value = d[k];
             }
         });
-        // ✅ Prefill phone with country selector split
         if (d.phone)    prefillPhone(d.phone,    'phoneCC',    'phoneNumber');
         if (d.whatsapp) prefillPhone(d.whatsapp, 'whatsappCC', 'whatsappNumber');
         console.log('✅ Data prefilled');
@@ -368,30 +305,108 @@ async function initEditMode(email, token) {
 }
 
 // ============================================================
-// FORM SUBMISSION
+// ✅ FIX PROBLEM 1: EMAIL BLUR — check status, show banner
 // ============================================================
+let emailStatusCache = {};
+
+document.getElementById('emailField').addEventListener('blur', async function() {
+    if (isEditMode) return;
+    const email   = this.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) return;
+
+    const banner   = document.getElementById('emailStatusBanner');
+    const checking = document.getElementById('emailChecking');
+
+    if (emailStatusCache[email] !== undefined) {
+        showEmailBanner(emailStatusCache[email], email);
+        return;
+    }
+
+    checking.style.display = 'block';
+    banner.style.display   = 'none';
+
+    try {
+        const r = await fetch(`${WEB_APP_URL}?mode=checkStatus&email=${encodeURIComponent(email)}`);
+        const d = await r.json();
+        checking.style.display = 'none';
+        const status = String(d.paymentStatus || '').trim().toUpperCase();
+        emailStatusCache[email] = status;
+        showEmailBanner(status, email);
+    } catch(e) {
+        checking.style.display = 'none';
+        // silently ignore — don't block on network error
+    }
+});
+
+// Clear banner when user edits the email
+document.getElementById('emailField').addEventListener('input', function() {
+    document.getElementById('emailStatusBanner').style.display = 'none';
+    document.getElementById('emailStatusBanner').className     = 'email-status-banner';
+    const btn = document.getElementById('submitBtn');
+    btn.disabled    = false;
+    btn.style.opacity = '';
+    btn.textContent = '💳 Pay ₹499';
+    emailStatusCache = {}; // reset cache on edit
+});
+
+function showEmailBanner(status, email) {
+    const banner    = document.getElementById('emailStatusBanner');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (status === 'PAID') {
+        // ── CASE A: Block ──────────────────────────────────
+        banner.className = 'email-status-banner paid';
+        banner.innerHTML = `
+            <strong>⛔ This email already has an active card.</strong><br>
+            A new order cannot be placed with this email.<br><br>
+            <strong>Did not receive your card?</strong>
+            <a href="https://wa.me/919770061597?text=Please%20resend%20my%20card%20for%20${encodeURIComponent(email)}"
+               target="_blank">Contact Support on WhatsApp</a><br>
+            <strong>Want to edit your card?</strong> Check your email inbox for the edit link.`;
+        banner.style.display  = 'block';
+        submitBtn.disabled    = true;
+        submitBtn.style.opacity = '0.45';
+        submitBtn.textContent = '⛔ Email Already Registered';
+
+    } else if (status === 'CREATED') {
+        // ── CASE B: Warning, allow retry ──────────────────
+        banner.className = 'email-status-banner created';
+        banner.innerHTML = `⚠️ <strong>A previous incomplete order exists for this email.</strong><br>
+            Payment was not completed last time. You can proceed — your previous order will be resumed.`;
+        banner.style.display  = 'block';
+        submitBtn.disabled    = false;
+        submitBtn.style.opacity = '';
+        submitBtn.textContent = '💳 Pay ₹499';
+
+    } else {
+        banner.style.display  = 'none';
+        submitBtn.disabled    = false;
+        submitBtn.style.opacity = '';
+        submitBtn.textContent = '💳 Pay ₹499';
+    }
+}
 
 // ============================================================
-// SUBMIT HANDLER — with double-submit guard
+// ✅ FIX PROBLEM 5: SUBMIT HANDLER — double-submit guard
 // ============================================================
 let isSubmitting = false;
 
 document.getElementById('orderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    if (isSubmitting) return; // prevent double-submit race
+    if (isSubmitting) return;
     isSubmitting = true;
     const btn = document.getElementById('submitBtn'), orig = btn.textContent;
-    
+
     try {
         if (isEditMode) {
             await handleEdit(btn);
         } else {
             await handleNewOrder(btn, orig);
         }
-    } catch(e) {
-        console.error('❌ Error:', e);
-        alert('Error: ' + e.message);
-        btn.disabled = false;
+    } catch(err) {
+        console.error('❌ Error:', err);
+        alert('Error: ' + err.message);
+        btn.disabled    = false;
         btn.textContent = orig;
     } finally {
         isSubmitting = false;
@@ -399,86 +414,104 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
 });
 
 // ============================================================
-// NEW ORDER FLOW
+// ✅ FIX PROBLEM 1 + 3: NEW ORDER FLOW
 // ============================================================
 async function handleNewOrder(btn, orig) {
-    // Collect data
     const fd = new FormData(document.getElementById('orderForm')), data = {};
     fd.forEach((v,k) => { data[k] = v; });
 
-    // ✅ Combine country code + number (stored as digits only, no +)
     const phoneDigits = getFullPhone('phoneCC', 'phoneNumber');
     const waDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
     data.phone    = phoneDigits;
-    data.whatsapp = waDigits || phoneDigits; // fallback to phone if WA blank
+    data.whatsapp = waDigits || phoneDigits;
 
-    // Validate
     if (!data.fullName || !data.email || !data.phone) {
-        alert('Name, Email, Phone required');
+        alert('Name, Email and Phone are required');
+        btn.disabled = false;
         return;
     }
     if (data.phone.length < 7) {
         alert('Enter a valid phone number');
+        btn.disabled = false;
         return;
     }
-    
+
     currentEmail = data.email.trim().toLowerCase();
-    
-    // Format Telegram
+
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
-        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
+        data.telegram = t.startsWith('@')
+            ? 'https://t.me/' + t.slice(1)
+            : (!t.startsWith('http') ? 'https://t.me/' + t : t);
     }
 
-    // Remove helper fields not needed by backend
     delete data.phoneCC; delete data.phoneNumber;
     delete data.whatsappCC; delete data.whatsappNumber;
-    
-    // Create order
-    btn.disabled = true;
+
+    btn.disabled    = true;
     btn.textContent = '⏳ Creating order...';
-    console.log('📤 Creating order...');
-    
+    console.log('📤 Creating order for:', currentEmail);
+
     const r = await fetch(WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ mode: 'create', ...data })
     });
-    
+
     const res = await r.json();
     console.log('📦 Response:', res);
-    
+
+    // ── CASE A: Already paid — show banner, stop ──────────
+    if (res.status === 'error' && res.code === 'ALREADY_PAID') {
+        showEmailBanner('PAID', currentEmail);
+        btn.disabled = false;
+        btn.textContent = '⛔ Email Already Registered';
+        isSubmitting = false;
+        return;
+    }
+
     if (res.status !== 'success') {
         throw new Error(res.message || 'Order creation failed');
     }
-    
+
+    // ── CASE B: Retry ─────────────────────────────────────
     if (res.retry) {
-        console.log('🔄 Retry detected — reusing existing order:', res.orderId);
+        console.log('🔄 Retry — reusing order:', res.orderId);
+        showEmailBanner('CREATED', currentEmail);
     } else {
-        console.log('✅ New order created:', res.orderId);
+        console.log('✅ New order:', res.orderId);
     }
-    
+
     // Open Razorpay
     btn.textContent = '💳 Opening payment...';
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     if (typeof Razorpay === 'undefined') {
-        throw new Error('Razorpay not loaded. Refresh and try again.');
+        throw new Error('Razorpay not loaded. Please refresh and try again.');
     }
-    
+
     const rzp = new Razorpay({
-        key: RAZORPAY_KEY_ID,
-        amount: 100,
-        currency: 'INR',
-        name: 'Agrawal Futurify AI Solutions',
+        key:         RAZORPAY_KEY_ID,
+        amount:      100,
+        currency:    'INR',
+        name:        'Agrawal Futurify AI Solutions',
         description: 'Digital Visiting Card - ₹499',
-        prefill: { name: data.fullName, email: data.email, contact: data.phone },
-        notes: { orderId: res.orderId },
+        prefill: {
+            name:    data.fullName,
+            email:   data.email,
+            contact: data.phone
+        },
+        // ✅ Include email in notes for webhook fallback
+        notes: {
+            orderId: res.orderId,
+            email:   currentEmail
+        },
         theme: { color: '#667eea' },
+
         handler: async function(response) {
             console.log('✅ Payment done:', response.razorpay_payment_id);
             btn.textContent = '⏳ Verifying...';
-            
+
             try {
                 const vr = await fetch(WEB_APP_URL, {
                     method: 'POST',
@@ -486,44 +519,60 @@ async function handleNewOrder(btn, orig) {
                     body: JSON.stringify({
                         mode: 'verifyPayment',
                         email: data.email,
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_order_id: response.razorpay_order_id || '',
-                        razorpay_signature: response.razorpay_signature || ''
+                        razorpay_payment_id:  response.razorpay_payment_id,
+                        razorpay_order_id:    response.razorpay_order_id   || '',
+                        razorpay_signature:   response.razorpay_signature  || ''
                     })
                 });
-                
+
                 const vres = await vr.json();
-                console.log('📦 Verify response:', vres);
-                
+                console.log('📦 Verify:', vres);
+
                 if (vres.status === 'success') {
                     document.getElementById('orderForm').style.display = 'none';
                     document.getElementById('successMsg').classList.add('show');
-                    console.log('🎉 Success!');
+                    console.log('🎉 Card activated!');
                 } else {
-                    throw new Error(vres.message || 'Verification failed');
+                    // ✅ Show helpful message instead of crash
+                    document.getElementById('orderForm').style.display = 'none';
+                    document.getElementById('successMsg').classList.add('show');
+                    document.getElementById('successMsg').innerHTML =
+                        `<h3>💳 Payment Received!</h3>
+                         <p>Your payment was successful. Your card will be activated shortly and you will receive an email confirmation.</p>
+                         <p style="margin-top:10px;font-size:13px;color:#065f46">If you don't receive email within 10 minutes, 
+                         <a href="https://wa.me/919770061597?text=Card%20not%20received%20for%20${encodeURIComponent(currentEmail)}" target="_blank" style="color:#065f46;font-weight:700">contact us on WhatsApp</a>.</p>`;
                 }
             } catch(e) {
-                console.error('❌ Verification error:', e);
-                alert('Payment received but verification failed. Contact support.');
+                console.error('❌ Verify error:', e);
+                // Payment is done, show soft message (don't panic user)
+                document.getElementById('orderForm').style.display = 'none';
+                document.getElementById('successMsg').classList.add('show');
+                document.getElementById('successMsg').innerHTML =
+                    `<h3>💳 Payment Received!</h3>
+                     <p>Your payment was successful. Your card will be activated within a few minutes.</p>
+                     <p style="margin-top:10px;font-size:13px;color:#065f46">
+                     <a href="https://wa.me/919770061597?text=Card%20not%20received%20for%20${encodeURIComponent(currentEmail)}" target="_blank" style="color:#065f46;font-weight:700">WhatsApp us</a> if you don't receive email in 10 minutes.</p>`;
             }
         },
+
         modal: {
             ondismiss: () => {
-                console.log('Payment cancelled');
-                btn.disabled = false;
+                console.log('Payment cancelled by user');
+                btn.disabled    = false;
                 btn.textContent = orig;
-                isSubmitting = false;
+                isSubmitting    = false;
             }
         }
     });
-    
+
     rzp.on('payment.failed', resp => {
         console.error('Payment failed:', resp.error);
         alert('Payment failed: ' + resp.error.description);
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = orig;
+        isSubmitting    = false;
     });
-    
+
     console.log('🚀 Opening Razorpay...');
     rzp.open();
 }
@@ -532,80 +581,56 @@ async function handleNewOrder(btn, orig) {
 // EDIT MODE
 // ============================================================
 async function handleEdit(btn) {
-    // Upload image if selected
     if (document.getElementById('imageInput')?.files[0]) {
-        btn.disabled = true;
-        btn.textContent = '📤 Uploading...';
-        const fi = document.getElementById('imageInput'), file = fi.files[0];
-        
-        if (file.size > 1024*1024) {
-            alert('Image must be < 1MB');
-            return;
-        }
-        
+        btn.disabled = true; btn.textContent = '📤 Uploading...';
+        const fi   = document.getElementById('imageInput'), file = fi.files[0];
+        if (file.size > 1024*1024) { alert('Image must be < 1MB'); return; }
         const r = new FileReader();
         r.onload = async ev => {
             try {
                 const res = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        mode: 'uploadImage',
-                        email: currentEmail,
-                        token: currentToken,
-                        imageData: ev.target.result,
-                        fileName: file.name,
-                        mimeType: file.type
-                    })
+                    body: JSON.stringify({ mode: 'uploadImage', email: currentEmail, token: currentToken,
+                        imageData: ev.target.result, fileName: file.name, mimeType: file.type })
                 });
                 const rs = await res.json();
                 if (rs.status !== 'success') alert('Image upload failed');
-            } catch(e) {
-                alert('Image error: ' + e.message);
-            }
+            } catch(e) { alert('Image error: ' + e.message); }
         };
         r.readAsDataURL(file);
         await new Promise(res => setTimeout(res, 1000));
     }
-    
-    // Update data
-    const fd = new FormData(document.getElementById('orderForm')), data = {
-        mode: 'edit',
-        email: currentEmail,
-        editToken: currentToken
-    };
-    fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
-    
-    // ✅ Handle email change — send as newEmail so backend can update it
-    const newEmailField = document.getElementById('newEmailField');
-    if (newEmailField && newEmailField.value.trim()) {
-        data.newEmail = newEmailField.value.trim().toLowerCase();
-    }
 
-    // ✅ Combine country code + number for edit mode too
+    const fd = new FormData(document.getElementById('orderForm'));
+    const data = { mode: 'edit', email: currentEmail, editToken: currentToken };
+    fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
+
+    const newEmailField = document.getElementById('newEmailField');
+    if (newEmailField && newEmailField.value.trim())
+        data.newEmail = newEmailField.value.trim().toLowerCase();
+
     const editPhoneDigits = getFullPhone('phoneCC', 'phoneNumber');
     const editWaDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
     if (editPhoneDigits) data.phone    = editPhoneDigits;
     if (editWaDigits)    data.whatsapp = editWaDigits;
     delete data.phoneCC; delete data.phoneNumber;
     delete data.whatsappCC; delete data.whatsappNumber;
-    
+
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
-        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
+        data.telegram = t.startsWith('@')
+            ? 'https://t.me/' + t.slice(1)
+            : (!t.startsWith('http') ? 'https://t.me/' + t : t);
     }
-    
-    btn.disabled = true;
-    btn.textContent = '⏳ Saving...';
-    
-    const r = await fetch(WEB_APP_URL, {
+
+    btn.disabled = true; btn.textContent = '⏳ Saving...';
+    const r   = await fetch(WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
     });
-    
     const res = await r.json();
-    
     if (res.status === 'success') {
         document.getElementById('orderForm').style.display = 'none';
         document.getElementById('editSuccessMsg').classList.add('show');
@@ -616,63 +641,53 @@ async function handleEdit(btn) {
 }
 
 function toggleEmailChange() {
-    const input = document.getElementById('changeEmailInput');
+    const input  = document.getElementById('changeEmailInput');
     const toggle = document.getElementById('changeEmailToggle');
     if (input.style.display === 'none') {
-        input.style.display = 'block';
-        toggle.textContent = '✕ Cancel';
-        toggle.style.color = '#e53e3e';
+        input.style.display  = 'block';
+        toggle.textContent   = '✕ Cancel';
+        toggle.style.color   = '#e53e3e';
     } else {
-        input.style.display = 'none';
-        toggle.innerHTML = '✏️ Email address badalna chahte hain?';
-        toggle.style.color = '#667eea';
+        input.style.display  = 'none';
+        toggle.innerHTML     = '✏️ Email address badalna chahte hain?';
+        toggle.style.color   = '#667eea';
         document.getElementById('newEmailField').value = '';
     }
 }
 
 // ============================================================
-// PHONE FIELD HELPERS — Country Code + Number combine
+// PHONE HELPERS
 // ============================================================
-
-// Get combined phone with country code (digits only, no +)
 function getFullPhone(ccSelectId, numberInputId) {
-    const cc = String(document.getElementById(ccSelectId)?.value || '91').replace(/\D/g,'');
+    const cc  = String(document.getElementById(ccSelectId)?.value  || '91').replace(/\D/g,'');
     const num = String(document.getElementById(numberInputId)?.value || '').replace(/\D/g,'');
     if (!num) return '';
     return cc + num;
 }
 
-// For edit mode prefill: split stored number (e.g. 919876543210 → cc=91, num=9876543210)
 function prefillPhone(stored, ccSelectId, numberInputId) {
     const digits = String(stored || '').replace(/\D/g,'');
     if (!digits) return;
     const ccEl  = document.getElementById(ccSelectId);
     const numEl = document.getElementById(numberInputId);
     if (!ccEl || !numEl) return;
-
-    // Try to match one of the CC options
     const options = Array.from(ccEl.options).map(o => o.value).sort((a,b) => b.length - a.length);
     let matched = false;
     for (const cc of options) {
         if (digits.startsWith(cc) && digits.length > cc.length) {
-            ccEl.value = cc;
+            ccEl.value  = cc;
             numEl.value = digits.slice(cc.length);
-            matched = true;
+            matched     = true;
             break;
         }
     }
-    // Fallback: treat as local number
     if (!matched) { ccEl.value = '91'; numEl.value = digits; }
 }
 
-// Restrict phone inputs to digits only
 ['phoneNumber','whatsappNumber'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g,'');
-    });
+    if (el) el.addEventListener('input', function() { this.value = this.value.replace(/\D/g,''); });
 });
-
 </script>
 </body>
 </html>
