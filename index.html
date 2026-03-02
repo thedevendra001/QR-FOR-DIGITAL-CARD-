@@ -353,14 +353,9 @@ async function handleNewOrder(btn, orig) {
     if (data.phone.length < 7) { alert('Enter a valid phone number'); btn.disabled = false; return; }
     currentEmail = data.email.trim().toLowerCase();
 
-    // Submit-time status check (safety net)
-    btn.textContent = 'Checking email...'; btn.disabled = true;
-    const statusAtSubmit = await checkEmailStatus(currentEmail);
-    if (statusAtSubmit === 'PAID') {
-        showEmailBanner('PAID', currentEmail);
-        btn.disabled = false; btn.textContent = 'Email Already Registered'; isSubmitting = false; return;
-    }
-    if (statusAtSubmit === 'CREATED') showEmailBanner('CREATED', currentEmail);
+    // Status blur pe check hota hai + backend bhi ALREADY_PAID return karta hai
+    // Submit pe extra API call nahi — speed ke liye
+    btn.disabled = true;
 
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
@@ -392,13 +387,7 @@ async function handleNewOrder(btn, orig) {
         notes:   { orderId: res.orderId, email: currentEmail },
         theme:   { color: '#667eea' }
     };
-    if (res.razorpayOrderId) {
-        rzpConfig.order_id = res.razorpayOrderId;
-        console.log('Using Razorpay Order (auto-capture):', res.razorpayOrderId);
-    } else {
-        rzpConfig.amount = 49900;
-        console.warn('No Razorpay Order ID — fallback amount 49900');
-    }
+    rzpConfig.amount = 49900; // Rs.499 in paise — auto-capture via Dashboard setting
 
     const rzp = new Razorpay({
         ...rzpConfig,
