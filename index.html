@@ -19,47 +19,25 @@
         .price-only { font-size: 18px; font-weight: 700; color: white; }
         .price-badge { background: #ef4444; color: white; font-size: 13px; font-weight: 800; padding: 6px 16px; border-radius: 20px; letter-spacing: 0.5px; animation: pulse 1.8s infinite; }
         @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
-
         .trust-intro { background: rgba(255,255,255,0.15); border-radius: 16px; margin: 20px 16px 0; padding: 18px 20px; text-align: left; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.3); }
         .trust-intro-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #fff; }
         .trust-intro ul { list-style: none; }
         .trust-intro ul li { font-size: 13px; color: rgba(255,255,255,0.95); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
         .trust-intro ul li span.icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
         .secure-badge { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 600; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 7px 14px; }
-
         .form-section { padding: 28px 24px; }
         .form-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 20px; }
-
         .info-box { background: linear-gradient(135deg, #f0f4ff, #e8f5e9); border: 2px solid #667eea; border-radius: 16px; padding: 20px; margin-bottom: 28px; }
         .info-box-title { font-size: 16px; font-weight: 700; color: #3730a3; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .info-box ul { list-style: none; margin-bottom: 14px; }
         .info-box ul li { font-size: 13.5px; color: #374151; margin-bottom: 9px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
         .info-box ul li::before { content: "•"; color: #667eea; font-weight: 900; font-size: 16px; flex-shrink: 0; line-height: 1.3; }
         .info-box-highlight { background: #fef3c7; border: 1.5px solid #f59e0b; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #92400e; display: flex; align-items: center; gap: 8px; }
-
-        /* ===== EMAIL STATUS BANNER ===== */
-        .email-status-banner {
-            display: none;
-            margin-top: 10px;
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-        .email-status-banner.paid {
-            background: #fef2f2;
-            border: 2px solid #ef4444;
-            color: #7f1d1d;
-        }
-        .email-status-banner.created {
-            background: #fffbeb;
-            border: 2px solid #f59e0b;
-            color: #78350f;
-        }
+        .email-status-banner { display: none; margin-top: 10px; padding: 14px 16px; border-radius: 12px; font-size: 14px; font-weight: 500; line-height: 1.6; }
+        .email-status-banner.paid    { background: #fef2f2; border: 2px solid #ef4444; color: #7f1d1d; }
+        .email-status-banner.created { background: #fffbeb; border: 2px solid #f59e0b; color: #78350f; }
         .email-status-banner a { color: #1d4ed8; font-weight: 700; }
         .email-checking { color: #888; font-size: 12px; margin-top: 6px; display: none; }
-
         .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 18px; padding-bottom: 12px; border-bottom: 3px solid #667eea; font-size: 17px; font-weight: 700; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
@@ -69,19 +47,10 @@
         .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
         .form-group input:disabled { background: #f7fafc; color: #718096; cursor: not-allowed; }
         .helper-text { font-size: 12px; color: #718096; margin-top: 6px; }
-
         .phone-group { display: flex; gap: 8px; align-items: stretch; }
-        .country-select {
-            flex-shrink: 0; padding: 0 10px; border: 2px solid #e2e8f0; border-radius: 12px;
-            font-size: 14px; font-weight: 600; color: #374151; background: #f8fafc;
-            cursor: pointer; height: 54px; min-width: 90px; transition: all 0.3s;
-            appearance: none; -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667eea' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px;
-        }
+        .country-select { flex-shrink: 0; padding: 0 10px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; color: #374151; background: #f8fafc; cursor: pointer; height: 54px; min-width: 90px; transition: all 0.3s; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667eea' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px; }
         .country-select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.1); }
         .phone-group input { flex: 1; min-width: 0; }
-
         .btn-trust-top { text-align: center; font-size: 13.5px; font-weight: 600; color: #667eea; margin-top: 28px; margin-bottom: 10px; }
         .submit-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(102,126,234,0.4); transition: all 0.3s; }
         .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
@@ -90,7 +59,6 @@
         .btn-guarantee { text-align: center; font-size: 12px; color: #6b7280; margin-top: 10px; padding: 10px 16px; background: #f9fafb; border-radius: 10px; border: 1px solid #e5e7eb; line-height: 1.5; }
         .support-line { text-align: center; margin-top: 16px; font-size: 13px; color: #374151; padding: 12px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0; }
         .support-line a { color: #15803d; font-weight: 700; text-decoration: none; }
-
         .success-box { background: #d1fae5; border-left: 4px solid #10b981; padding: 28px; border-radius: 12px; margin: 24px 0; display: none; }
         .success-box.show { display: block; }
         .success-box h3 { color: #065f46; margin-bottom: 18px; font-size: 24px; }
@@ -99,9 +67,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="edit-mode-header" id="editModeHeader">
-        <h2>✏️ Edit Your Card</h2>
-    </div>
+    <div class="edit-mode-header" id="editModeHeader"><h2>✏️ Edit Your Card</h2></div>
     <div class="header" id="normalHeader">
         <h1>Professional Digital Visiting Card</h1>
         <div class="price-block">
@@ -124,10 +90,8 @@
             <div class="secure-badge">🔒 Secure payment powered by Razorpay</div>
         </div>
     </div>
-
     <div class="form-section">
         <h2 class="form-title" id="formTitle">Fill Your Details</h2>
-
         <div class="info-box" id="infoBox">
             <div class="info-box-title">ℹ️ Important Information</div>
             <ul>
@@ -138,7 +102,6 @@
             </ul>
             <div class="info-box-highlight">📧 Please enter correct email to receive your card.</div>
         </div>
-
         <form id="orderForm">
             <div class="section-header"><span>📞</span><span>Primary Contact</span></div>
             <div class="form-group">
@@ -190,19 +153,16 @@
                 </div>
                 <div class="helper-text">Leave blank if same as phone</div>
             </div>
-
             <div class="section-header"><span>👥</span><span>Contact 2 (Optional)</span></div>
             <div class="form-group"><label>Name<span class="label-badge">Editable Later</span></label><input type="text" name="contact2Name" placeholder="Support Team"></div>
             <div class="form-group"><label>Phone<span class="label-badge">Editable Later</span></label><input type="tel" name="contact2Phone" placeholder="9876543210" maxlength="10"></div>
             <div class="form-group"><label>Email<span class="label-badge">Editable Later</span></label><input type="email" name="contact2Email" placeholder="support@example.com"></div>
             <div class="form-group"><label>Role<span class="label-badge">Editable Later</span></label><input type="text" name="contact2Role" placeholder="Support"></div>
-
             <div class="section-header"><span>🏢</span><span>Business Info</span></div>
             <div class="form-group"><label>Business Name<span class="label-badge">Editable Later</span></label><input type="text" name="businessName" placeholder="Kumar Enterprises"></div>
             <div class="form-group"><label>Designation<span class="label-badge">Editable Later</span></label><input type="text" name="designation" placeholder="CEO"></div>
             <div class="form-group"><label>Address<span class="label-badge">Editable Later</span></label><input type="text" name="address" placeholder="Office No. 123"></div>
             <div class="form-group"><label>UPI ID<span class="label-badge">Editable Later</span></label><input type="text" name="upiId" placeholder="yourname@ybl"></div>
-
             <div class="section-header"><span>🌐</span><span>Social Media</span></div>
             <div class="form-group"><label>Instagram<span class="label-badge">Editable Later</span></label><input type="url" name="instagram" placeholder="https://instagram.com/username"></div>
             <div class="form-group"><label>Facebook<span class="label-badge">Editable Later</span></label><input type="url" name="facebook" placeholder="https://facebook.com/page"></div>
@@ -210,12 +170,10 @@
             <div class="form-group"><label>Twitter<span class="label-badge">Editable Later</span></label><input type="url" name="twitter" placeholder="https://twitter.com/handle"></div>
             <div class="form-group"><label>YouTube<span class="label-badge">Editable Later</span></label><input type="url" name="youtube" placeholder="https://youtube.com/@channel"></div>
             <div class="form-group"><label>Telegram<span class="label-badge">Editable Later</span></label><input type="text" name="telegram" placeholder="@username"></div>
-
             <div class="section-header"><span>🔗</span><span>Website & Location</span></div>
             <div class="form-group"><label>Website<span class="label-badge">Editable Later</span></label><input type="url" name="website" placeholder="https://yourwebsite.com"></div>
             <div class="form-group"><label>Product URL<span class="label-badge">Editable Later</span></label><input type="url" name="productUrl" placeholder="https://shop.com/products"></div>
             <div class="form-group"><label>Google Maps<span class="label-badge">Editable Later</span></label><input type="url" name="maps" placeholder="https://maps.google.com/..."></div>
-
             <div id="imageUploadSection" style="display:none">
                 <div class="section-header"><span>📷</span><span>Photo</span></div>
                 <div class="form-group">
@@ -224,7 +182,6 @@
                     <div id="imagePreview"></div>
                 </div>
             </div>
-
             <div class="btn-trust-top" id="btnTrustTop">⚡ Takes less than 1 minute to create your card</div>
             <button type="submit" class="submit-btn" id="submitBtn">💳 Pay ₹499</button>
             <div class="btn-secure-text" id="btnSecureText">🔒 Secure Payment via Razorpay</div>
@@ -233,496 +190,316 @@
                 💬 Need help? <a href="https://wa.me/919770061597" target="_blank">WhatsApp Support: +91 9770061597</a>
             </div>
         </form>
-
-        <div class="success-box" id="successMsg">
-            <h3>🎉 Payment Successful!</h3>
-            <p>Check your email for card URL and QR code!</p>
-        </div>
-        <div class="success-box" id="editSuccessMsg">
-            <h3>✅ Updated!</h3>
-            <p>Changes saved successfully.</p>
-        </div>
+        <div class="success-box" id="successMsg"><h3>🎉 Payment Successful!</h3><p>Check your email for card URL and QR code!</p></div>
+        <div class="success-box" id="editSuccessMsg"><h3>✅ Updated!</h3><p>Changes saved successfully.</p></div>
     </div>
 </div>
-
 <script>
-// ============================================================
-// CONFIG — update URL after each new backend deployment
-// ============================================================
-const WEB_APP_URL   = 'https://script.google.com/macros/s/AKfycbzfq42nZFZZrTyAqnS7jPJPCPg49S7-cNi-DZwfHNe8IeY4F3v-LU1yzb1LJgfz2Slg/exec';
+const WEB_APP_URL     = 'https://script.google.com/macros/s/AKfycbzfq42nZFZZrTyAqnS7jPJPCPg49S7-cNi-DZwfHNe8IeY4F3v-LU1yzb1LJgfz2Slg/exec';
 const RAZORPAY_KEY_ID = 'rzp_live_SJYhIXCogVGip3';
 
-let isEditMode = false, currentEmail = null, currentToken = null;
+let isEditMode   = false;
+let currentEmail = null;
+let currentToken = null;
+let isSubmitting = false;
+let referralCode = '';
 
-console.log('🚀 App loaded | Razorpay:', typeof Razorpay !== 'undefined' ? '✅' : '❌');
+console.log('App loaded | Razorpay:', typeof Razorpay !== 'undefined' ? 'OK' : 'MISSING');
 
-// ============================================================
-// INITIALIZATION
-// ============================================================
+// ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
     const p     = new URLSearchParams(window.location.search);
-    const email = p.get('email'), token = p.get('token');
+    const email = p.get('email');
+    const token = p.get('token');
+    const ref   = (p.get('ref') || '').trim().toUpperCase();
+
+    if (ref) {
+        referralCode = ref;
+        console.log('Referral:', referralCode);
+        const badge = document.createElement('div');
+        badge.style.cssText = 'position:fixed;bottom:16px;right:16px;background:#667eea;color:white;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2)';
+        badge.textContent = 'Ref: ' + referralCode;
+        document.body.appendChild(badge);
+        setTimeout(() => badge.remove(), 4000);
+    }
+
     if (email && token) await initEditMode(email, token);
 });
 
+// ── EDIT MODE ─────────────────────────────────────────────────
 async function initEditMode(email, token) {
     isEditMode = true; currentEmail = email; currentToken = token;
-    document.getElementById('normalHeader').style.display = 'none';
+    document.getElementById('normalHeader').style.display   = 'none';
     document.getElementById('editModeHeader').style.display = 'block';
-    document.getElementById('formTitle').textContent = 'Edit Details';
-    document.getElementById('submitBtn').textContent  = '✏️ Update Card';
+    document.getElementById('formTitle').textContent        = 'Edit Details';
+    document.getElementById('submitBtn').textContent        = 'Update Card';
     document.getElementById('imageUploadSection').style.display = 'block';
-
     ['infoBox','btnTrustTop','btnSecureText','btnGuarantee','supportLine'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
+        const el = document.getElementById(id); if (el) el.style.display = 'none';
     });
-
     const ef = document.getElementById('emailField');
     ef.value = email; ef.disabled = true; ef.required = false;
-
     const emailGroup = ef.closest('.form-group');
     if (emailGroup && !document.getElementById('changeEmailGroup')) {
         const changeDiv = document.createElement('div');
-        changeDiv.id = 'changeEmailGroup';
-        changeDiv.style.marginTop = '10px';
+        changeDiv.id = 'changeEmailGroup'; changeDiv.style.marginTop = '10px';
         changeDiv.innerHTML = `
             <div style="font-size:12px;color:#667eea;font-weight:600;cursor:pointer" onclick="toggleEmailChange()" id="changeEmailToggle">
-                ✏️ Email address badalna chahte hain?
+                Email address badalna chahte hain?
             </div>
             <div id="changeEmailInput" style="display:none;margin-top:8px">
                 <input type="email" id="newEmailField" name="newEmail" placeholder="Naya email darj karein"
                     style="width:100%;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:15px">
-                <div style="font-size:11px;color:#e53e3e;margin-top:4px">⚠️ Email badalne ke baad purana edit link kaam nahi karega.</div>
+                <div style="font-size:11px;color:#e53e3e;margin-top:4px">Email badalne ke baad purana edit link kaam nahi karega.</div>
             </div>`;
         emailGroup.appendChild(changeDiv);
     }
-
     try {
         const r = await fetch(`${WEB_APP_URL}?mode=fetch&email=${encodeURIComponent(email)}`);
         const d = await r.json();
         if (d.error) throw new Error(d.error);
         Object.keys(d).forEach(k => {
-            if (k !== 'email') {
-                const i = document.querySelector(`[name="${k}"]`);
-                if (i && d[k]) i.value = d[k];
-            }
+            if (k !== 'email') { const i = document.querySelector(`[name="${k}"]`); if (i && d[k]) i.value = d[k]; }
         });
         if (d.phone)    prefillPhone(d.phone,    'phoneCC',    'phoneNumber');
         if (d.whatsapp) prefillPhone(d.whatsapp, 'whatsappCC', 'whatsappNumber');
-        console.log('✅ Data prefilled');
-    } catch(e) {
-        console.error('Prefill error:', e);
-        alert('Error loading data');
-    }
+    } catch(e) { console.error('Prefill error:', e); alert('Error loading data'); }
 }
 
-// ============================================================
-// EMAIL STATUS CHECK — used on blur AND on submit
-// Uses POST (reliable with Apps Script, no CORS issues)
-// ============================================================
+// ── EMAIL STATUS CHECK (POST — reliable) ─────────────────────
 let emailStatusCache = {};
 
 async function checkEmailStatus(email) {
-    const cached = emailStatusCache[email];
-    if (cached !== undefined) return cached;
-
+    if (emailStatusCache[email] !== undefined) return emailStatusCache[email];
     try {
-        console.log('🔍 Checking status for:', email);
         const r = await fetch(WEB_APP_URL, {
             method:  'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body:    JSON.stringify({ mode: 'checkStatus', email: email })
+            body:    JSON.stringify({ mode: 'checkStatus', email })
         });
-        const d = await r.json();
-        console.log('📊 Status response:', d);
+        const d      = await r.json();
         const status = String(d.paymentStatus || '').trim().toUpperCase();
         emailStatusCache[email] = status;
         return status;
-    } catch(e) {
-        console.error('❌ Status check failed:', e);
-        return 'UNKNOWN';
-    }
+    } catch(e) { console.error('Status check error:', e); return 'UNKNOWN'; }
 }
 
-// Blur — show banner as UX hint
 document.getElementById('emailField').addEventListener('blur', async function() {
     if (isEditMode) return;
     const email = this.value.trim().toLowerCase();
     if (!email || !email.includes('@')) return;
-
     const checking = document.getElementById('emailChecking');
     checking.style.display = 'block';
-
     const status = await checkEmailStatus(email);
     checking.style.display = 'none';
-    console.log('📧 Blur check result:', status, 'for', email);
     showEmailBanner(status, email);
 });
 
-// Clear banner when user edits the email
 document.getElementById('emailField').addEventListener('input', function() {
     document.getElementById('emailStatusBanner').style.display = 'none';
     document.getElementById('emailStatusBanner').className     = 'email-status-banner';
     const btn = document.getElementById('submitBtn');
-    btn.disabled      = false;
-    btn.style.opacity = '';
-    btn.textContent   = '💳 Pay ₹499';
-    emailStatusCache  = {};
+    btn.disabled = false; btn.style.opacity = ''; btn.textContent = 'Pay Rs.499';
+    emailStatusCache = {};
 });
 
 function showEmailBanner(status, email) {
     const banner    = document.getElementById('emailStatusBanner');
     const submitBtn = document.getElementById('submitBtn');
-
     if (status === 'PAID') {
         banner.className = 'email-status-banner paid';
-        banner.innerHTML = `
-            <strong>⛔ This email already has an active card.</strong><br>
+        banner.innerHTML = `<strong>This email already has an active card.</strong><br>
             A new order cannot be placed with this email.<br><br>
-            <strong>Did not receive your card?</strong>
-            <a href="https://wa.me/919770061597?text=Please%20resend%20my%20card%20for%20${encodeURIComponent(email)}"
-               target="_blank">Contact Support on WhatsApp</a><br>
-            <strong>Want to edit your card?</strong> Check your email inbox for the edit link.`;
-        banner.style.display    = 'block';
-        submitBtn.disabled      = true;
-        submitBtn.style.opacity = '0.45';
-        submitBtn.textContent   = '⛔ Email Already Registered';
-
+            Did not receive your card?
+            <a href="https://wa.me/919770061597?text=Please%20resend%20my%20card%20for%20${encodeURIComponent(email)}" target="_blank">Contact Support on WhatsApp</a><br>
+            Want to edit your card? Check your email inbox for the edit link.`;
+        banner.style.display = 'block';
+        submitBtn.disabled = true; submitBtn.style.opacity = '0.45'; submitBtn.textContent = 'Email Already Registered';
     } else if (status === 'CREATED') {
         banner.className = 'email-status-banner created';
-        banner.innerHTML = `⚠️ <strong>A previous incomplete order exists for this email.</strong><br>
+        banner.innerHTML = `<strong>A previous incomplete order exists for this email.</strong><br>
             Payment was not completed last time. You can proceed — your previous order will be resumed.`;
-        banner.style.display    = 'block';
-        submitBtn.disabled      = false;
-        submitBtn.style.opacity = '';
-        submitBtn.textContent   = '💳 Pay ₹499';
-
+        banner.style.display = 'block';
+        submitBtn.disabled = false; submitBtn.style.opacity = ''; submitBtn.textContent = 'Pay Rs.499';
     } else {
-        banner.style.display    = 'none';
-        submitBtn.disabled      = false;
-        submitBtn.style.opacity = '';
-        submitBtn.textContent   = '💳 Pay ₹499';
+        banner.style.display = 'none';
+        submitBtn.disabled = false; submitBtn.style.opacity = ''; submitBtn.textContent = 'Pay Rs.499';
     }
 }
 
-// ============================================================
-// ✅ FIX PROBLEM 5: SUBMIT HANDLER — double-submit guard
-// ============================================================
-let isSubmitting = false;
-
+// ── FORM SUBMIT ───────────────────────────────────────────────
 document.getElementById('orderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     if (isSubmitting) return;
     isSubmitting = true;
     const btn = document.getElementById('submitBtn'), orig = btn.textContent;
-
     try {
-        if (isEditMode) {
-            await handleEdit(btn);
-        } else {
-            await handleNewOrder(btn, orig);
-        }
+        if (isEditMode) { await handleEdit(btn); }
+        else            { await handleNewOrder(btn, orig); }
     } catch(err) {
-        console.error('❌ Error:', err);
+        console.error('Error:', err);
         alert('Error: ' + err.message);
-        btn.disabled    = false;
-        btn.textContent = orig;
-    } finally {
-        isSubmitting = false;
-    }
+        btn.disabled = false; btn.textContent = orig;
+    } finally { isSubmitting = false; }
 });
 
-// ============================================================
-// NEW ORDER FLOW — status check happens BOTH on blur AND here at submit
-// ============================================================
+// ── NEW ORDER ─────────────────────────────────────────────────
 async function handleNewOrder(btn, orig) {
-    const fd = new FormData(document.getElementById('orderForm')), data = {};
+    const fd = new FormData(document.getElementById('orderForm')); const data = {};
     fd.forEach((v,k) => { data[k] = v; });
-
-    const phoneDigits = getFullPhone('phoneCC', 'phoneNumber');
-    const waDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
-    data.phone    = phoneDigits;
-    data.whatsapp = waDigits || phoneDigits;
-
-    if (!data.fullName || !data.email || !data.phone) {
-        alert('Name, Email and Phone are required');
-        btn.disabled = false;
-        return;
-    }
-    if (data.phone.length < 7) {
-        alert('Enter a valid phone number');
-        btn.disabled = false;
-        return;
-    }
-
+    data.phone    = getFullPhone('phoneCC', 'phoneNumber');
+    data.whatsapp = getFullPhone('whatsappCC', 'whatsappNumber') || data.phone;
+    if (!data.fullName || !data.email || !data.phone) { alert('Name, Email and Phone are required'); btn.disabled = false; return; }
+    if (data.phone.length < 7) { alert('Enter a valid phone number'); btn.disabled = false; return; }
     currentEmail = data.email.trim().toLowerCase();
 
-    // ── SUBMIT-TIME STATUS CHECK (safety net even if blur failed) ──
-    btn.textContent = '⏳ Checking email...';
-    btn.disabled = true;
+    // Submit-time status check (safety net)
+    btn.textContent = 'Checking email...'; btn.disabled = true;
     const statusAtSubmit = await checkEmailStatus(currentEmail);
-    console.log('🔐 Submit-time status check:', statusAtSubmit);
-
     if (statusAtSubmit === 'PAID') {
-        // Block immediately — don't even hit backend
         showEmailBanner('PAID', currentEmail);
-        btn.disabled    = false;
-        btn.textContent = '⛔ Email Already Registered';
-        isSubmitting    = false;
-        return;
+        btn.disabled = false; btn.textContent = 'Email Already Registered'; isSubmitting = false; return;
     }
-
-    if (statusAtSubmit === 'CREATED') {
-        // Show warning banner but let them proceed
-        showEmailBanner('CREATED', currentEmail);
-    }
+    if (statusAtSubmit === 'CREATED') showEmailBanner('CREATED', currentEmail);
 
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
-        data.telegram = t.startsWith('@')
-            ? 'https://t.me/' + t.slice(1)
-            : (!t.startsWith('http') ? 'https://t.me/' + t : t);
+        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
     }
+    delete data.phoneCC; delete data.phoneNumber; delete data.whatsappCC; delete data.whatsappNumber;
+    if (referralCode) data.referralCode = referralCode;
 
-    delete data.phoneCC; delete data.phoneNumber;
-    delete data.whatsappCC; delete data.whatsappNumber;
-
-    btn.textContent = '⏳ Creating order...';
-    console.log('📤 Creating order for:', currentEmail);
-
-    const r = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ mode: 'create', ...data })
-    });
-
+    btn.textContent = 'Creating order...';
+    const r   = await fetch(WEB_APP_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({ mode:'create', ...data }) });
     const res = await r.json();
-    console.log('📦 Response:', res);
+    console.log('Backend response:', res);
 
-    // ── CASE A: Already paid — show banner, stop ──────────
     if (res.status === 'error' && res.code === 'ALREADY_PAID') {
-        showEmailBanner('PAID', currentEmail);
-        btn.disabled = false;
-        btn.textContent = '⛔ Email Already Registered';
-        isSubmitting = false;
-        return;
+        showEmailBanner('PAID', currentEmail); btn.disabled = false; btn.textContent = 'Email Already Registered'; isSubmitting = false; return;
     }
+    if (res.status !== 'success') throw new Error(res.message || 'Order creation failed');
+    if (res.retry) showEmailBanner('CREATED', currentEmail);
 
-    if (res.status !== 'success') {
-        throw new Error(res.message || 'Order creation failed');
-    }
+    btn.textContent = 'Opening payment...';
+    await new Promise(r => setTimeout(r, 300));
+    if (typeof Razorpay === 'undefined') throw new Error('Razorpay not loaded. Please refresh.');
 
-    // ── CASE B: Retry ─────────────────────────────────────
-    if (res.retry) {
-        console.log('🔄 Retry — reusing order:', res.orderId);
-        showEmailBanner('CREATED', currentEmail);
+    // Auto-capture: use razorpayOrderId from backend (capture:automatic set on order)
+    const rzpConfig = {
+        key: RAZORPAY_KEY_ID, currency: 'INR',
+        name: 'Agrawal Futurify AI Solutions', description: 'Digital Visiting Card',
+        prefill: { name: data.fullName, email: data.email, contact: data.phone },
+        notes:   { orderId: res.orderId, email: currentEmail },
+        theme:   { color: '#667eea' }
+    };
+    if (res.razorpayOrderId) {
+        rzpConfig.order_id = res.razorpayOrderId;
+        console.log('Using Razorpay Order (auto-capture):', res.razorpayOrderId);
     } else {
-        console.log('✅ New order:', res.orderId);
-    }
-
-    // Open Razorpay
-    btn.textContent = '💳 Opening payment...';
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    if (typeof Razorpay === 'undefined') {
-        throw new Error('Razorpay not loaded. Please refresh and try again.');
+        rzpConfig.amount = 49900;
+        console.warn('No Razorpay Order ID — fallback amount 49900');
     }
 
     const rzp = new Razorpay({
-        key:         RAZORPAY_KEY_ID,
-        amount:      49900,
-        currency:    'INR',
-        name:        'Agrawal Futurify AI Solutions',
-        description: 'Digital Visiting Card - ₹499',
-        prefill: {
-            name:    data.fullName,
-            email:   data.email,
-            contact: data.phone
-        },
-        // ✅ Include email in notes for webhook fallback
-        notes: {
-            orderId: res.orderId,
-            email:   currentEmail
-        },
-        theme: { color: '#667eea' },
-
+        ...rzpConfig,
         handler: async function(response) {
-            console.log('✅ Payment done:', response.razorpay_payment_id);
-            btn.textContent = '⏳ Verifying...';
-
+            btn.textContent = 'Verifying...';
             try {
                 const vr = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        mode: 'verifyPayment',
-                        email: data.email,
-                        razorpay_payment_id:  response.razorpay_payment_id,
-                        razorpay_order_id:    response.razorpay_order_id   || '',
-                        razorpay_signature:   response.razorpay_signature  || ''
-                    })
+                    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+                    body: JSON.stringify({ mode:'verifyPayment', email: data.email,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id:   response.razorpay_order_id   || '',
+                        razorpay_signature:  response.razorpay_signature  || '' })
                 });
-
                 const vres = await vr.json();
-                console.log('📦 Verify:', vres);
-
                 if (vres.status === 'success') {
                     document.getElementById('orderForm').style.display = 'none';
                     document.getElementById('successMsg').classList.add('show');
-                    console.log('🎉 Card activated!');
-                } else {
-                    // ✅ Show helpful message instead of crash
-                    document.getElementById('orderForm').style.display = 'none';
-                    document.getElementById('successMsg').classList.add('show');
-                    document.getElementById('successMsg').innerHTML =
-                        `<h3>💳 Payment Received!</h3>
-                         <p>Your payment was successful. Your card will be activated shortly and you will receive an email confirmation.</p>
-                         <p style="margin-top:10px;font-size:13px;color:#065f46">If you don't receive email within 10 minutes, 
-                         <a href="https://wa.me/919770061597?text=Card%20not%20received%20for%20${encodeURIComponent(currentEmail)}" target="_blank" style="color:#065f46;font-weight:700">contact us on WhatsApp</a>.</p>`;
-                }
-            } catch(e) {
-                console.error('❌ Verify error:', e);
-                // Payment is done, show soft message (don't panic user)
-                document.getElementById('orderForm').style.display = 'none';
-                document.getElementById('successMsg').classList.add('show');
-                document.getElementById('successMsg').innerHTML =
-                    `<h3>💳 Payment Received!</h3>
-                     <p>Your payment was successful. Your card will be activated within a few minutes.</p>
-                     <p style="margin-top:10px;font-size:13px;color:#065f46">
-                     <a href="https://wa.me/919770061597?text=Card%20not%20received%20for%20${encodeURIComponent(currentEmail)}" target="_blank" style="color:#065f46;font-weight:700">WhatsApp us</a> if you don't receive email in 10 minutes.</p>`;
-            }
+                } else { showPaymentReceivedMsg(); }
+            } catch(e) { console.error('Verify error:', e); showPaymentReceivedMsg(); }
         },
-
-        modal: {
-            ondismiss: () => {
-                console.log('Payment cancelled by user');
-                btn.disabled    = false;
-                btn.textContent = orig;
-                isSubmitting    = false;
-            }
-        }
+        modal: { ondismiss: () => { btn.disabled = false; btn.textContent = orig; isSubmitting = false; } }
     });
-
     rzp.on('payment.failed', resp => {
-        console.error('Payment failed:', resp.error);
         alert('Payment failed: ' + resp.error.description);
-        btn.disabled    = false;
-        btn.textContent = orig;
-        isSubmitting    = false;
+        btn.disabled = false; btn.textContent = orig; isSubmitting = false;
     });
-
-    console.log('🚀 Opening Razorpay...');
     rzp.open();
 }
 
-// ============================================================
-// EDIT MODE
-// ============================================================
+function showPaymentReceivedMsg() {
+    document.getElementById('orderForm').style.display = 'none';
+    const box = document.getElementById('successMsg');
+    box.innerHTML = `<h3>Payment Received!</h3>
+        <p>Your payment was successful. Your card will be activated shortly and you will receive an email confirmation.</p>
+        <p style="margin-top:10px;font-size:13px;color:#065f46">If you don't receive email within 10 minutes,
+        <a href="https://wa.me/919770061597?text=Card%20not%20received%20for%20${encodeURIComponent(currentEmail||'')}" target="_blank" style="color:#065f46;font-weight:700">contact us on WhatsApp</a>.</p>`;
+    box.classList.add('show');
+}
+
+// ── EDIT SUBMIT ───────────────────────────────────────────────
 async function handleEdit(btn) {
     if (document.getElementById('imageInput')?.files[0]) {
-        btn.disabled = true; btn.textContent = '📤 Uploading...';
-        const fi   = document.getElementById('imageInput'), file = fi.files[0];
+        btn.disabled = true; btn.textContent = 'Uploading...';
+        const file = document.getElementById('imageInput').files[0];
         if (file.size > 1024*1024) { alert('Image must be < 1MB'); return; }
-        const r = new FileReader();
-        r.onload = async ev => {
-            try {
-                const res = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ mode: 'uploadImage', email: currentEmail, token: currentToken,
-                        imageData: ev.target.result, fileName: file.name, mimeType: file.type })
-                });
-                const rs = await res.json();
-                if (rs.status !== 'success') alert('Image upload failed');
-            } catch(e) { alert('Image error: ' + e.message); }
-        };
-        r.readAsDataURL(file);
-        await new Promise(res => setTimeout(res, 1000));
+        await new Promise(resolve => {
+            const r = new FileReader();
+            r.onload = async ev => {
+                try {
+                    const res = await fetch(WEB_APP_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+                        body: JSON.stringify({ mode:'uploadImage', email:currentEmail, token:currentToken, imageData:ev.target.result, fileName:file.name, mimeType:file.type }) });
+                    const rs = await res.json();
+                    if (rs.status !== 'success') alert('Image upload failed');
+                } catch(e) { alert('Image error: ' + e.message); }
+                resolve();
+            };
+            r.readAsDataURL(file);
+        });
     }
-
     const fd = new FormData(document.getElementById('orderForm'));
-    const data = { mode: 'edit', email: currentEmail, editToken: currentToken };
+    const data = { mode:'edit', email:currentEmail, editToken:currentToken };
     fd.forEach((v,k) => { if (k !== 'email') data[k] = v; });
-
     const newEmailField = document.getElementById('newEmailField');
-    if (newEmailField && newEmailField.value.trim())
-        data.newEmail = newEmailField.value.trim().toLowerCase();
-
-    const editPhoneDigits = getFullPhone('phoneCC', 'phoneNumber');
-    const editWaDigits    = getFullPhone('whatsappCC', 'whatsappNumber');
-    if (editPhoneDigits) data.phone    = editPhoneDigits;
-    if (editWaDigits)    data.whatsapp = editWaDigits;
-    delete data.phoneCC; delete data.phoneNumber;
-    delete data.whatsappCC; delete data.whatsappNumber;
-
+    if (newEmailField && newEmailField.value.trim()) data.newEmail = newEmailField.value.trim().toLowerCase();
+    const ep = getFullPhone('phoneCC','phoneNumber'); if (ep) data.phone    = ep;
+    const ew = getFullPhone('whatsappCC','whatsappNumber'); if (ew) data.whatsapp = ew;
+    delete data.phoneCC; delete data.phoneNumber; delete data.whatsappCC; delete data.whatsappNumber;
     if (data.telegram && data.telegram.trim()) {
         const t = data.telegram.trim();
-        data.telegram = t.startsWith('@')
-            ? 'https://t.me/' + t.slice(1)
-            : (!t.startsWith('http') ? 'https://t.me/' + t : t);
+        data.telegram = t.startsWith('@') ? 'https://t.me/' + t.slice(1) : (!t.startsWith('http') ? 'https://t.me/' + t : t);
     }
-
-    btn.disabled = true; btn.textContent = '⏳ Saving...';
-    const r   = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-    });
-    const res = await r.json();
+    btn.disabled = true; btn.textContent = 'Saving...';
+    const res = await (await fetch(WEB_APP_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(data) })).json();
     if (res.status === 'success') {
         document.getElementById('orderForm').style.display = 'none';
         document.getElementById('editSuccessMsg').classList.add('show');
-        console.log('✅ Updated');
-    } else {
-        throw new Error(res.message);
-    }
+    } else { throw new Error(res.message); }
 }
 
 function toggleEmailChange() {
-    const input  = document.getElementById('changeEmailInput');
-    const toggle = document.getElementById('changeEmailToggle');
-    if (input.style.display === 'none') {
-        input.style.display  = 'block';
-        toggle.textContent   = '✕ Cancel';
-        toggle.style.color   = '#e53e3e';
-    } else {
-        input.style.display  = 'none';
-        toggle.innerHTML     = '✏️ Email address badalna chahte hain?';
-        toggle.style.color   = '#667eea';
-        document.getElementById('newEmailField').value = '';
-    }
+    const input = document.getElementById('changeEmailInput'), toggle = document.getElementById('changeEmailToggle');
+    if (input.style.display === 'none') { input.style.display = 'block'; toggle.textContent = 'Cancel'; toggle.style.color = '#e53e3e'; }
+    else { input.style.display = 'none'; toggle.innerHTML = 'Email address badalna chahte hain?'; toggle.style.color = '#667eea'; document.getElementById('newEmailField').value = ''; }
 }
 
-// ============================================================
-// PHONE HELPERS
-// ============================================================
-function getFullPhone(ccSelectId, numberInputId) {
-    const cc  = String(document.getElementById(ccSelectId)?.value  || '91').replace(/\D/g,'');
-    const num = String(document.getElementById(numberInputId)?.value || '').replace(/\D/g,'');
-    if (!num) return '';
-    return cc + num;
+// ── PHONE HELPERS ─────────────────────────────────────────────
+function getFullPhone(ccId, numId) {
+    const cc  = String(document.getElementById(ccId)?.value  || '91').replace(/\D/g,'');
+    const num = String(document.getElementById(numId)?.value  || '').replace(/\D/g,'');
+    return num ? cc + num : '';
 }
-
-function prefillPhone(stored, ccSelectId, numberInputId) {
-    const digits = String(stored || '').replace(/\D/g,'');
-    if (!digits) return;
-    const ccEl  = document.getElementById(ccSelectId);
-    const numEl = document.getElementById(numberInputId);
+function prefillPhone(stored, ccId, numId) {
+    const digits = String(stored||'').replace(/\D/g,''); if (!digits) return;
+    const ccEl = document.getElementById(ccId), numEl = document.getElementById(numId);
     if (!ccEl || !numEl) return;
     const options = Array.from(ccEl.options).map(o => o.value).sort((a,b) => b.length - a.length);
-    let matched = false;
     for (const cc of options) {
-        if (digits.startsWith(cc) && digits.length > cc.length) {
-            ccEl.value  = cc;
-            numEl.value = digits.slice(cc.length);
-            matched     = true;
-            break;
-        }
+        if (digits.startsWith(cc) && digits.length > cc.length) { ccEl.value = cc; numEl.value = digits.slice(cc.length); return; }
     }
-    if (!matched) { ccEl.value = '91'; numEl.value = digits; }
+    ccEl.value = '91'; numEl.value = digits;
 }
-
 ['phoneNumber','whatsappNumber'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', function() { this.value = this.value.replace(/\D/g,''); });
